@@ -14,9 +14,20 @@
             text-align: center;
             color: #333;
         }
+        #logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+        }
         #searchForm {
             text-align: center;
             margin-bottom: 20px;
+            margin-top: 70px; /* Отступ для логотипа */
         }
         #searchInput {
             padding: 10px;
@@ -53,6 +64,7 @@
     </style>
 </head>
 <body>
+    <img id="logo" src="https://avatars.dzeninfra.ru/get-zen-logos/271828/pub_5ccdaec214686000b302798a_67b9e20e3c3f3d370114f4e6/orig" alt="Логотип" onerror="this.src='https://via.placeholder.com/50';">
     <h1>Прайс-лист игр</h1>
     <div id="searchForm">
         <input type="text" id="searchInput" placeholder="Поиск по названию игры..." autocomplete="off">
