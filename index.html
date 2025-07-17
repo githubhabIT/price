@@ -14,6 +14,17 @@
             text-align: center;
             color: #333;
         }
+        #searchForm {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #searchInput {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
         table {
             width: 80%;
             margin: 20px auto;
@@ -43,6 +54,9 @@
 </head>
 <body>
     <h1>Прайс-лист игр</h1>
+    <div id="searchForm">
+        <input type="text" id="searchInput" placeholder="Поиск по названию игры..." autocomplete="off">
+    </div>
     <p id="error"></p>
     <table id="priceTable">
         <thead>
@@ -57,6 +71,7 @@
     <script>
         // URL публичной HTML-версии таблицы
         const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRrtNsVjDH35c4vGbh-L5G8q1T6LQJIRaDM-vdNU22a6o6xBXm1C8jEspzfskYbDolx6ZWNki5eLaLa/pubhtml';
+        let allGames = []; // Храним все игры для фильтрации
 
         async function loadPriceList() {
             const errorElement = document.getElementById('error');
@@ -87,8 +102,7 @@
                     throw new Error('Таблица с классом "waffle" не найдена или пуста.');
                 }
 
-                let hasData = false;
-                // Пропускаем первую строку (заголовки)
+                allGames = [];
                 rows.forEach((row, index) => {
                     if (index === 0) return; // Пропускаем заголовки
                     const cells = row.querySelectorAll('td');
@@ -96,23 +110,42 @@
                         const gameName = cells[0].textContent.trim();
                         const price = cells[1].textContent.trim();
                         if (gameName && price) {
-                            const newRow = document.createElement('tr');
-                            newRow.innerHTML = `<td>${gameName}</td><td>${price}</td>`;
-                            tableBody.appendChild(newRow);
-                            hasData = true;
+                            allGames.push({ name: gameName, price: price });
                         }
                     }
                 });
 
-                if (!hasData) {
+                if (allGames.length === 0) {
                     throw new Error('Нет данных для отображения. Проверьте содержимое таблицы.');
                 }
+
+                // Отображаем все игры
+                renderTable(allGames);
             } catch (error) {
                 errorElement.textContent = `Ошибка загрузки: ${error.message}. Возможно, проблема с CORS или структурой таблицы.`;
                 errorElement.style.display = 'block';
                 console.error('Подробности ошибки:', error);
             }
         }
+
+        function renderTable(games) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = ''; // Очищаем таблицу
+            games.forEach(game => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${game.name}</td><td>${game.price}</td>`;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Обработчик поиска
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            const filteredGames = allGames.filter(game => 
+                game.name.toLowerCase().includes(query)
+            );
+            renderTable(filteredGames);
+        });
 
         // Загружаем данные при загрузке страницы
         loadPriceList();
