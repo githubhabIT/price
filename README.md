@@ -1,22 +1,22 @@
 <style>
+  .responsive-iframe-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px; /* Ограничение максимальной ширины */
+    aspect-ratio: 16 / 9; /* Укажите желаемое соотношение сторон */
+    margin: 0 auto;
+  }
+
   .responsive-iframe {
-    width: 90vw; /* 90% ширины окна */
-    height: 80vh; /* 80% высоты окна */
-    max-width: 1000px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     border: none;
-  }
-
-  @media screen and (max-width: 768px) {
-    .responsive-iframe {
-      height: 60vh; /* Уменьшенная высота для планшетов */
-    }
-  }
-
-  @media screen and (max-width: 480px) {
-    .responsive-iframe {
-      height: 50vh; /* Еще меньшая высота для мобильных */
-    }
   }
 </style>
 
-<iframe class="responsive-iframe" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRrtNsVjDH35c4vGbh-L5G8q1T6LQJIRaDM-vdNU22a6o6xBXm1C8jEspzfskYbDolx6ZWNki5eLaLa/pubhtml?widget=true&headers=false"></iframe>
+<div class="responsive-iframe-container">
+  <iframe class="responsive-iframe" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRrtNsVjDH35c4vGbh-L5G8q1T6LQJIRaDM-vdNU22a6o6xBXm1C8jEspzfskYbDolx6ZWNki5eLaLa/pubhtml?widget=true&headers=false"></iframe>
+</div>
