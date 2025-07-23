@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Парсер цен Xbox RU</title>
+</head>
+<body>
+    <h1>Парсер цен Xbox RU</h1>
+    <button onclick="parseAndDownload()">Спарсить и скачать</button>
+    <p id="status">Нажмите кнопку, чтобы начать.</p>
+
+    <script>
+        async function parseAndDownload() {
+            try {
+                document.getElementById('status').textContent = 'Загрузка данных...';
+                
+                // Пытаемся получить HTML-контент Google Sheets
+                const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTrff8JB836U8z3f24KQUoFUQt2hBM4fxQjDjTnO0ZNu8lCUh8GQ2EBdnWyWjHR1Q-FmDIbeSZBtCe9/pubhtml', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'text/html'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Ошибка HTTP: ${response.status}`);
+                }
+
+                const htmlText = await response.text();
+
+                // Парсим HTML в DOM
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, 'text/html');
+
+                // Пробуем найти таблицу
+                const table = doc.querySelector('table');
+                if (!table) {
+                    throw new Error('Таблица не найдена в документе.');
+                }
+
+                // Получаем все строки таблицы
+                const rows = table.querySelectorAll('tr');
+                if (rows.length === 0) {
+                    throw new Error('Строки в таблице не найдены.');
+                }
+
+                let textContent = '';
+                // Проходим по строкам, пропуская заголовок
+                rows.forEach((row, index) => {
+                    if (index === 0) return; // Пропускаем строку заголовка
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 2) {
+                        const title = cells[0].textContent.trim();
+                        const price = cells[1].textContent.trim();
+                        textContent += `${title} - ${price}\n`;
+                    }
+                });
+
+                if (!textContent) {
+                    throw new Error('Данные в таблице не найдены.');
+                }
+
+                // Создаём и скачиваем текстовый файл
+                const blob = new Blob([textContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Xbox_RU_Prices.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                document.getElementById('status').textContent = 'Файл успешно скачан!';
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('status').textContent = `Ошибка: ${error.message}`;
+                alert(`Произошла ошибка: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html>
