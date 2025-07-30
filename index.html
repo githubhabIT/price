@@ -105,7 +105,32 @@
         const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrff8JB836U8z3f24KQUoFUQt2hBM4fxQjDjTnO0ZNu8lCUh8GQ2EBdnWyWjHR1Q-FmDIbeSZBtCe9/pubhtml';
         let allGames = [];
 
+        async function fetchWithRetry(url, retries = 3, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'text/html'
+                        }
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status} ${response.statusText}`);
+                    }
+                    return response;
+                } catch (error) {
+                    if (i < retries - 1) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        console.log(`Повторная попытка ${i + 1} из ${retries}...`);
+                        continue;
+                    }
+                    throw error;
+                }
+            }
+        }
+
         async function loadPriceList() {
+            const cacheKey = 'xboxRuPriceCache';
             const errorElement = document.getElementById('error');
             const tableBody = document.getElementById('tableBody');
             const loadingElement = document.getElementById('loading');
@@ -114,25 +139,22 @@
             errorElement.textContent = '';
             loadingElement.style.display = 'block';
 
+            // Проверяем кэш
+            const cachedData = localStorage.getItem(cacheKey);
+            if (cachedData) {
+                allGames = JSON.parse(cachedData);
+                renderTable(allGames);
+            }
+
             try {
-                const response = await fetch(dataUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'text/html'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Не удалось загрузить страницу: HTTP ${response.status} ${response.statusText}`);
-                }
-
+                const response = await fetchWithRetry(dataUrl);
                 const text = await response.text();
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, 'text/html');
 
-                const rows = doc.querySelectorAll('table.waffle tbody tr');
+                const rows = doc.querySelectorAll('table.waffle tbody tr') || doc.querySelectorAll('table tbody tr');
                 if (rows.length === 0) {
-                    throw new Error('Таблица с классом "waffle" не найдена или пуста.');
+                    throw new Error('Таблица не найдена или пуста.');
                 }
 
                 allGames = [];
@@ -152,11 +174,15 @@
                     throw new Error('Нет данных для отображения. Проверьте содержимое таблицы.');
                 }
 
+                localStorage.setItem(cacheKey, JSON.stringify(allGames));
                 renderTable(allGames);
             } catch (error) {
-                errorElement.textContent = `Ошибка загрузки: ${error.message}. Возможно, проблема с CORS или структурой таблицы.`;
+                errorElement.textContent = `Ошибка загрузки: ${error.message}. Показаны последние сохраненные данные.`;
                 errorElement.style.display = 'block';
                 console.error('Подробности ошибки:', error);
+                if (!cachedData) {
+                    tableBody.innerHTML = '<tr><td colspan="2">Не удалось загрузить данные.</td></tr>';
+                }
             } finally {
                 loadingElement.style.display = 'none';
             }
