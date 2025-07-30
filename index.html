@@ -131,6 +131,8 @@
 
         async function loadPriceList() {
             const cacheKey = 'xboxRuPriceCache';
+            const cacheTimeKey = 'xboxRuPriceCacheTime';
+            const cacheDuration = 60 * 60 * 1000; // 1 hour
             const errorElement = document.getElementById('error');
             const tableBody = document.getElementById('tableBody');
             const loadingElement = document.getElementById('loading');
@@ -139,9 +141,11 @@
             errorElement.textContent = '';
             loadingElement.style.display = 'block';
 
-            // Проверяем кэш
+            // Load cached data
             const cachedData = localStorage.getItem(cacheKey);
-            if (cachedData) {
+            const cacheTime = localStorage.getItem(cacheTimeKey);
+            const now = Date.now();
+            if (cachedData && cacheTime && (now - parseInt(cacheTime) < cacheDuration)) {
                 allGames = JSON.parse(cachedData);
                 renderTable(allGames);
             }
@@ -149,10 +153,18 @@
             try {
                 const response = await fetchWithRetry(dataUrl);
                 const text = await response.text();
+                console.log('Размер ответа:', text.length);
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, 'text/html');
 
-                const rows = doc.querySelectorAll('table.waffle tbody tr') || doc.querySelectorAll('table tbody tr');
+                let rows = doc.querySelectorAll('table.waffle tbody tr');
+                if (rows.length === 0) {
+                    rows = doc.querySelectorAll('table tbody tr');
+                }
+                if (rows.length === 0) {
+                    rows = doc.querySelectorAll('table tr');
+                }
+                console.log('Найдено строк:', rows.length);
                 if (rows.length === 0) {
                     throw new Error('Таблица не найдена или пуста.');
                 }
@@ -175,13 +187,14 @@
                 }
 
                 localStorage.setItem(cacheKey, JSON.stringify(allGames));
+                localStorage.setItem(cacheTimeKey, now.toString());
                 renderTable(allGames);
             } catch (error) {
-                errorElement.textContent = `Ошибка загрузки: ${error.message}. Показаны последние сохраненные данные.`;
+                errorElement.textContent = `Ошибка загрузки: ${error.message}. Показаны последние сохраненные данные или таблица пуста.`;
                 errorElement.style.display = 'block';
                 console.error('Подробности ошибки:', error);
                 if (!cachedData) {
-                    tableBody.innerHTML = '<tr><td colspan="2">Не удалось загрузить данные.</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="2">Не удалось загрузить данные. Попробуйте позже.</td></tr>';
                 }
             } finally {
                 loadingElement.style.display = 'none';
