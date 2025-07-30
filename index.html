@@ -102,18 +102,16 @@
     </table>
 
     <script>
-        const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrff8JB836U8z3f24KQUoFUQt2hBM4fxQjDjTnO0ZNu8lCUh8GQ2EBdnWyWjHR1Q-FmDIbeSZBtCe9/pubhtml';
+        const sheetId = '1vTrff8JB836U8z3f24KQUoFUQt2hBM4fxQjDjTnO0ZNu8lCUh8GQ2EBdnWyWjHR1Q-FmDIbeSZBtCe9';
+        const apiKey = 'AIzaSyAz6NMjP-Sgq2P9FgGOc8T1prYM57b-An0'; // Вставьте ваш API-ключ
+        const range = 'ru price!A:B';
+        const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
         let allGames = [];
 
         async function fetchWithRetry(url, retries = 3, delay = 1000) {
             for (let i = 0; i < retries; i++) {
                 try {
-                    const response = await fetch(url, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'text/html'
-                        }
-                    });
+                    const response = await fetch(url);
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status} ${response.statusText}`);
                     }
@@ -132,7 +130,7 @@
         async function loadPriceList() {
             const cacheKey = 'xboxRuPriceCache';
             const cacheTimeKey = 'xboxRuPriceCacheTime';
-            const cacheDuration = 60 * 60 * 1000; // 1 hour
+            const cacheDuration = 60 * 60 * 1000; // 1 час
             const errorElement = document.getElementById('error');
             const tableBody = document.getElementById('tableBody');
             const loadingElement = document.getElementById('loading');
@@ -141,46 +139,31 @@
             errorElement.textContent = '';
             loadingElement.style.display = 'block';
 
-            // Load cached data
+            // Загрузка кэшированных данных
             const cachedData = localStorage.getItem(cacheKey);
             const cacheTime = localStorage.getItem(cacheTimeKey);
             const now = Date.now();
             if (cachedData && cacheTime && (now - parseInt(cacheTime) < cacheDuration)) {
                 allGames = JSON.parse(cachedData);
                 renderTable(allGames);
+                console.log('Использованы кэшированные данные');
             }
 
             try {
+                console.log('Запрос к API:', dataUrl);
                 const response = await fetchWithRetry(dataUrl);
-                const text = await response.text();
-                console.log('Размер ответа:', text.length);
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
+                const data = await response.json();
+                console.log('Данные API:', data);
+                const rows = data.values;
 
-                let rows = doc.querySelectorAll('table.waffle tbody tr');
-                if (rows.length === 0) {
-                    rows = doc.querySelectorAll('table tbody tr');
-                }
-                if (rows.length === 0) {
-                    rows = doc.querySelectorAll('table tr');
-                }
-                console.log('Найдено строк:', rows.length);
-                if (rows.length === 0) {
-                    throw new Error('Таблица не найдена или пуста.');
+                if (!rows || rows.length <= 1) {
+                    throw new Error('Таблица пуста или содержит только заголовки.');
                 }
 
-                allGames = [];
-                rows.forEach((row, index) => {
-                    if (index === 0) return;
-                    const cells = row.querySelectorAll('td');
-                    if (cells.length >= 2) {
-                        const gameName = cells[0].textContent.trim();
-                        const price = cells[1].textContent.trim();
-                        if (gameName && price) {
-                            allGames.push({ name: gameName, price: price });
-                        }
-                    }
-                });
+                allGames = rows.slice(1).map(row => ({
+                    name: row[0]?.trim() || '',
+                    price: row[1]?.trim() || ''
+                })).filter(game => game.name && game.price);
 
                 if (allGames.length === 0) {
                     throw new Error('Нет данных для отображения. Проверьте содержимое таблицы.');
@@ -189,6 +172,7 @@
                 localStorage.setItem(cacheKey, JSON.stringify(allGames));
                 localStorage.setItem(cacheTimeKey, now.toString());
                 renderTable(allGames);
+                console.log('Данные успешно загружены и кэшированы');
             } catch (error) {
                 errorElement.textContent = `Ошибка загрузки: ${error.message}. Показаны последние сохраненные данные или таблица пуста.`;
                 errorElement.style.display = 'block';
