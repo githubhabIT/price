@@ -16,7 +16,7 @@
         }
         #logo {
             display: block;
-            margin: 10px auto 0 auto; /* Отступ 10px сверху, авто по бокам для центрирования */
+            margin: 10px auto 0 auto;
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -33,6 +33,28 @@
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 4px;
+        }
+        #loading {
+            font-size: 16px;
+            color: #333;
+            margin: 20px;
+            display: none;
+            text-align: center;
+        }
+        #loading::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #4CAF50;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         table {
             width: 80%;
@@ -67,6 +89,7 @@
     <div id="searchForm">
         <input type="text" id="searchInput" placeholder="Поиск по названию игры..." autocomplete="off">
     </div>
+    <div id="loading">Загрузка...</div>
     <p id="error"></p>
     <table id="priceTable">
         <thead>
@@ -79,16 +102,17 @@
     </table>
 
     <script>
-        // URL публичной HTML-версии таблицы
         const dataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrff8JB836U8z3f24KQUoFUQt2hBM4fxQjDjTnO0ZNu8lCUh8GQ2EBdnWyWjHR1Q-FmDIbeSZBtCe9/pubhtml';
-        let allGames = []; // Храним все игры для фильтрации
+        let allGames = [];
 
         async function loadPriceList() {
             const errorElement = document.getElementById('error');
             const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = ''; // Очищаем таблицу
+            const loadingElement = document.getElementById('loading');
+            tableBody.innerHTML = '';
             errorElement.style.display = 'none';
             errorElement.textContent = '';
+            loadingElement.style.display = 'block';
 
             try {
                 const response = await fetch(dataUrl, {
@@ -106,7 +130,6 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(text, 'text/html');
 
-                // Ищем таблицу с классом 'waffle'
                 const rows = doc.querySelectorAll('table.waffle tbody tr');
                 if (rows.length === 0) {
                     throw new Error('Таблица с классом "waffle" не найдена или пуста.');
@@ -114,7 +137,7 @@
 
                 allGames = [];
                 rows.forEach((row, index) => {
-                    if (index === 0) return; // Пропускаем заголовки
+                    if (index === 0) return;
                     const cells = row.querySelectorAll('td');
                     if (cells.length >= 2) {
                         const gameName = cells[0].textContent.trim();
@@ -129,18 +152,19 @@
                     throw new Error('Нет данных для отображения. Проверьте содержимое таблицы.');
                 }
 
-                // Отображаем все игры
                 renderTable(allGames);
             } catch (error) {
                 errorElement.textContent = `Ошибка загрузки: ${error.message}. Возможно, проблема с CORS или структурой таблицы.`;
                 errorElement.style.display = 'block';
                 console.error('Подробности ошибки:', error);
+            } finally {
+                loadingElement.style.display = 'none';
             }
         }
 
         function renderTable(games) {
             const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = ''; // Очищаем таблицу
+            tableBody.innerHTML = '';
             games.forEach(game => {
                 const row = document.createElement('tr');
                 row.innerHTML = `<td>${game.name}</td><td>${game.price}</td>`;
@@ -148,7 +172,6 @@
             });
         }
 
-        // Обработчик поиска
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
             const filteredGames = allGames.filter(game => 
@@ -157,7 +180,6 @@
             renderTable(filteredGames);
         });
 
-        // Загружаем данные при загрузке страницы
         loadPriceList();
     </script>
 </body>
