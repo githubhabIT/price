@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xbox Game Pass Plans</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: left;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .card img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .card h3 {
+            margin: 0 0 10px;
+            color: #333;
+            font-size: 1.5em;
+        }
+        .card .price {
+            color: #4CAF50;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .card p {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+        .card .note {
+            font-size: 0.9em;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        .card-button {
+            display: block;
+            max-width: 200px; /* Фиксированная ширина для аккуратного вида */
+            margin: 0 auto; /* Центрирование по горизонтали */
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .card-button:hover {
+            background-color: #45a049;
+        }
+        @media (max-width: 600px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            .card {
+                padding: 15px;
+            }
+            .card img {
+                max-height: 120px;
+            }
+            .card-button {
+                max-width: 150px; /* Меньшая ширина для мобильных */
+                padding: 8px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Xbox Game Pass Plans</h1>
+    <div class="cards-container" id="plansContainer">
+        <!-- Карточки будут добавлены через JavaScript -->
+    </div>
+
+    <script>
+        // Замените этот массив своими данными, ссылками на изображения и URL для перехода
+        const plans = [
+            {
+                name: "Game Pass Ultimate",
+                price: "2800 руб",
+                description: "Game Pass Ultimate 1 мес.",
+                note: "Оформление на ваш аккаунт.",
+                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
+                link: "https://t.me/realfurys"
+            },
+            {
+                name: "Game Pass Ultimate",
+                price: "Укажите цену",
+                description: "Опишите план подписки здесь.",
+                note: "Добавьте примечание или ссылку.",
+                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
+                link: "https://t.me/realfurys"
+            },
+            {
+                name: "Game Pass Ultimate",
+                price: "Укажите цену",
+                description: "Опишите план подписки здесь.",
+                note: "Добавьте примечание или ссылку.",
+                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
+                link: "https://t.me/realfurys"
+            },
+            {
+                name: "Game Pass Ultimate",
+                price: "Укажите цену",
+                description: "Опишите план подписки здесь.",
+                note: "Добавьте примечание или ссылку.",
+                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
+                link: "https://t.me/realfurys"
+            }
+        ];
+
+        function renderPlans() {
+            const container = document.getElementById('plansContainer');
+            container.innerHTML = '';
+            plans.forEach(plan => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${plan.image}" alt="${plan.name}">
+                    <h3>${plan.name}</h3>
+                    <div class="price">${plan.price}</div>
+                    <p>${plan.description}</p>
+                    <p class="note">${plan.note}</p>
+                    <a href="${plan.link}" class="card-button" target="_blank">Перейти</a>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        renderPlans();
+    </script>
+</body>
+</html>
