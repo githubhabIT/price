@@ -27,12 +27,32 @@
             text-align: center;
             margin: 20px 0;
         }
+        .search-container {
+            position: relative;
+            display: inline-block;
+        }
         #searchInput {
-            padding: 10px;
+            padding: 10px 30px 10px 10px;
             width: 300px;
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 4px;
+        }
+        #clearSearch {
+            display: none;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+            padding: 0;
+        }
+        #clearSearch:hover {
+            color: #4CAF50;
         }
         #loading {
             font-size: 16px;
@@ -87,7 +107,10 @@
     <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/50';">
     <h1>Прайс-лист игр</h1>
     <div id="searchForm">
-        <input type="text" id="searchInput" placeholder="Поиск по названию игры..." autocomplete="off">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Поиск по названию игры..." autocomplete="off">
+            <button id="clearSearch" title="Очистить">×</button>
+        </div>
     </div>
     <div id="loading">Загрузка...</div>
     <p id="error"></p>
@@ -103,7 +126,7 @@
 
     <script>
         const sheetId = '1MzBvxOzI6Yn3sRkAdJZeG-mdSeoQwPRYKv9thY9_U-0';
-        const apiKey = 'AIzaSyAz6NMjP-Sgq2P9FgGOc8T1prYM57b-An0'; // Вставьте ваш API-ключ
+        const apiKey = 'AIzaSyAz6NMjP-Sgq2P9FgGOc8T1prYM57b-An0';
         const range = 'ru price!A:B';
         const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
         let allGames = [];
@@ -195,12 +218,24 @@
             });
         }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => {
+        // Обработка строки поиска
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+
+        searchInput.addEventListener('input', (e) => {
             const query = e.target.value.trim().toLowerCase();
+            clearSearchBtn.style.display = query ? 'block' : 'none';
             const filteredGames = allGames.filter(game => 
                 game.name.toLowerCase().includes(query)
             );
             renderTable(filteredGames);
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearSearchBtn.style.display = 'none';
+            renderTable(allGames);
+            searchInput.focus();
         });
 
         loadPriceList();
