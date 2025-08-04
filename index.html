@@ -13,6 +13,7 @@
         h1 {
             text-align: center;
             color: #333;
+            margin: 10px 0;
         }
         #logo {
             display: block;
@@ -24,8 +25,13 @@
             border: 2px solid #ddd;
         }
         #searchForm {
+            position: sticky;
+            top: 0;
+            background-color: #f4f4f9;
+            padding: 10px 0;
+            z-index: 1000;
             text-align: center;
-            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .search-container {
             position: relative;
@@ -53,6 +59,13 @@
         }
         #clearSearch:hover {
             color: #4CAF50;
+        }
+        #sortSelect {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-left: 10px;
         }
         #loading {
             font-size: 16px;
@@ -101,6 +114,35 @@
             display: none;
             margin: 20px;
         }
+        #scrollToTop {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: opacity 0.3s, background-color 0.3s;
+            opacity: 0.8;
+        }
+        #scrollToTop:hover {
+            background-color: #45a049;
+            opacity: 1;
+        }
+        @media (max-width: 600px) {
+            #searchInput {
+                width: 200px;
+            }
+            #searchForm {
+                padding: 5px 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -111,6 +153,11 @@
             <input type="text" id="searchInput" placeholder="Поиск по названию игры..." autocomplete="off">
             <button id="clearSearch" title="Очистить">×</button>
         </div>
+        <select id="sortSelect">
+            <option value="none">Без сортировки</option>
+            <option value="priceAsc">По цене (возрастание)</option>
+            <option value="priceDesc">По цене (убывание)</option>
+        </select>
     </div>
     <div id="loading">Загрузка...</div>
     <p id="error"></p>
@@ -123,6 +170,7 @@
         </thead>
         <tbody id="tableBody"></tbody>
     </table>
+    <button id="scrollToTop" title="Наверх">↑</button>
 
     <script>
         const sheetId = '1MzBvxOzI6Yn3sRkAdJZeG-mdSeoQwPRYKv9thY9_U-0';
@@ -168,7 +216,7 @@
             const now = Date.now();
             if (cachedData && cacheTime && (now - parseInt(cacheTime) < cacheDuration)) {
                 allGames = JSON.parse(cachedData);
-                renderTable(allGames);
+                applyFiltersAndSort();
                 console.log('Использованы кэшированные данные');
             }
 
@@ -194,7 +242,7 @@
 
                 localStorage.setItem(cacheKey, JSON.stringify(allGames));
                 localStorage.setItem(cacheTimeKey, now.toString());
-                renderTable(allGames);
+                applyFiltersAndSort();
                 console.log('Данные успешно загружены и кэшированы');
             } catch (error) {
                 errorElement.textContent = `Ошибка загрузки: ${error.message}. Показаны последние сохраненные данные или таблица пуста.`;
@@ -218,24 +266,55 @@
             });
         }
 
+        function applyFiltersAndSort() {
+            const query = searchInput.value.trim().toLowerCase();
+            const sortOption = document.getElementById('sortSelect').value;
+
+            let filteredGames = allGames.filter(game => 
+                game.name.toLowerCase().includes(query)
+            );
+
+            if (sortOption === 'priceAsc') {
+                filteredGames.sort((a, b) => parseFloat(a.price.replace(/[^0-9.-]+/g,'')) - parseFloat(b.price.replace(/[^0-9.-]+/g,'')));
+            } else if (sortOption === 'priceDesc') {
+                filteredGames.sort((a, b) => parseFloat(b.price.replace(/[^0-9.-]+/g,'')) - parseFloat(a.price.replace(/[^0-9.-]+/g,'')));
+            }
+
+            renderTable(filteredGames);
+        }
+
         // Обработка строки поиска
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearch');
+        const sortSelect = document.getElementById('sortSelect');
+        const scrollToTopBtn = document.getElementById('scrollToTop');
 
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.trim().toLowerCase();
-            clearSearchBtn.style.display = query ? 'block' : 'none';
-            const filteredGames = allGames.filter(game => 
-                game.name.toLowerCase().includes(query)
-            );
-            renderTable(filteredGames);
+        searchInput.addEventListener('input', () => {
+            clearSearchBtn.style.display = searchInput.value ? 'block' : 'none';
+            applyFiltersAndSort();
         });
 
         clearSearchBtn.addEventListener('click', () => {
             searchInput.value = '';
             clearSearchBtn.style.display = 'none';
-            renderTable(allGames);
+            applyFiltersAndSort();
             searchInput.focus();
+        });
+
+        sortSelect.addEventListener('change', applyFiltersAndSort);
+
+        // Обработка кнопки "Наверх"
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Показ/скрытие кнопки при прокрутке
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) {
+                scrollToTopBtn.style.display = 'block';
+            } else {
+                scrollToTopBtn.style.display = 'none';
+            }
         });
 
         loadPriceList();
