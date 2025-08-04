@@ -60,12 +60,44 @@
         #clearSearch:hover {
             color: #4CAF50;
         }
-        #sortSelect {
+        #sortButton {
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 4px;
             margin-left: 10px;
+            background-color: white;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #sortButton:hover {
+            background-color: #f5f5f5;
+        }
+        #sortMenu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1001;
+            margin-top: 5px;
+        }
+        #sortMenu div {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+        #sortMenu div:hover {
+            background-color: #f5f5f5;
         }
         #loading {
             font-size: 16px;
@@ -138,6 +170,23 @@
         @media (max-width: 600px) {
             #searchInput {
                 width: 200px;
+                font-size: 14px;
+                padding: 8px 25px 8px 8px;
+            }
+            #clearSearch {
+                font-size: 14px;
+                right: 8px;
+            }
+            #sortButton {
+                width: 32px;
+                height: 32px;
+                padding: 8px;
+                margin-left: 5px;
+                font-size: 14px;
+            }
+            #sortMenu div {
+                font-size: 14px;
+                padding: 8px 15px;
             }
             #searchForm {
                 padding: 5px 0;
@@ -153,11 +202,12 @@
             <input type="text" id="searchInput" placeholder="Поиск по названию игры..." autocomplete="off">
             <button id="clearSearch" title="Очистить">×</button>
         </div>
-        <select id="sortSelect">
-            <option value="none">Без сортировки</option>
-            <option value="priceAsc">По цене (возрастание)</option>
-            <option value="priceDesc">По цене (убывание)</option>
-        </select>
+        <button id="sortButton" title="Сортировка">↕</button>
+        <div id="sortMenu">
+            <div data-sort="none">Без сортировки</div>
+            <div data-sort="priceAsc">Цена ↑</div>
+            <div data-sort="priceDesc">Цена ↓</div>
+        </div>
     </div>
     <div id="loading">Загрузка...</div>
     <p id="error"></p>
@@ -178,6 +228,7 @@
         const range = 'ru price!A:B';
         const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
         let allGames = [];
+        let currentSort = 'none';
 
         async function fetchWithRetry(url, retries = 3, delay = 1000) {
             for (let i = 0; i < retries; i++) {
@@ -268,15 +319,13 @@
 
         function applyFiltersAndSort() {
             const query = searchInput.value.trim().toLowerCase();
-            const sortOption = document.getElementById('sortSelect').value;
-
             let filteredGames = allGames.filter(game => 
                 game.name.toLowerCase().includes(query)
             );
 
-            if (sortOption === 'priceAsc') {
+            if (currentSort === 'priceAsc') {
                 filteredGames.sort((a, b) => parseFloat(a.price.replace(/[^0-9.-]+/g,'')) - parseFloat(b.price.replace(/[^0-9.-]+/g,'')));
-            } else if (sortOption === 'priceDesc') {
+            } else if (currentSort === 'priceDesc') {
                 filteredGames.sort((a, b) => parseFloat(b.price.replace(/[^0-9.-]+/g,'')) - parseFloat(a.price.replace(/[^0-9.-]+/g,'')));
             }
 
@@ -286,7 +335,8 @@
         // Обработка строки поиска
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearch');
-        const sortSelect = document.getElementById('sortSelect');
+        const sortButton = document.getElementById('sortButton');
+        const sortMenu = document.getElementById('sortMenu');
         const scrollToTopBtn = document.getElementById('scrollToTop');
 
         searchInput.addEventListener('input', () => {
@@ -301,7 +351,25 @@
             searchInput.focus();
         });
 
-        sortSelect.addEventListener('change', applyFiltersAndSort);
+        // Обработка кнопки сортировки и меню
+        sortButton.addEventListener('click', () => {
+            sortMenu.style.display = sortMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        sortMenu.querySelectorAll('div').forEach(item => {
+            item.addEventListener('click', () => {
+                currentSort = item.getAttribute('data-sort');
+                applyFiltersAndSort();
+                sortMenu.style.display = 'none';
+            });
+        });
+
+        // Закрытие меню при клике вне его
+        document.addEventListener('click', (e) => {
+            if (!sortButton.contains(e.target) && !sortMenu.contains(e.target)) {
+                sortMenu.style.display = 'none';
+            }
+        });
 
         // Обработка кнопки "Наверх"
         scrollToTopBtn.addEventListener('click', () => {
