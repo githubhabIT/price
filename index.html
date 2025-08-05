@@ -105,21 +105,20 @@
             margin: 20px;
             display: none;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         #loading img {
-            width: 50px;
-            height: 50px;
-            vertical-align: middle;
-            margin-right: 10px;
-            animation: spin 1.3333333s linear infinite, color-and-stroke 1.3333333s ease-in-out infinite;
+            width: 60px;
+            height: 60px;
+            animation: color-and-stroke 1.3333333s ease-in-out infinite;
         }
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
+        #loading span {
+            display: block;
+            text-align: center;
         }
         @keyframes color-and-stroke {
             0%, 25% {
@@ -206,8 +205,8 @@
                 padding: 5px 0;
             }
             #loading img {
-                width: 20px;
-                height: 20px;
+                width: 30px;
+                height: 30px;
             }
         }
     </style>
@@ -228,8 +227,8 @@
         </div>
     </div>
     <div id="loading">
-        <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка" width="50" height="50">
-        Загрузка...
+        <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка" width="60" height="60">
+        <span>Загрузка...</span>
     </div>
     <p id="error"></p>
     <table id="priceTable">
