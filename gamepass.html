@@ -1,3 +1,43 @@
+<script type="text/javascript">
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function filledCell(cell) {
+      return cell !== '' && cell != null;
+    }
+    function loadFileData(filename) {
+      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+          try {
+              var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+              var firstSheetName = workbook.SheetNames[0];
+              var worksheet = workbook.Sheets[firstSheetName];
+
+              // Convert sheet to JSON to filter blank rows
+              var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+              // Filter out blank rows (rows where all cells are empty, null, or undefined)
+              var filteredData = jsonData.filter(row => row.some(filledCell));
+
+              // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+              var headerRowIndex = filteredData.findIndex((row, index) =>
+                row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+              );
+              // Fallback
+              if (headerRowIndex === -1 || headerRowIndex > 25) {
+                headerRowIndex = 0;
+              }
+
+              // Convert filtered JSON back to CSV
+              var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+              csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+              return csv;
+          } catch (e) {
+              console.error(e);
+              return "";
+          }
+      }
+      return gk_fileData[filename] || "";
+    }
+</script>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -65,8 +105,8 @@
         }
         .card-button {
             display: block;
-            max-width: 200px; /* Фиксированная ширина для аккуратного вида */
-            margin: 0 auto; /* Центрирование по горизонтали */
+            max-width: 200px;
+            margin: 0 auto;
             padding: 10px;
             background-color: #4CAF50;
             color: white;
@@ -82,18 +122,36 @@
         }
         @media (max-width: 600px) {
             .cards-container {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr); /* Два столбца */
+                gap: 8px; /* Уменьшенный отступ, как на Playerok */
             }
             .card {
-                padding: 15px;
+                transform: scale(0.85); /* Уменьшение масштаба всей карточки */
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Легкая тень */
             }
-            .card img {
-                max-height: 120px;
+            .card:hover {
+                transform: scale(0.85) translateY(-5px); /* Сохранение масштаба при ховере */
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             }
-            .card-button {
-                max-width: 150px; /* Меньшая ширина для мобильных */
-                padding: 8px;
-                font-size: 0.9em;
+            .card h3 {
+                white-space: nowrap; /* Запрет переноса текста в заголовке */
+            }
+        }
+        @media (max-width: 400px) {
+            .cards-container {
+                grid-template-columns: 1fr; /* Одна колонка для очень маленьких экранов */
+                gap: 10px;
+            }
+            .card {
+                transform: scale(0.9); /* Легкое уменьшение масштаба */
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card:hover {
+                transform: scale(0.9) translateY(-5px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            }
+            .card h3 {
+                white-space: nowrap; /* Запрет переноса текста в заголовке */
             }
         }
     </style>
@@ -105,37 +163,60 @@
     </div>
 
     <script>
-        // Замените этот массив своими данными, ссылками на изображения и URL для перехода
         const plans = [
             {
                 name: "Game Pass Ultimate",
-                price: "2800 руб",
+                price: "1290 руб",
                 description: "Game Pass Ultimate 1 мес.",
+                note: "Оформление на ваш аккаунт.",
+                image: "https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg",
+                link: "https://t.me/realfurys"
+            },
+            {
+                name: "Game Pass Ultimate",
+                price: "2350 руб",
+                description: "Game Pass Ultimate 2 мес.",
                 note: "Оформление на ваш аккаунт.",
                 image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
                 link: "https://t.me/realfurys"
             },
             {
                 name: "Game Pass Ultimate",
-                price: "Укажите цену",
-                description: "Опишите план подписки здесь.",
-                note: "Добавьте примечание или ссылку.",
+                price: "2980 руб",
+                description: "Game Pass Ultimate 3 мес.",
+                note: "Оформление на ваш аккаунт.",
                 image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
                 link: "https://t.me/realfurys"
             },
             {
                 name: "Game Pass Ultimate",
-                price: "Укажите цену",
-                description: "Опишите план подписки здесь.",
-                note: "Добавьте примечание или ссылку.",
+                price: "3850 руб",
+                description: "Game Pass Ultimate 4 мес.",
+                note: "Оформление на ваш аккаунт.",
                 image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
                 link: "https://t.me/realfurys"
             },
             {
-                name: "Game Pass Ultimate",
-                price: "Укажите цену",
-                description: "Опишите план подписки здесь.",
-                note: "Добавьте примечание или ссылку.",
+                name: "Game Pass Standard",
+                price: "5490 руб",
+                description: "Game Pass Ultimate 7 мес.",
+                note: "Оформление на ваш аккаунт.",
+                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
+                link: "https://t.me/realfurys"
+            },
+            {
+                name: "Game Pass Core",
+                price: "6490 руб",
+                description: "Game Pass Ultimate 9 мес.",
+                note: "Оформление на ваш аккаунт.",
+                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
+                link: "https://t.me/realfurys"
+            },
+            {
+                name: "Game Pass PC",
+                price: "8790 руб",
+                description: "Game Pass Ultimate 13 мес.",
+                note: "Оформление на ваш аккаунт.",
                 image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
                 link: "https://t.me/realfurys"
             }
