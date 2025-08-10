@@ -17,6 +17,23 @@ body.dark-theme {
     color: #f1f1f1;
 }
 
+.section-title {
+    text-align: center;
+    font-size: clamp(1.5em, 3vw, 2em);
+    margin: 40px auto 20px;
+    position: relative;
+}
+
+.section-title::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: #4CAF50;
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -78,29 +95,30 @@ body.dark-theme .card {
     color: #4CAF50;
     font-size: clamp(1em, 2vw, 1.3em);
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
-.card p {
+.card p:not(.note) {
     color: #666;
     font-size: clamp(0.9em, 2vw, 1em);
     line-height: 1.4;
-    margin: 0 0 5px;
+    margin: 0 0 2px;
 }
 
-body.dark-theme .card p {
+body.dark-theme .card p:not(.note) {
     color: #bbb;
 }
 
-.note {
-    font-size: 0.75em;
+.card .note {
+    font-size: 0.9em;
     color: #999;
-    margin-bottom: 15px;
+    margin-top: 2px;
+    margin-bottom: 8px;
 }
 
 @media (max-width: 480px) {
-    .note {
-        font-size: 0.65em;
+    .card .note {
+        font-size: 0.85em;
     }
 }
 
@@ -139,6 +157,8 @@ body.dark-theme .card p {
 
 <button class="theme-toggle" onclick="document.body.classList.toggle('dark-theme')">Сменить тему</button>
 
+<!-- Группа 1 -->
+<h2 class="section-title">Game Pass Ultimate</h2>
 <div class="cards-container">
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
@@ -148,7 +168,6 @@ body.dark-theme .card p {
         <p class="note">Оформление на ваш аккаунт.</p>
         <a href="#" class="card-button">Купить</a>
     </div>
-
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
@@ -157,7 +176,6 @@ body.dark-theme .card p {
         <p class="note">Оформление на ваш аккаунт.</p>
         <a href="#" class="card-button">Купить</a>
     </div>
-
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
@@ -166,7 +184,6 @@ body.dark-theme .card p {
         <p class="note">Оформление на ваш аккаунт.</p>
         <a href="#" class="card-button">Купить</a>
     </div>
-
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
@@ -175,7 +192,6 @@ body.dark-theme .card p {
         <p class="note">Оформление на ваш аккаунт.</p>
         <a href="#" class="card-button">Купить</a>
     </div>
-
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
@@ -184,13 +200,73 @@ body.dark-theme .card p {
         <p class="note">Оформление на ваш аккаунт.</p>
         <a href="#" class="card-button">Купить</a>
     </div>
-
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
         <span class="price">6 999 ₽</span>
         <p>Game Pass Ultimate 36 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+</div>
+
+<!-- Группа 2 -->
+<h2 class="section-title">Xbox Live Gold</h2>
+<div class="cards-container">
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
+        <h3>Xbox Live Gold</h3>
+        <span class="price">799 ₽</span>
+        <p>Xbox Live Gold 1 мес.</p>
+        <p class="note">Активация через ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
+        <h3>Xbox Live Gold</h3>
+        <span class="price">1 499 ₽</span>
+        <p>Xbox Live Gold 3 мес.</p>
+        <p class="note">Активация через ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
+        <h3>Xbox Live Gold</h3>
+        <span class="price">2 299 ₽</span>
+        <p>Xbox Live Gold 6 мес.</p>
+        <p class="note">Активация через ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
+        <h3>Xbox Live Gold</h3>
+        <span class="price">3 999 ₽</span>
+        <p>Xbox Live Gold 12 мес.</p>
+        <p class="note">Активация через ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
+        <h3>Xbox Live Gold</h3>
+        <span class="price">5 499 ₽</span>
+        <p>Xbox Live Gold 18 мес.</p>
+        <p class="note">Активация через ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
+        <h3>Xbox Live Gold</h3>
+        <span class="price">6 999 ₽</span>
+        <p>Xbox Live Gold 24 мес.</p>
+        <p class="note">Активация через ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
+        <h3>Xbox Live Gold</h3>
+        <span class="price">12 999 ₽</span>
+        <p>Xbox Live Gold 36 мес.</p>
+        <p class="note">Активация через ваш аккаунт.</p>
         <a href="#" class="card-button">Купить</a>
     </div>
 </div>
