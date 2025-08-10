@@ -34,6 +34,32 @@ body.dark-theme {
     border-radius: 2px;
 }
 
+.note-table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 15px;
+    border-collapse: collapse;
+    background: #fff;
+    color: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.95em;
+}
+
+body.dark-theme .note-table {
+    background: #1e1e1e;
+    color: #ddd;
+}
+
+.note-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+body.dark-theme .note-table td {
+    border-color: #444;
+}
+
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -159,6 +185,13 @@ body.dark-theme .card p:not(.note) {
 
 <!-- Группа 1 -->
 <h2 class="section-title">Game Pass Ultimate</h2>
+
+<table class="note-table">
+    <tr>
+        <td>Продление подписки на любой аккаунт.</td>
+    </tr>
+</table>
+
 <div class="cards-container">
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
@@ -211,7 +244,14 @@ body.dark-theme .card p:not(.note) {
 </div>
 
 <!-- Группа 2 -->
-<h2 class="section-title">Xbox Live Gold</h2>
+<h2 class="section-title">Game Pass Ultimate</h2>
+
+<table class="note-table">
+    <tr>
+        <td>Подключение только на новый аккаунт.</td>
+    </tr>
+</table>
+
 <div class="cards-container">
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
@@ -271,7 +311,7 @@ body.dark-theme .card p:not(.note) {
     </div>
 </div>
 
-    <script>
+<script>
 document.querySelectorAll('.card-button').forEach(link => {
     link.setAttribute('target', '_blank');
 });
