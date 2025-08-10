@@ -34,30 +34,30 @@ body.dark-theme {
     border-radius: 2px;
 }
 
+/* Изменённая таблица */
 .note-table {
-    width: 100%;
-    max-width: 1200px;
+    width: fit-content;
+    max-width: 90%;
     margin: 0 auto 15px;
     border-collapse: collapse;
-    background: #fff;
+    background: #e6f4ea; /* нежный зелёный фон */
     color: #333;
     border-radius: 8px;
     overflow: hidden;
-    font-size: 0.95em;
-}
-
-body.dark-theme .note-table {
-    background: #1e1e1e;
-    color: #ddd;
+    font-size: 1em;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .note-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
+    padding: 10px 20px;
+    border: none; /* убраны границы */
+    font-weight: 500;
 }
 
-body.dark-theme .note-table td {
-    border-color: #444;
+body.dark-theme .note-table {
+    background: #2d3a2d; /* тёмно-зелёный для тёмной темы */
+    color: #ddd;
 }
 
 .cards-container {
@@ -248,7 +248,7 @@ body.dark-theme .card p:not(.note) {
 
 <table class="note-table">
     <tr>
-        <td>Подключение только на новый аккаунт.</td>
+        <td>Подключение только на новый аккаунт. Аккаунт мы создаем сами бесплатно!</td>
     </tr>
 </table>
 
