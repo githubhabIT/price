@@ -3,134 +3,197 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Xbox Game Pass Plans</title>
+<title>Адаптивные карточки</title>
 <style>
-    * {
-        box-sizing: border-box;
-    }
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f9;
-    }
-    h1 {
-        text-align: center;
-        color: #333;
-        margin: 20px 0;
-        font-size: clamp(1.5em, 4vw, 2.5em);
-    }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-theme {
+    background-color: #121212;
+    color: #f1f1f1;
+}
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+@media (max-width: 600px) {
     .cards-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 10px;
+        grid-template-columns: repeat(2, 1fr);
     }
-    .card {
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        padding: 20px;
-        text-align: left;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (max-width: 360px) {
+    .cards-container {
+        grid-template-columns: 1fr;
     }
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: left;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s, color 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+body.dark-theme .card {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.card img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    font-size: clamp(1.1em, 2.5vw, 1.5em);
+    color: inherit;
+    margin: 0 0 5px;
+}
+
+.price {
+    color: #4CAF50;
+    font-size: clamp(1em, 2vw, 1.3em);
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.card p {
+    color: #666;
+    font-size: clamp(0.9em, 2vw, 1em);
+    line-height: 1.4;
+    margin: 0 0 5px;
+}
+
+body.dark-theme .card p {
+    color: #bbb;
+}
+
+.note {
+    font-size: 0.75em;
+    color: #999;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 480px) {
+    .note {
+        font-size: 0.65em;
     }
-    .card img {
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-        border-radius: 8px;
-        margin-bottom: 10px;
-    }
-    .card h3 {
-        margin: 0 0 10px;
-        color: #333;
-        font-size: clamp(1.1em, 2.5vw, 1.5em);
-        word-break: break-word;
-    }
-    .price {
-        color: #4CAF50;
-        font-size: clamp(1em, 2vw, 1.3em);
-        font-weight: bold;
-        margin: 10px 0;
-    }
-    .card p {
-        color: #666;
-        font-size: clamp(0.9em, 2vw, 1em);
-        line-height: 1.4;
-        margin: 10px 0;
-    }
-    .card .note {
-        font-size: 0.9em;
-        color: #999;
-        margin-bottom: 15px;
-    }
-    .card-button {
-        display: block;
-        max-width: 200px;
-        margin: 0 auto;
-        padding: 10px;
-        background-color: #4CAF50;
-        color: white;
-        text-align: center;
-        text-decoration: none;
-        border-radius: 8px;
-        font-weight: bold;
-        font-size: 1em;
-        transition: background-color 0.2s ease;
-    }
-    .card-button:hover {
-        background-color: #45a049;
-    }
-    @media (max-width: 480px) {
-        .cards-container {
-            grid-template-columns: 1fr;
-        }
-    }
+}
+
+.card-button {
+    display: block;
+    margin-top: auto;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.card-button:hover {
+    background-color: #45a049;
+}
+
+.theme-toggle {
+    margin: 15px;
+    padding: 8px 12px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.theme-toggle:hover {
+    background: #555;
+}
 </style>
 </head>
 <body>
 
-<h1>Xbox Game Pass Plans</h1>
-<div class="cards-container" id="plansContainer">
-    <!-- Карточки добавятся через JS -->
+<button class="theme-toggle" onclick="document.body.classList.toggle('dark-theme')">Сменить тему</button>
+
+<div class="cards-container">
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
+        <h3>Game Pass Ultimate</h3>
+        <span class="price">2 980 ₽</span>
+        <p>Game Pass Ultimate 3 мес.</p>
+        <p class="note">Оформление на ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
+        <h3>Game Pass Ultimate</h3>
+        <span class="price">1 299 ₽</span>
+        <p>Game Pass Ultimate 1 мес.</p>
+        <p class="note">Оформление на ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
+        <h3>Game Pass Ultimate</h3>
+        <span class="price">2 499 ₽</span>
+        <p>Game Pass Ultimate 6 мес.</p>
+        <p class="note">Оформление на ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
+        <h3>Game Pass Ultimate</h3>
+        <span class="price">3 199 ₽</span>
+        <p>Game Pass Ultimate 12 мес.</p>
+        <p class="note">Оформление на ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
+        <h3>Game Pass Ultimate</h3>
+        <span class="price">5 499 ₽</span>
+        <p>Game Pass Ultimate 24 мес.</p>
+        <p class="note">Оформление на ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
+
+    <div class="card">
+        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
+        <h3>Game Pass Ultimate</h3>
+        <span class="price">6 999 ₽</span>
+        <p>Game Pass Ultimate 36 мес.</p>
+        <p class="note">Оформление на ваш аккаунт.</p>
+        <a href="#" class="card-button">Купить</a>
+    </div>
 </div>
 
-<script>
-    const plans = [
-        { name: "Game Pass Ultimate", price: "1290 руб", description: "Game Pass Ultimate 1 мес.", note: "Оформление на ваш аккаунт.", image: "https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg", link: "https://t.me/realfurys" },
-        { name: "Game Pass Ultimate", price: "2350 руб", description: "Game Pass Ultimate 2 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" },
-        { name: "Game Pass Ultimate", price: "2980 руб", description: "Game Pass Ultimate 3 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" },
-        { name: "Game Pass Ultimate", price: "3850 руб", description: "Game Pass Ultimate 4 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" },
-        { name: "Game Pass Ultimate", price: "5490 руб", description: "Game Pass Ultimate 7 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" },
-        { name: "Game Pass Ultimate", price: "6490 руб", description: "Game Pass Ultimate 9 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" },
-        { name: "Game Pass Ultimate", price: "8790 руб", description: "Game Pass Ultimate 13 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" }
-    ];
-
-    function renderPlans() {
-        const container = document.getElementById('plansContainer');
-        container.innerHTML = '';
-        plans.forEach(plan => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <img src="${plan.image}" alt="${plan.name}" loading="lazy">
-                <h3>${plan.name}</h3>
-                <div class="price">${plan.price}</div>
-                <p>${plan.description}</p>
-                <p class="note">${plan.note}</p>
-                <a href="${plan.link}" class="card-button" target="_blank">Перейти</a>
-            `;
-            container.appendChild(card);
-        });
-    }
-
-    renderPlans();
-</script>
 </body>
 </html>
