@@ -1,344 +1,136 @@
-<script type="text/javascript">
-    var gk_isXlsx = false;
-    var gk_xlsxFileLookup = {};
-    var gk_fileData = {};
-    function filledCell(cell) {
-      return cell !== '' && cell != null;
-    }
-    function loadFileData(filename) {
-      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-          try {
-              var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-              var firstSheetName = workbook.SheetNames[0];
-              var worksheet = workbook.Sheets[firstSheetName];
-
-              // Convert sheet to JSON to filter blank rows
-              var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-              // Filter out blank rows (rows where all cells are empty, null, or undefined)
-              var filteredData = jsonData.filter(row => row.some(filledCell));
-
-              // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-              var headerRowIndex = filteredData.findIndex((row, index) =>
-                row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-              );
-              // Fallback
-              if (headerRowIndex === -1 || headerRowIndex > 25) {
-                headerRowIndex = 0;
-              }
-
-              // Convert filtered JSON back to CSV
-              var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-              csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-              return csv;
-          } catch (e) {
-              console.error(e);
-              return "";
-          }
-      }
-      return gk_fileData[filename] || "";
-    }
-</script>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Xbox Game Pass Plans</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin: 20px 0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xbox Game Pass Plans</title>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin: 20px 0;
+        font-size: clamp(1.5em, 4vw, 2.5em);
+    }
+    .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 10px;
+    }
+    .card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+        text-align: left;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    .card img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    .card h3 {
+        margin: 0 0 10px;
+        color: #333;
+        font-size: clamp(1.1em, 2.5vw, 1.5em);
+        word-break: break-word;
+    }
+    .price {
+        color: #4CAF50;
+        font-size: clamp(1em, 2vw, 1.3em);
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    .card p {
+        color: #666;
+        font-size: clamp(0.9em, 2vw, 1em);
+        line-height: 1.4;
+        margin: 10px 0;
+    }
+    .card .note {
+        font-size: 0.9em;
+        color: #999;
+        margin-bottom: 15px;
+    }
+    .card-button {
+        display: block;
+        max-width: 200px;
+        margin: 0 auto;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1em;
+        transition: background-color 0.2s ease;
+    }
+    .card-button:hover {
+        background-color: #45a049;
+    }
+    @media (max-width: 480px) {
         .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0;
-            justify-content: center;
-            justify-items: center;
+            grid-template-columns: 1fr;
         }
-        .card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 20px;
-            text-align: left;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            will-change: transform;
-            width: 100%;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-        .card img {
-            width: 100%;
-            max-height: 500px;
-            object-fit: contain;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            loading: lazy;
-        }
-        .card h3 {
-            margin: 0 0 10px;
-            color: #333;
-            font-size: 1.5em;
-            overflow-wrap: break-word;
-        }
-        .card .price {
-            color: #4CAF50;
-            font-size: 1.3em;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .card p {
-            color: #666;
-            font-size: 1em;
-            line-height: 1.5;
-            margin: 10px 0;
-        }
-        .card .note {
-            font-size: 0.9em;
-            color: #999;
-            margin-bottom: 15px;
-        }
-        .card-button {
-            display: block;
-            max-width: 200px;
-            margin: 0 auto;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
-            transition: background-color 0.2s ease;
-        }
-        .card-button:hover {
-            background-color: #45a049;
-        }
-        @media (max-width: 768px) {
-            .cards-container {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 20px;
-                padding: 0;
-                justify-content: center;
-                justify-items: center;
-            }
-            .card {
-                transform: scale(0.85);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .card:hover {
-                transform: scale(0.85) translateY(-5px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            }
-            .card h3 {
-                white-space: nowrap;
-            }
-        }
-        @media (max-width: 700px) {
-            .cards-container {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-                padding: 0;
-                justify-content: center;
-                justify-items: center;
-            }
-            .card {
-                transform: scale(0.82);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .card:hover {
-                transform: scale(0.82) translateY(-5px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            }
-            .card h3 {
-                white-space: nowrap;
-            }
-        }
-        @media (max-width: 600px) {
-            .cards-container {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-                padding: 0;
-                justify-content: center;
-                justify-items: center;
-            }
-            .card {
-                transform: scale(0.78);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .card:hover {
-                transform: scale(0.78) translateY(-5px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            }
-            .card h3 {
-                white-space: nowrap;
-            }
-        }
-        @media (max-width: 480px) {
-            .cards-container {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 0;
-                justify-content: center;
-                justify-items: center;
-            }
-            .card {
-                transform: scale(0.85);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .card:hover {
-                transform: scale(0.85) translateY(-5px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            }
-            .card h3 {
-                white-space: nowrap;
-            }
-        }
-        @media (max-width: 400px) {
-            .cards-container {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 0;
-                justify-content: center;
-                justify-items: center;
-            }
-            .card {
-                transform: scale(0.9);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .card:hover {
-                transform: scale(0.9) translateY(-5px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            }
-            .card h3 {
-                white-space: nowrap;
-            }
-        }
-        @media (max-width: 320px) {
-            .cards-container {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 0;
-                justify-content: center;
-                justify-items: center;
-            }
-            .card {
-                transform: scale(0.85);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .card:hover {
-                transform: scale(0.85) translateY(-5px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            }
-            .card h3 {
-                white-space: nowrap;
-                font-size: 1.2em;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
-    <h1>Xbox Game Pass Plans</h1>
-    <div class="cards-container" id="plansContainer">
-        <!-- Карточки будут добавлены через JavaScript -->
-    </div>
 
-    <script>
-        const plans = [
-            {
-                name: "Game Pass Ultimate",
-                price: "1290 руб",
-                description: "Game Pass Ultimate 1 мес.",
-                note: "Оформление на ваш аккаунт.",
-                image: "https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg",
-                link: "https://t.me/realfurys"
-            },
-            {
-                name: "Game Pass Ultimate",
-                price: "2350 руб",
-                description: "Game Pass Ultimate 2 мес.",
-                note: "Оформление на ваш аккаунт.",
-                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
-                link: "https://t.me/realfurys"
-            },
-            {
-                name: "Game Pass Ultimate",
-                price: "2980 руб",
-                description: "Game Pass Ultimate 3 мес.",
-                note: "Оформление на ваш аккаунт.",
-                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
-                link: "https://t.me/realfurys"
-            },
-            {
-                name: "Game Pass Ultimate",
-                price: "3850 руб",
-                description: "Game Pass Ultimate 4 мес.",
-                note: "Оформление на ваш аккаунт.",
-                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
-                link: "https://t.me/realfurys"
-            },
-            {
-                name: "Game Pass Standard",
-                price: "5490 руб",
-                description: "Game Pass Ultimate 7 мес.",
-                note: "Оформление на ваш аккаунт.",
-                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
-                link: "https://t.me/realfurys"
-            },
-            {
-                name: "Game Pass Core",
-                price: "6490 руб",
-                description: "Game Pass Ultimate 9 мес.",
-                note: "Оформление на ваш аккаунт.",
-                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
-                link: "https://t.me/realfurys"
-            },
-            {
-                name: "Game Pass PC",
-                price: "8790 руб",
-                description: "Game Pass Ultimate 13 мес.",
-                note: "Оформление на ваш аккаунт.",
-                image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg",
-                link: "https://t.me/realfurys"
-            }
-        ];
+<h1>Xbox Game Pass Plans</h1>
+<div class="cards-container" id="plansContainer">
+    <!-- Карточки добавятся через JS -->
+</div>
 
-        function renderPlans() {
-            const container = document.getElementById('plansContainer');
-            container.innerHTML = '';
-            plans.forEach(plan => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${plan.image}" alt="${plan.name}" loading="lazy">
-                    <h3>${plan.name}</h3>
-                    <div class="price">${plan.price}</div>
-                    <p>${plan.description}</p>
-                    <p class="note">${plan.note}</p>
-                    <a href="${plan.link}" class="card-button" target="_blank">Перейти</a>
-                `;
-                container.appendChild(card);
-            });
-        }
+<script>
+    const plans = [
+        { name: "Game Pass Ultimate", price: "1290 руб", description: "Game Pass Ultimate 1 мес.", note: "Оформление на ваш аккаунт.", image: "https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg", link: "https://t.me/realfurys" },
+        { name: "Game Pass Ultimate", price: "2350 руб", description: "Game Pass Ultimate 2 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" },
+        { name: "Game Pass Ultimate", price: "2980 руб", description: "Game Pass Ultimate 3 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" },
+        { name: "Game Pass Ultimate", price: "3850 руб", description: "Game Pass Ultimate 4 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" },
+        { name: "Game Pass Standard", price: "5490 руб", description: "Game Pass Ultimate 7 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" },
+        { name: "Game Pass Core", price: "6490 руб", description: "Game Pass Ultimate 9 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" },
+        { name: "Game Pass PC", price: "8790 руб", description: "Game Pass Ultimate 13 мес.", note: "Оформление на ваш аккаунт.", image: "https://digital-basket-01.wbbasket.ru/vol6/273/af517b332053e97f2ec5442cb232c2c6/1920.jpg", link: "https://t.me/realfurys" }
+    ];
 
-        renderPlans();
-    </script>
+    function renderPlans() {
+        const container = document.getElementById('plansContainer');
+        container.innerHTML = '';
+        plans.forEach(plan => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <img src="${plan.image}" alt="${plan.name}" loading="lazy">
+                <h3>${plan.name}</h3>
+                <div class="price">${plan.price}</div>
+                <p>${plan.description}</p>
+                <p class="note">${plan.note}</p>
+                <a href="${plan.link}" class="card-button" target="_blank">Перейти</a>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    renderPlans();
+</script>
 </body>
 </html>
