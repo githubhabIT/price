@@ -55,26 +55,20 @@ body.dark-theme .note-table {
 }
 .cards-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
     max-width: 1200px;
-    width: 100%;
     margin: 0 auto;
     padding: 10px;
-    box-sizing: border-box;
 }
 @media (max-width: 600px) {
     .cards-container {
-        grid-template-columns: repeat(2, minmax(120px, 1fr));
-        gap: 12px;
-        padding: 8px;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 @media (max-width: 360px) {
     .cards-container {
         grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 5px;
     }
 }
 .card {
@@ -87,7 +81,6 @@ body.dark-theme .note-table {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-sizing: border-box;
 }
 body.dark-theme .card {
     background-color: #1e1e1e;
@@ -187,7 +180,6 @@ body.dark-theme .card p:not(.note) {
     text-decoration: none;
     border-radius: 8px;
     font-weight: bold;
-    box-sizing: border-box;
 }
 .card-button:hover {
     background-color: #45a049;
@@ -207,25 +199,39 @@ body.dark-theme .card p:not(.note) {
 /* Новые стили платформенных бэйджей */
 .platform-badges {
     display: flex;
+    flex-wrap: wrap;       /* перенос бейджей на новую строку */
     gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 11px; /* отступ сверху от кнопки */
+    margin-bottom: 11px;
+    justify-content: flex-start;
 }
+
 .platform-badge {
     background-color: #ddd;
     color: #333;
-    font-size: 0.7em;
-    padding: 2px 8px;
+    font-size: clamp(0.6em, 1vw, 0.8em); /* адаптивный размер шрифта */
+    padding: 2px 6px;
     border-radius: 999px;
     font-weight: 500;
     white-space: nowrap;
     user-select: none;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    flex-shrink: 1;  /* бейджи могут сжиматься */
+    max-width: 100%; /* не выходят за пределы контейнера */
 }
+
 body.dark-theme .platform-badge {
     background-color: #555;
     color: #eee;
 }
+
+/* Дополнительно: на очень маленьких экранах уменьшаем шрифт и padding */
+@media (max-width: 400px) {
+    .platform-badge {
+        font-size: 0.55em;
+        padding: 1px 5px;
+    }
+}
+
 /* Уменьшаем размер карточных бэйджей на экранах 362-554px */
 @media (min-width: 362px) and (max-width: 554px) {
   .card-badges .badge {
@@ -254,6 +260,7 @@ body.dark-theme .platform-badge {
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate" />
         <h3>Game Pass Ultimate</h3>
         <div class="card-badges">
+            <!-- <p><span class="badge badge-hit">Хит</span></p> -->
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
@@ -421,33 +428,33 @@ body.dark-theme .platform-badge {
             <span class="badge badge-hit">Хит</span>
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">2 299 ₽</span>
-        <p>Xbox Live Gold 6 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <div class="platform-badges">
-            <span class="platform-badge">Xbox One</span>
-            <span class="platform-badge">Xbox Series S/X</span>
-        </div>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
-    <div class="card">
-        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
-        <h3>Xbox Live Gold</h3>
-        <div class="card-badges">
-            <span class="badge badge-hit">Хит</span>
-            <span class="badge badge-sale">Скидка</span>
-            <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">3 999 ₽</span>
-        <p>Xbox Live Gold 12 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <div class="platform-badges">
-            <span class="platform-badge">Xbox One</span>
-            <span class="platform-badge">Xbox Series S/X</span>
-        </div>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
+    <span class="price">2 799 ₽</span>
+    <p>Xbox Live Gold 6 мес.</p>
+    <p class="note">Активация через ваш аккаунт.</p>
+    <div class="platform-badges">
+        <span class="platform-badge">Xbox One</span>
+        <span class="platform-badge">Xbox Series S/X</span>
     </div>
+    <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
+</div>
+<div class="card">
+    <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
+    <h3>Xbox Live Gold</h3>
+    <div class="card-badges">
+        <span class="badge badge-hit">Хит</span>
+        <span class="badge badge-sale">Скидка</span>
+        <span class="badge badge-top">Топ продаж</span>
+    </div>
+    <span class="price">4 999 ₽</span>
+    <p>Xbox Live Gold 12 мес.</p>
+    <p class="note">Активация через ваш аккаунт.</p>
+    <div class="platform-badges">
+        <span class="platform-badge">Xbox One</span>
+        <span class="platform-badge">Xbox Series S/X</span>
+    </div>
+    <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
+</div>
 </div>
 
 </body>
