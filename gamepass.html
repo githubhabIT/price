@@ -60,15 +60,22 @@ body.dark-theme .note-table {
     max-width: 1200px;
     margin: 0 auto;
     padding: 10px;
+    box-sizing: border-box; /* добавлено */
 }
+
 @media (max-width: 600px) {
     .cards-container {
         grid-template-columns: repeat(2, 1fr);
+        padding: 5px; /* уменьшенный паддинг */
+        box-sizing: border-box;
     }
 }
+
 @media (max-width: 360px) {
     .cards-container {
         grid-template-columns: 1fr;
+        padding: 5px;
+        box-sizing: border-box;
     }
 }
 .card {
