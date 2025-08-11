@@ -120,6 +120,7 @@ body.dark-theme .card {
     display: flex;
     gap: 8px;
     margin-bottom: 8px;
+    flex-wrap: wrap;
 }
 
 .badge {
@@ -216,6 +217,58 @@ body.dark-theme .card p:not(.note) {
 .theme-toggle:hover {
     background: #555;
 }
+
+/* Новые мини-таблички "Выгодно", "Распродажа", "Новинка" */
+.mini-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.mini-badge {
+    background-color: #2196F3;
+    color: white;
+    font-size: 0.75em;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.mini-badge.sale {
+    background-color: #FF5722;
+}
+
+.mini-badge.new {
+    background-color: #4CAF50;
+}
+
+/* Платформы */
+.platform-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: auto;
+}
+
+.platform-badge {
+    background-color: #ddd;
+    color: #333;
+    font-size: 0.7em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 500;
+    white-space: nowrap;
+    user-select: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+body.dark-theme .platform-badge {
+    background-color: #555;
+    color: #eee;
+}
 </style>
 </head>
 <body>
@@ -232,84 +285,175 @@ body.dark-theme .card p:not(.note) {
 </table>
 
 <div class="cards-container">
+
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate" />
         <h3>Game Pass Ultimate</h3>
+
+        <div class="mini-badges">
+            <span class="mini-badge">Выгодно</span>
+            <span class="mini-badge sale">Распродажа</span>
+            <span class="mini-badge new">Новинка</span>
+        </div>
+
         <div class="card-badges">
             <span class="badge badge-hit">Хит</span>
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
+
         <span class="price">2 980 ₽</span>
         <p>Game Pass Ultimate 3 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
+
+        <div class="platform-badges">
+            <span class="platform-badge">Xbox One</span>
+            <span class="platform-badge">Xbox Series S/X</span>
+        </div>
+
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
+
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate" />
         <h3>Game Pass Ultimate</h3>
+
+        <div class="mini-badges">
+            <span class="mini-badge">Выгодно</span>
+            <span class="mini-badge sale">Распродажа</span>
+            <span class="mini-badge new">Новинка</span>
+        </div>
+
         <div class="card-badges">
             <span class="badge badge-hit">Хит</span>
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
+
         <span class="price">1 299 ₽</span>
         <p>Game Pass Ultimate 1 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
+
+        <div class="platform-badges">
+            <span class="platform-badge">Xbox One</span>
+            <span class="platform-badge">Xbox Series S/X</span>
+        </div>
+
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
+
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate" />
         <h3>Game Pass Ultimate</h3>
+
+        <div class="mini-badges">
+            <span class="mini-badge">Выгодно</span>
+            <span class="mini-badge sale">Распродажа</span>
+            <span class="mini-badge new">Новинка</span>
+        </div>
+
         <div class="card-badges">
             <span class="badge badge-hit">Хит</span>
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
+
         <span class="price">2 499 ₽</span>
         <p>Game Pass Ultimate 6 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
+
+        <div class="platform-badges">
+            <span class="platform-badge">Xbox One</span>
+            <span class="platform-badge">Xbox Series S/X</span>
+        </div>
+
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
+
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate" />
         <h3>Game Pass Ultimate</h3>
+
+        <div class="mini-badges">
+            <span class="mini-badge">Выгодно</span>
+            <span class="mini-badge sale">Распродажа</span>
+            <span class="mini-badge new">Новинка</span>
+        </div>
+
         <div class="card-badges">
             <span class="badge badge-hit">Хит</span>
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
+
         <span class="price">3 199 ₽</span>
         <p>Game Pass Ultimate 12 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
+
+        <div class="platform-badges">
+            <span class="platform-badge">Xbox One</span>
+            <span class="platform-badge">Xbox Series S/X</span>
+        </div>
+
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
+
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate" />
         <h3>Game Pass Ultimate</h3>
+
+        <div class="mini-badges">
+            <span class="mini-badge">Выгодно</span>
+            <span class="mini-badge sale">Распродажа</span>
+            <span class="mini-badge new">Новинка</span>
+        </div>
+
         <div class="card-badges">
             <span class="badge badge-hit">Хит</span>
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
+
         <span class="price">5 499 ₽</span>
         <p>Game Pass Ultimate 24 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
+
+        <div class="platform-badges">
+            <span class="platform-badge">Xbox One</span>
+            <span class="platform-badge">Xbox Series S/X</span>
+        </div>
+
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
+
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate" />
         <h3>Game Pass Ultimate</h3>
+
+        <div class="mini-badges">
+            <span class="mini-badge">Выгодно</span>
+            <span class="mini-badge sale">Распродажа</span>
+            <span class="mini-badge new">Новинка</span>
+        </div>
+
         <div class="card-badges">
             <span class="badge badge-hit">Хит</span>
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
+
         <span class="price">6 999 ₽</span>
         <p>Game Pass Ultimate 36 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
+
+        <div class="platform-badges">
+            <span class="platform-badge">Xbox One</span>
+            <span class="platform-badge">Xbox Series S/X</span>
+        </div>
+
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
+
 </div>
 
 <!-- Группа 2 -->
@@ -322,104 +466,53 @@ body.dark-theme .card p:not(.note) {
 </table>
 
 <div class="cards-container">
+
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
         <h3>Xbox Live Gold</h3>
+
+        <div class="mini-badges">
+            <span class="mini-badge">Выгодно</span>
+            <span class="mini-badge sale">Распродажа</span>
+            <span class="mini-badge new">Новинка</span>
+        </div>
+
         <div class="card-badges">
             <span class="badge badge-hit">Хит</span>
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
+
         <span class="price">799 ₽</span>
         <p>Xbox Live Gold 1 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
+
+        <div class="platform-badges">
+            <span class="platform-badge">Xbox One</span>
+            <span class="platform-badge">Xbox Series S/X</span>
+        </div>
+
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
+
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
         <h3>Xbox Live Gold</h3>
+
+        <div class="mini-badges">
+            <span class="mini-badge">Выгодно</span>
+            <span class="mini-badge sale">Распродажа</span>
+            <span class="mini-badge new">Новинка</span>
+        </div>
+
         <div class="card-badges">
             <span class="badge badge-hit">Хит</span>
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
+
         <span class="price">1 499 ₽</span>
         <p>Xbox Live Gold 3 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
-    </div>
-    <div class="card">
-        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
-        <h3>Xbox Live Gold</h3>
-        <div class="card-badges">
-            <span class="badge badge-hit">Хит</span>
-            <span class="badge badge-sale">Скидка</span>
-            <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">2 299 ₽</span>
-        <p>Xbox Live Gold 6 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
-    </div>
-    <div class="card">
-        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
-        <h3>Xbox Live Gold</h3>
-        <div class="card-badges">
-            <span class="badge badge-hit">Хит</span>
-            <span class="badge badge-sale">Скидка</span>
-            <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">3 999 ₽</span>
-        <p>Xbox Live Gold 12 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
-    </div>
-    <div class="card">
-        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
-        <h3>Xbox Live Gold</h3>
-        <div class="card-badges">
-            <span class="badge badge-hit">Хит</span>
-            <span class="badge badge-sale">Скидка</span>
-            <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">5 499 ₽</span>
-        <p>Xbox Live Gold 18 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
-    </div>
-    <div class="card">
-        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
-        <h3>Xbox Live Gold</h3>
-        <div class="card-badges">
-            <span class="badge badge-hit">Хит</span>
-            <span class="badge badge-sale">Скидка</span>
-            <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">6 999 ₽</span>
-        <p>Xbox Live Gold 24 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
-    </div>
-    <div class="card">
-        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
-        <h3>Xbox Live Gold</h3>
-        <div class="card-badges">
-            <span class="badge badge-hit">Хит</span>
-            <span class="badge badge-sale">Скидка</span>
-            <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">12 999 ₽</span>
-        <p>Xbox Live Gold 36 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
-    </div>
-</div>
 
-<script>
-document.querySelectorAll('.card-button').forEach(link => {
-    link.setAttribute('target', '_blank');
-});
-</script>
-
-</body>
-</html>
+       
