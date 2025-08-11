@@ -56,33 +56,19 @@ body.dark-theme .note-table {
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px; /* чуть поменьше */
-    max-width: 100vw; /* не шире экрана */
+    gap: 20px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 10px;
-    box-sizing: border-box;
-    overflow-x: hidden; /* предотвращаем скролл по горизонтали */
+    padding: 10px;
 }
-
 @media (max-width: 600px) {
     .cards-container {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        padding: 0 8px;
     }
 }
-
 @media (max-width: 360px) {
     .cards-container {
         grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 0 5px;
-    }
-}
-
-.card {
-    box-sizing: border-box; /* чтобы padding не расширял карточку */
-}
     }
 }
 .card {
