@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ru">
 <head>
 <meta charset="UTF-8" />
@@ -66,6 +65,14 @@ body.dark-theme .note-table {
     .cards-container {
         grid-template-columns: repeat(2, 1fr);
     }
+    /* Запрет переноса и добавление горизонтального скролла бейджам на маленьких экранах */
+    .card-badges,
+    .platform-badges {
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 6px;
+    }
 }
 @media (max-width: 360px) {
     .cards-container {
@@ -107,7 +114,6 @@ body.dark-theme .card {
     display: flex;
     gap: 8px;
     margin-bottom: 8px;
-    flex-wrap: wrap; /* по умолчанию перенос */
 }
 .badge {
     padding: 4px 10px;
@@ -192,7 +198,7 @@ body.dark-theme .card p:not(.note) {
 .platform-badges {
     display: flex;
     gap: 6px;
-    flex-wrap: wrap; /* по умолчанию перенос */
+    flex-wrap: wrap;
     margin-bottom: 11px; /* отступ сверху от кнопки */
 }
 .platform-badge {
@@ -210,24 +216,13 @@ body.dark-theme .platform-badge {
     background-color: #555;
     color: #eee;
 }
-
-/\* Запрет переноса бейджей на маленьких экранах и включение горизонтального скролла \*/
-@media (max-width: 480px) {
-.card-badges,
-.platform-badges {
-flex-wrap: nowrap !important;
-overflow-x: auto;
--webkit-overflow-scrolling: touch;
-}
-} </style>
-
+</style>
 </head>
 <body>
 
 <button class="theme-toggle" onclick="document.body.classList.toggle('dark-theme')">Сменить тему</button>
 
 <!-- Группа 1 -->
-
 <h2 class="section-title">Game Pass Ultimate</h2>
 
 <table class="note-table">
@@ -359,7 +354,6 @@ overflow-x: auto;
 </div>
 
 <!-- Группа 2 -->
-
 <h2 class="section-title">Game Pass Ultimate</h2>
 
 <table class="note-table">
@@ -428,42 +422,8 @@ overflow-x: auto;
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
-        <span class="price">2 299 ₽</span>
-        <p>Xbox Live Gold 6 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <div class="platform-badges">
-            <span class="platform-badge">Xbox One</span>
-            <span class="platform-badge">Xbox Series S/X</span>
-        </div>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
-    </div>
-    <div class="card">
-        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
-        <h3>Xbox Live Gold</h3>
-        <div class="card-badges">
-            <span class="badge badge-hit">Хит</span>
-            <span class="badge badge-sale">Скидка</span>
-            <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">2 299 ₽</span>
-        <p>Xbox Live Gold 6 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <div class="platform-badges">
-            <span class="platform-badge">Xbox One</span>
-            <span class="platform-badge">Xbox Series S/X</span>
-        </div>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
-    </div>
-    <div class="card">
-        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
-        <h3>Xbox Live Gold</h3>
-        <div class="card-badges">
-            <span class="badge badge-hit">Хит</span>
-            <span class="badge badge-sale">Скидка</span>
-            <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">2 299 ₽</span>
-        <p>Xbox Live Gold 6 мес.</p>
+        <span class="price">4 499 ₽</span>
+        <p>Xbox Live Gold 12 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
         <div class="platform-badges">
             <span class="platform-badge">Xbox One</span>
@@ -472,6 +432,13 @@ overflow-x: auto;
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
 </div>
+
+<script>
+// Скрипт для переключения темы
+document.querySelector('.theme-toggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+});
+</script>
 
 </body>
 </html>
