@@ -59,12 +59,17 @@ body.dark-theme .note-table {
     gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 @media (max-width: 600px) {
     .cards-container {
         grid-template-columns: repeat(2, 1fr);
+        padding-left: 15px;  /* Увеличен отступ слева */
+        padding-right: 15px; /* И справа */
     }
 }
 .card {
