@@ -117,6 +117,46 @@ body.dark-theme .card {
     margin: 0 0 5px;
 }
 
+.card-badges {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: white;
+    display: inline-block;
+    user-select: none;
+}
+
+.badge-hit {
+    background-color: #e91e63; /* розовый */
+}
+
+.badge-sale {
+    background-color: #ff9800; /* оранжевый */
+}
+
+.badge-top {
+    background-color: #4caf50; /* зелёный */
+}
+
+body.dark-theme .badge-hit {
+    background-color: #f48fb1;
+}
+
+body.dark-theme .badge-sale {
+    background-color: #ffb74d;
+}
+
+body.dark-theme .badge-top {
+    background-color: #81c784;
+}
+
 .price {
     color: #4CAF50;
     font-size: clamp(1em, 2vw, 1.3em);
@@ -196,6 +236,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">2 980 ₽</span>
         <p>Game Pass Ultimate 3 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
@@ -204,6 +249,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">1 299 ₽</span>
         <p>Game Pass Ultimate 1 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
@@ -212,6 +262,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">2 499 ₽</span>
         <p>Game Pass Ultimate 6 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
@@ -220,6 +275,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">3 199 ₽</span>
         <p>Game Pass Ultimate 12 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
@@ -228,6 +288,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">5 499 ₽</span>
         <p>Game Pass Ultimate 24 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
@@ -236,14 +301,24 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">6 999 ₽</span>
         <p>Game Pass Ultimate 36 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
         <a href="https://t.me/realfurys" class="card-button">Купить</a>
     </div>
-        <div class="card">
+    <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Game Pass Ultimate">
         <h3>Game Pass Ultimate</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">6 999 ₽</span>
         <p>Game Pass Ultimate 36 мес.</p>
         <p class="note">Оформление на ваш аккаунт.</p>
@@ -265,6 +340,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
         <h3>Xbox Live Gold</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">799 ₽</span>
         <p>Xbox Live Gold 1 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
@@ -273,6 +353,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
         <h3>Xbox Live Gold</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">1 499 ₽</span>
         <p>Xbox Live Gold 3 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
@@ -281,6 +366,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
         <h3>Xbox Live Gold</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">2 299 ₽</span>
         <p>Xbox Live Gold 6 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
@@ -289,6 +379,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
         <h3>Xbox Live Gold</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">3 999 ₽</span>
         <p>Xbox Live Gold 12 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
@@ -297,6 +392,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
         <h3>Xbox Live Gold</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">5 499 ₽</span>
         <p>Xbox Live Gold 18 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
@@ -305,6 +405,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
         <h3>Xbox Live Gold</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">6 999 ₽</span>
         <p>Xbox Live Gold 24 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
@@ -313,6 +418,11 @@ body.dark-theme .card p:not(.note) {
     <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold">
         <h3>Xbox Live Gold</h3>
+        <div class="card-badges">
+            <span class="badge badge-hit">Хит</span>
+            <span class="badge badge-sale">Скидка</span>
+            <span class="badge badge-top">Топ продаж</span>
+        </div>
         <span class="price">12 999 ₽</span>
         <p>Xbox Live Gold 36 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
@@ -321,10 +431,4 @@ body.dark-theme .card p:not(.note) {
 </div>
 
 <script>
-document.querySelectorAll('.card-button').forEach(link => {
-    link.setAttribute('target', '_blank');
-});
-</script>
-
-</body>
-</html>
+document.querySelectorAll('.
