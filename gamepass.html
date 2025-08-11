@@ -226,12 +226,27 @@ body.dark-theme .platform-badge {
     justify-content: center;
   }
 }
+
+/* Обёртка для масштабирования */
+.page-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 600px) {
+  .page-wrapper {
+    transform: scale(0.9);
+    transform-origin: top center;
+  }
+}
 </style>
 </head>
 <body>
 
 <button class="theme-toggle" onclick="document.body.classList.toggle('dark-theme')">Сменить тему</button>
 
+<div class="page-wrapper">
 <!-- Группа 1 -->
 <h2 class="section-title">Game Pass Ultimate</h2>
 
@@ -441,6 +456,7 @@ body.dark-theme .platform-badge {
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
 </div>
+</div> <!-- .page-wrapper end -->
 
 </body>
 </html>
