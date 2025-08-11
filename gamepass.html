@@ -106,6 +106,7 @@ body.dark-theme .card {
     display: flex;
     gap: 8px;
     margin-bottom: 8px;
+    flex-wrap: wrap; /* перенос бейджей */
 }
 .badge {
     padding: 4px 10px;
@@ -115,6 +116,7 @@ body.dark-theme .card {
     color: white;
     display: inline-block;
     user-select: none;
+    white-space: nowrap;
 }
 .badge-hit {
     background-color: #e91e63;
@@ -191,7 +193,7 @@ body.dark-theme .card p:not(.note) {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
-    margin-bottom: 11px; /* отступ сверху от кнопки */
+    margin-bottom: 11px;
 }
 .platform-badge {
     background-color: #ddd;
@@ -207,6 +209,19 @@ body.dark-theme .card p:not(.note) {
 body.dark-theme .platform-badge {
     background-color: #555;
     color: #eee;
+}
+/* Адаптивные размеры для бейджей */
+@media (max-width: 480px) {
+  .badge {
+    font-size: 0.7em;
+    padding: 3px 8px;
+  }
+}
+@media (max-width: 320px) {
+  .badge {
+    font-size: 0.65em;
+    padding: 2px 6px;
+  }
 }
 </style>
 </head>
@@ -406,7 +421,7 @@ body.dark-theme .platform-badge {
         </div>
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
-        <div class="card">
+    <div class="card">
         <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
         <h3>Xbox Live Gold</h3>
         <div class="card-badges">
@@ -414,8 +429,8 @@ body.dark-theme .platform-badge {
             <span class="badge badge-sale">Скидка</span>
             <span class="badge badge-top">Топ продаж</span>
         </div>
-        <span class="price">2 299 ₽</span>
-        <p>Xbox Live Gold 6 мес.</p>
+        <span class="price">3 799 ₽</span>
+        <p>Xbox Live Gold 12 мес.</p>
         <p class="note">Активация через ваш аккаунт.</p>
         <div class="platform-badges">
             <span class="platform-badge">Xbox One</span>
@@ -423,39 +438,7 @@ body.dark-theme .platform-badge {
         </div>
         <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
     </div>
-        <div class="card">
-        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
-        <h3>Xbox Live Gold</h3>
-        <div class="card-badges">
-            <span class="badge badge-hit">Хит</span>
-            <span class="badge badge-sale">Скидка</span>
-            <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">2 299 ₽</span>
-        <p>Xbox Live Gold 6 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <div class="platform-badges">
-            <span class="platform-badge">Xbox One</span>
-            <span class="platform-badge">Xbox Series S/X</span>
-        </div>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
-    </div>
-        <div class="card">
-        <img src="https://m.media-amazon.com/images/I/71md9ggyf6L._SL1500_.jpg" alt="Xbox Live Gold" />
-        <h3>Xbox Live Gold</h3>
-        <div class="card-badges">
-            <span class="badge badge-hit">Хит</span>
-            <span class="badge badge-sale">Скидка</span>
-            <span class="badge badge-top">Топ продаж</span>
-        </div>
-        <span class="price">2 299 ₽</span>
-        <p>Xbox Live Gold 6 мес.</p>
-        <p class="note">Активация через ваш аккаунт.</p>
-        <div class="platform-badges">
-            <span class="platform-badge">Xbox One</span>
-            <span class="platform-badge">Xbox Series S/X</span>
-        </div>
-        <a href="https://t.me/realfurys" class="card-button" target="_blank">Купить</a>
-    </div>
-    </body>
-    </html>
+</div>
+
+</body>
+</html>
