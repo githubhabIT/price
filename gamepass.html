@@ -30,7 +30,7 @@ body.dark-theme {
     margin: 10px auto 0;
     border-radius: 2px;
 }
-/* Изменённая таблица */
+/* Таблица заметок */
 .note-table {
     width: fit-content;
     max-width: 90%;
@@ -53,6 +53,7 @@ body.dark-theme .note-table {
     background: #2d3a2d;
     color: #ddd;
 }
+/* Контейнер карточек */
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -61,12 +62,7 @@ body.dark-theme .note-table {
     margin: 0 auto;
     padding: 10px;
 }
-
-@media (max-width: 600px) {
-    .cards-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
+/* Карточка */
 .card {
     background-color: white;
     border-radius: 12px;
@@ -102,7 +98,7 @@ body.dark-theme .card {
     display: flex;
     gap: 8px;
     margin-bottom: 8px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
 }
 .badge {
     padding: 4px 10px;
@@ -114,24 +110,12 @@ body.dark-theme .card {
     user-select: none;
     white-space: nowrap;
 }
-.badge-hit {
-    background-color: #e91e63;
-}
-.badge-sale {
-    background-color: #ff9800;
-}
-.badge-top {
-    background-color: #4caf50;
-}
-body.dark-theme .badge-hit {
-    background-color: #f48fb1;
-}
-body.dark-theme .badge-sale {
-    background-color: #ffb74d;
-}
-body.dark-theme .badge-top {
-    background-color: #81c784;
-}
+.badge-hit { background-color: #e91e63; }
+.badge-sale { background-color: #ff9800; }
+.badge-top { background-color: #4caf50; }
+body.dark-theme .badge-hit { background-color: #f48fb1; }
+body.dark-theme .badge-sale { background-color: #ffb74d; }
+body.dark-theme .badge-top { background-color: #81c784; }
 .price {
     color: #4CAF50;
     font-size: clamp(1em, 2vw, 1.3em);
@@ -144,19 +128,12 @@ body.dark-theme .badge-top {
     line-height: 1.4;
     margin: 0 0 2px;
 }
-body.dark-theme .card p:not(.note) {
-    color: #bbb;
-}
+body.dark-theme .card p:not(.note) { color: #bbb; }
 .card .note {
     font-size: 0.9em;
     color: #999;
     margin-top: 2px;
     margin-bottom: 8px;
-}
-@media (max-width: 480px) {
-    .card .note {
-        font-size: 0.85em;
-    }
 }
 .card-button {
     display: block;
@@ -169,9 +146,7 @@ body.dark-theme .card p:not(.note) {
     border-radius: 8px;
     font-weight: bold;
 }
-.card-button:hover {
-    background-color: #45a049;
-}
+.card-button:hover { background-color: #45a049; }
 .theme-toggle {
     margin: 15px;
     padding: 8px 12px;
@@ -181,15 +156,13 @@ body.dark-theme .card p:not(.note) {
     border-radius: 6px;
     cursor: pointer;
 }
-.theme-toggle:hover {
-    background: #555;
-}
-/* Новые стили платформенных бэйджей */
+.theme-toggle:hover { background: #555; }
+/* Платформенные бэйджи */
 .platform-badges {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
-    margin-bottom: 11px; /* отступ сверху от кнопки */
+    margin-bottom: 11px;
 }
 .platform-badge {
     background-color: #ddd;
@@ -209,36 +182,24 @@ body.dark-theme .platform-badge {
     background-color: #555;
     color: #eee;
 }
-/* Уменьшаем размер карточных и платформенных бэйджей на экранах 362-554px */
-@media (min-width: 362px) and (max-width: 554px) {
-  .card-badges .badge,
-  .platform-badge {
-    font-size: 0.6em;
-    padding: 2px 6px;
-  }
-}
-/* Дополнительные корректировки для очень узких экранов */
-@media (max-width: 386px) {
-  .platform-badges {
-    justify-content: center;
-  }
-  .card-badges {
-    justify-content: center;
-  }
-}
-
-/* Обёртка для масштабирования */
-.page-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  transition: transform 0.3s ease;
-}
-
+/* Адаптив для мобильных */
 @media (max-width: 600px) {
-  .page-wrapper {
-    transform: scale(0.8);
-    transform-origin: top center;
+  .cards-container {
+    grid-template-columns: 1fr;
+    gap: 15px;
   }
+  .page-wrapper {
+    padding: 0 10px;
+    transform: none;
+  }
+  .card {
+    padding: 15px;
+  }
+  .card h3 { font-size: 1.2em; }
+  .card p:not(.note) { font-size: 0.9em; }
+  .card .note { font-size: 0.8em; }
+  .card-button { padding: 8px; font-size: 0.9em; }
+  .card-badges, .platform-badges { justify-content: flex-start; }
 }
 </style>
 </head>
