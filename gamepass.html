@@ -56,7 +56,7 @@ body.dark-theme .note-table {
 /* Контейнер карточек */
 .cards-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 2fr));
     gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
@@ -185,7 +185,7 @@ body.dark-theme .platform-badge {
 /* Адаптив для мобильных */
 @media (max-width: 600px) {
   .cards-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr); /* 2 колонки на мобильных */
     gap: 15px;
   }
   .page-wrapper {
@@ -195,12 +195,27 @@ body.dark-theme .platform-badge {
   .card {
     padding: 15px;
   }
-  .card h3 { font-size: 1.2em; }
+  .card h3 { font-size: 1.1em; }
   .card p:not(.note) { font-size: 0.9em; }
   .card .note { font-size: 0.8em; }
   .card-button { padding: 8px; font-size: 0.9em; }
   .card-badges, .platform-badges { justify-content: flex-start; }
 }
+/* Очень узкие экраны */
+@media (max-width: 360px) {
+    .section-title {
+        text-align: center;
+        font-size: 1.2em; /* уменьшение размера, чтобы помещалось */
+        margin: 20px auto 10px;
+    }
+    .note-table {
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+        font-size: 0.9em;
+    }
+}
+
 </style>
 </head>
 <body>
