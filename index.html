@@ -173,7 +173,7 @@
 
             const cached = localStorage.getItem('priceCache');
             const time = localStorage.getItem('priceCacheTime');
-            if (cached && time && Date.now() - +time < 3600000) {
+            if (cached && time && Date.now() - +time < 300000) {
                 allGames = JSON.parse(cached);
                 applyFiltersAndSort();
                 loading.classList.remove('show');
