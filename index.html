@@ -10,11 +10,7 @@
             margin: 20px;
             background-color: #f4f4f9;
         }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin: 10px 0;
-        }
+        h1 { text-align: center; color: #333; margin: 10px 0; }
         #logo {
             display: block;
             margin: 10px auto 0 auto;
@@ -24,6 +20,7 @@
             object-fit: cover;
             border: 2px solid #ddd;
         }
+
         #searchForm {
             position: sticky;
             top: 0;
@@ -33,10 +30,7 @@
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .search-container {
-            position: relative;
-            display: inline-block;
-        }
+        .search-container { position: relative; display: inline-block; }
         #searchInput {
             padding: 10px 30px 10px 10px;
             width: 300px;
@@ -108,7 +102,7 @@
         }
         #sortMenu div:hover { background-color: #f5f5f5; }
 
-        /* === ИДЕАЛЬНЫЙ ЦЕНТРИРОВАННЫЙ ЛОАДЕР === */
+        /* Красивый лоадер по центру */
         #loading {
             position: fixed;
             top: 50%;
@@ -117,7 +111,7 @@
             background: rgba(255, 255, 255, 0.96);
             padding: 30px 50px;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             z-index: 9999;
             text-align: center;
             flex-direction: column;
@@ -129,9 +123,7 @@
             color: #333;
             display: none;
         }
-        #loading.show {
-            display: flex !important;
-        }
+        #loading.show { display: flex !important; }
         #loading img {
             width: 70px;
             height: 70px;
@@ -140,7 +132,6 @@
         @keyframes color-and-stroke {
             0%, 25% { filter: hue-rotate(0deg) brightness(1); }
             50% { filter: hue-rotate(15deg) brightness(0.9); }
-            56.25% { filter: hue-rotate(30deg) brightness(0.8); }
             100% { filter: hue-rotate(30deg) brightness(0.8); }
         }
 
@@ -159,23 +150,43 @@
         th { background-color: #4CAF50; color: white; }
         tr:hover { background-color: #f5f5f5; }
 
+        /* Кнопка копирования с SVG */
         .copy-btn {
             cursor: pointer;
             margin-right: 8px;
-            font-size: 18px;
+            width: 18px;
+            height: 18px;
             opacity: 0.7;
             transition: all 0.2s;
-            user-select: none;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
         }
-        .copy-btn:hover { opacity: 1; transform: scale(1.15); }
-        .copy-btn:active { transform: scale(0.95); }
+        .copy-btn:hover { opacity: 1; transform: scale(1.1); }
 
-        #error {
-            color: red;
-            text-align: center;
-            margin: 20px;
-            display: none;
+        /* Надпись "Скопировано!" рядом с иконкой */
+        .copy-feedback {
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 10;
         }
+        .copy-feedback.show {
+            opacity: 1;
+            transform: translateY(-50%) translateX(4px);
+        }
+
+        #error { color: red; text-align: center; margin: 20px; display: none; }
         #scrollToTop {
             display: none;
             position: fixed;
@@ -194,15 +205,8 @@
         }
         #scrollToTop:hover { background-color: #45a049; opacity: 1; }
 
-        /* Анимация тоста "Скопировано!" */
-        @keyframes fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeout { to { opacity: 0; transform: translateY(-10px); } }
-
         @media (max-width: 600px) {
             #searchInput { width: 200px; font-size: 14px; padding: 8px 25px 8px 8px; }
-            #clearSearch { font-size: 14px; right: 8px; }
-            #sortButton { width: 32px; height: 32px; font-size: 14px; margin-left: 5px; }
-            #copyHint { font-size: 13px; padding: 8px 12px; }
             #loading { padding: 20px 35px; }
             #loading img { width: 50px; height: 50px; }
         }
@@ -249,6 +253,15 @@
 
     <button id="scrollToTop" title="Наверх">↑</button>
 
+    <!-- SVG иконка копирования (один раз внизу, используется через use) -->
+    <svg style="display:none;">
+        <defs>
+            <symbol id="copy-icon" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+            </symbol>
+        </defs>
+    </svg>
+
     <script>
         const sheetId = '1MzBvxOzI6Yn3sRkAdJZeG-mdSeoQwPRYKv9thY9_U-0';
         const apiKey = 'AIzaSyAz6NMjP-Sgq2P9FgGOc8T1prYM57b-An0';
@@ -257,19 +270,27 @@
         let allGames = [];
         let currentSort = 'none';
 
-        // Копирование в буфер
-        async function copyToClipboard(text) {
+        // Копирование + показ красивой подсказки
+        async function copyToClipboard(text, btn) {
             try {
                 await navigator.clipboard.writeText(text);
-                const toast = document.createElement('div');
-                toast.textContent = 'Скопировано!';
-                toast.style.cssText = `
-                    position: fixed; bottom: 80px; right: 20px; background: #333; color: white;
-                    padding: 10px 16px; border-radius: 6px; font-size: 14px; z-index: 10000;
-                    animation: fadein 0.3s, fadeout 0.5s 2s forwards;
-                `;
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
+
+                // Создаём надпись "Скопировано!", если ещё нет
+                let feedback = btn.querySelector('.copy-feedback');
+                if (!feedback) {
+                    feedback = document.createElement('span');
+                    feedback.className = 'copy-feedback';
+                    feedback.textContent = 'Скопировано!';
+                    btn.appendChild(feedback);
+                }
+
+                // Показываем
+                feedback.classList.add('show');
+
+                // Скрываем через 1.5 сек
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 1500);
             } catch (err) {
                 console.error('Ошибка копирования:', err);
             }
@@ -345,13 +366,15 @@
                 const row = document.createElement('tr');
 
                 const nameCell = document.createElement('td');
+
+                // Контейнер для иконки
                 const copyBtn = document.createElement('span');
-                copyBtn.textContent = 'Копировать';
                 copyBtn.className = 'copy-btn';
                 copyBtn.title = 'Копировать название и цену';
+                copyBtn.innerHTML = `<svg width="18" height="18"><use href="#copy-icon"></use></svg>`;
                 copyBtn.onclick = (e) => {
                     e.stopPropagation();
-                    copyToClipboard(`${game.name} — ${game.price} руб.`);
+                    copyToClipboard(`${game.name} — ${game.price} руб.`, copyBtn);
                 };
 
                 nameCell.appendChild(copyBtn);
@@ -416,10 +439,7 @@
             }
         });
 
-        scrollToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
+        scrollToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
         window.addEventListener('scroll', () => {
             scrollToTopBtn.style.display = window.scrollY > 200 ? 'block' : 'none';
         });
