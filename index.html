@@ -190,8 +190,8 @@
                     .map(r => ({name: (r[0]||'').trim(), price: (r[1]||'').trim()}))
                     .filter(g => g.name && g.price);
 
-                localStorage.setItem('priceCache', JSON.stringify(allGames));
-                localStorage.setItem('priceCacheTime', Date.now()+'');
+                //localStorage.setItem('priceCache', JSON.stringify(allGames));
+                //localStorage.setItem('priceCacheTime', Date.now()+'');
                 applyFiltersAndSort();
             } catch(e) {
                 errorEl.textContent = 'Ошибка: ' + e.message;
