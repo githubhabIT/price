@@ -102,7 +102,7 @@
         }
         #sortMenu div:hover { background-color: #f5f5f5; }
 
-        /* Красивый лоадер по центру */
+        /* Красивый центрированный лоадер */
         #loading {
             position: fixed;
             top: 50%;
@@ -121,9 +121,15 @@
             backdrop-filter: blur(8px);
             font-weight: 500;
             color: #333;
-            display: none;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
         }
-        #loading.show { display: flex !important; }
+        #loading.show {
+            opacity: 1;
+            pointer-events: auto;
+            display: flex !important;
+        }
         #loading img {
             width: 70px;
             height: 70px;
@@ -150,29 +156,28 @@
         th { background-color: #4CAF50; color: white; }
         tr:hover { background-color: #f5f5f5; }
 
-        /* Кнопка копирования с SVG */
+        /* Иконка копирования */
         .copy-btn {
             cursor: pointer;
             margin-right: 8px;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             opacity: 0.7;
             transition: all 0.2s;
             position: relative;
             display: inline-flex;
             align-items: center;
         }
-        .copy-btn:hover { opacity: 1; transform: scale(1.1); }
+        .copy-btn:hover { opacity: 1; transform: scale(1.15); }
 
-        /* Надпись "Скопировано!" рядом с иконкой */
         .copy-feedback {
             position: absolute;
-            left: 24px;
+            left: 26px;
             top: 50%;
             transform: translateY(-50%);
             background: #4CAF50;
             color: white;
-            padding: 4px 8px;
+            padding: 4px 9px;
             border-radius: 4px;
             font-size: 12px;
             white-space: nowrap;
@@ -219,13 +224,13 @@
     <div id="searchForm">
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Поиск по названию игры..." autocomplete="off">
-            <button id="clearSearch" title="Очистить">×</button>
+            <button id="clearSearch" title="Очистить">x</button>
         </div>
-        <button id="sortButton" title="Сортировка">↕</button>
+        <button id="sortButton" title="Сортировка">up/down</button>
         <div id="sortMenu">
             <div data-sort="none">Без сортировки</div>
-            <div data-sort="priceAsc">Цена ↑</div>
-            <div data-sort="priceDesc">Цена ↓</div>
+            <div data-sort="priceAsc">Цена up</div>
+            <div data-sort="priceDesc">Цена down</div>
         </div>
     </div>
 
@@ -251,9 +256,9 @@
         <tbody id="tableBody"></tbody>
     </table>
 
-    <button id="scrollToTop" title="Наверх">↑</button>
+    <button id="scrollToTop" title="Наверх">up</button>
 
-    <!-- SVG иконка копирования (один раз внизу, используется через use) -->
+    <!-- SVG иконка копирования -->
     <svg style="display:none;">
         <defs>
             <symbol id="copy-icon" viewBox="0 0 24 24">
@@ -270,12 +275,10 @@
         let allGames = [];
         let currentSort = 'none';
 
-        // Копирование + показ красивой подсказки
+        // Копирование + локальная подсказка
         async function copyToClipboard(text, btn) {
             try {
                 await navigator.clipboard.writeText(text);
-
-                // Создаём надпись "Скопировано!", если ещё нет
                 let feedback = btn.querySelector('.copy-feedback');
                 if (!feedback) {
                     feedback = document.createElement('span');
@@ -283,14 +286,8 @@
                     feedback.textContent = 'Скопировано!';
                     btn.appendChild(feedback);
                 }
-
-                // Показываем
                 feedback.classList.add('show');
-
-                // Скрываем через 1.5 сек
-                setTimeout(() => {
-                    feedback.classList.remove('show');
-                }, 1500);
+                setTimeout(() => feedback.classList.remove('show'), 1500);
             } catch (err) {
                 console.error('Ошибка копирования:', err);
             }
@@ -319,6 +316,11 @@
 
             tableBody.innerHTML = '';
             errorElement.style.display = 'none';
+
+            // ГЛАВНЫЙ ФИКС: принудительный перезапуск анимации
+            loadingElement.classList.remove('show');
+            // eslint-disable-next-line no-unused-expressions
+            loadingElement.offsetHeight; // магия reflow — заставляет браузер перерисовать
             loadingElement.classList.add('show');
 
             const cachedData = localStorage.getItem(cacheKey);
@@ -364,10 +366,8 @@
 
             games.forEach(game => {
                 const row = document.createElement('tr');
-
                 const nameCell = document.createElement('td');
 
-                // Контейнер для иконки
                 const copyBtn = document.createElement('span');
                 copyBtn.className = 'copy-btn';
                 copyBtn.title = 'Копировать название и цену';
@@ -402,7 +402,6 @@
             renderTable(filtered);
         }
 
-        // Элементы управления
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearch');
         const sortButton = document.getElementById('sortButton');
@@ -444,6 +443,7 @@
             scrollToTopBtn.style.display = window.scrollY > 200 ? 'block' : 'none';
         });
 
+        // Запуск
         loadPriceList();
     </script>
 </body>
