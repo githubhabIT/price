@@ -53,12 +53,11 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             color: #333;
         }
         #clearSearch:hover { color: #4CAF50; }
 
-        /* Новая подсказка под поиском */
         #copyHint {
             max-width: 500px;
             margin: 12px auto 0;
@@ -109,19 +108,35 @@
         }
         #sortMenu div:hover { background-color: #f5f5f5; }
 
+        /* === ИДЕАЛЬНЫЙ ЦЕНТРИРОВАННЫЙ ЛОАДЕР === */
         #loading {
-            font-size: 16px;
-            color: #333;
-            margin: 20px;
-            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.96);
+            padding: 30px 50px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
             text-align: center;
-            display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: 16px;
+            min-width: 160px;
+            backdrop-filter: blur(8px);
+            font-weight: 500;
+            color: #333;
+            display: none;
         }
-        #loading img { width: 60px; height: 60px; animation: color-and-stroke 1.333s ease-in-out infinite; }
+        #loading.show {
+            display: flex !important;
+        }
+        #loading img {
+            width: 70px;
+            height: 70px;
+            animation: color-and-stroke 1.333s ease-in-out infinite;
+        }
         @keyframes color-and-stroke {
             0%, 25% { filter: hue-rotate(0deg) brightness(1); }
             50% { filter: hue-rotate(15deg) brightness(0.9); }
@@ -142,10 +157,8 @@
             border-bottom: 1px solid #ddd;
         }
         th { background-color: #4CAF50; color: white; }
-
         tr:hover { background-color: #f5f5f5; }
 
-        /* Стиль кнопки копирования */
         .copy-btn {
             cursor: pointer;
             margin-right: 8px;
@@ -154,19 +167,14 @@
             transition: all 0.2s;
             user-select: none;
         }
-        .copy-btn:hover {
-            opacity: 1;
-            transform: scale(1.15);
-        }
-        .copy-btn:active {
-            transform: scale(0.95);
-        }
+        .copy-btn:hover { opacity: 1; transform: scale(1.15); }
+        .copy-btn:active { transform: scale(0.95); }
 
         #error {
             color: red;
             text-align: center;
-            display: none;
             margin: 20px;
+            display: none;
         }
         #scrollToTop {
             display: none;
@@ -186,11 +194,17 @@
         }
         #scrollToTop:hover { background-color: #45a049; opacity: 1; }
 
+        /* Анимация тоста "Скопировано!" */
+        @keyframes fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeout { to { opacity: 0; transform: translateY(-10px); } }
+
         @media (max-width: 600px) {
             #searchInput { width: 200px; font-size: 14px; padding: 8px 25px 8px 8px; }
             #clearSearch { font-size: 14px; right: 8px; }
             #sortButton { width: 32px; height: 32px; font-size: 14px; margin-left: 5px; }
             #copyHint { font-size: 13px; padding: 8px 12px; }
+            #loading { padding: 20px 35px; }
+            #loading img { width: 50px; height: 50px; }
         }
     </style>
 </head>
@@ -211,16 +225,16 @@
         </div>
     </div>
 
-    <!-- Подсказка про копирование -->
     <div id="copyHint">
-        <strong>📋 Кнопка копирования</strong> — одним кликом копирует название игры и актуальную цену в формате:<br>
+        <strong>Кнопка копирования</strong> — одним кликом копирует название игры и цену в формате:<br>
         <em>«Cyberpunk 2077: Ultimate Edition — 2499 руб.»</em>
     </div>
 
     <div id="loading">
         <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка">
-        <span>Загрузка</span>
+        <span>Загрузка прайса...</span>
     </div>
+
     <p id="error"></p>
 
     <table id="priceTable">
@@ -243,39 +257,23 @@
         let allGames = [];
         let currentSort = 'none';
 
-        // Функция копирования в буфер обмена
+        // Копирование в буфер
         async function copyToClipboard(text) {
             try {
                 await navigator.clipboard.writeText(text);
-                // Небольшой визуальный фидбек (можно улучшить)
                 const toast = document.createElement('div');
                 toast.textContent = 'Скопировано!';
                 toast.style.cssText = `
-                    position: fixed;
-                    bottom: 80px;
-                    right: 20px;
-                    background: #333;
-                    color: white;
-                    padding: 10px 16px;
-                    border-radius: 6px;
-                    font-size: 14px;
-                    z-index: 10000;
+                    position: fixed; bottom: 80px; right: 20px; background: #333; color: white;
+                    padding: 10px 16px; border-radius: 6px; font-size: 14px; z-index: 10000;
                     animation: fadein 0.3s, fadeout 0.5s 2s forwards;
                 `;
                 document.body.appendChild(toast);
                 setTimeout(() => toast.remove(), 3000);
             } catch (err) {
-                console.error('Не удалось скопировать:', err);
+                console.error('Ошибка копирования:', err);
             }
         }
-
-        // Добавляем стили для тоста
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-            @keyframes fadeout { to { opacity: 0; transform: translateY(-10px); } }
-        `;
-        document.head.appendChild(style);
 
         async function fetchWithRetry(url, retries = 3, delay = 1000) {
             for (let i = 0; i < retries; i++) {
@@ -284,11 +282,8 @@
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     return response;
                 } catch (error) {
-                    if (i < retries - 1) {
-                        await new Promise(r => setTimeout(r, delay));
-                        continue;
-                    }
-                    throw error;
+                    if (i < retries - 1) await new Promise(r => setTimeout(r, delay));
+                    else throw error;
                 }
             }
         }
@@ -303,15 +298,17 @@
 
             tableBody.innerHTML = '';
             errorElement.style.display = 'none';
-            loadingElement.style.display = 'block';
+            loadingElement.classList.add('show');
 
-            // Кэш
             const cachedData = localStorage.getItem(cacheKey);
             const cacheTime = localStorage.getItem(cacheTimeKey);
             const now = Date.now();
+
             if (cachedData && cacheTime && (now - parseInt(cacheTime) < cacheDuration)) {
                 allGames = JSON.parse(cachedData);
                 applyFiltersAndSort();
+                loadingElement.classList.remove('show');
+                return;
             }
 
             try {
@@ -336,7 +333,7 @@
                     tableBody.innerHTML = '<tr><td colspan="2">Не удалось загрузить данные</td></tr>';
                 }
             } finally {
-                loadingElement.style.display = 'none';
+                loadingElement.classList.remove('show');
             }
         }
 
@@ -349,13 +346,12 @@
 
                 const nameCell = document.createElement('td');
                 const copyBtn = document.createElement('span');
-                copyBtn.textContent = '📋';
+                copyBtn.textContent = 'Копировать';
                 copyBtn.className = 'copy-btn';
                 copyBtn.title = 'Копировать название и цену';
                 copyBtn.onclick = (e) => {
                     e.stopPropagation();
-                    const text = `${game.name} — ${game.price} руб.`;
-                    copyToClipboard(text);
+                    copyToClipboard(`${game.name} — ${game.price} руб.`);
                 };
 
                 nameCell.appendChild(copyBtn);
@@ -428,7 +424,6 @@
             scrollToTopBtn.style.display = window.scrollY > 200 ? 'block' : 'none';
         });
 
-        // Запуск
         loadPriceList();
     </script>
 </body>
