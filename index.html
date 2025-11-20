@@ -5,215 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Прайс-лист игр</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
-        }
-        h1 { text-align: center; color: #333; margin: 10px 0; }
-        #logo {
-            display: block;
-            margin: 10px auto 0 auto;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #ddd;
-        }
+        body {font-family: Arial, sans-serif; margin:20px; background:#f4f4f9;}
+        h1 {text-align:center; color:#333; margin:10px 0;}
+        #logo {display:block; margin:10px auto 0; width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid #ddd;}
 
         #searchForm {
-            position: sticky;
-            top: 0;
-            background-color: #f4f4f9;
-            padding: 10px 0;
-            z-index: 1000;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position:sticky; top:0; background:#f4f4f9; padding:10px 0; z-index:1000;
+            text-align:center; box-shadow:0 2px 5px rgba(0,0,0,0.1);
         }
-        .search-container { position: relative; display: inline-block; }
-        #searchInput {
-            padding: 10px 30px 10px 10px;
-            width: 300px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        #clearSearch {
-            display: none;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            color: #333;
-        }
-        #clearSearch:hover { color: #4CAF50; }
+        .search-container {position:relative; display:inline-block;}
+        #searchInput {padding:10px 30px 10px 10px; width:300px; font-size:16px; border:1px solid #ddd; border-radius:4px;}
+        #clearSearch {display:none; position:absolute; right:10px; top:50%; transform:translateY(-50%);
+            background:none; border:none; cursor:pointer; font-size:18px; color:#333;}
+        #clearSearch:hover {color:#4CAF50;}
 
         #copyHint {
-            max-width: 500px;
-            margin: 12px auto 0;
-            padding: 10px 14px;
-            background: #e8f5e9;
-            border: 1px solid #4CAF50;
-            border-radius: 6px;
-            font-size: 14px;
-            color: #2e7d32;
-            text-align: center;
+            max-width:500px; margin:12px auto 0; padding:10px 14px; background:#e8f5e9;
+            border:1px solid #4CAF50; border-radius:6px; font-size:14px; color:#2e7d32; text-align:center;
         }
-        #copyHint strong { color: #1b5e20; }
 
         #sortButton {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-left: 10px;
-            background-color: white;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            margin-left:10px; width:40px; height:40px; background:white; border:1px solid #ddd;
+            border-radius:4px; cursor:pointer; font-size:20px;
         }
-        #sortButton:hover { background-color: #f5f5f5; }
+        #sortButton:hover {background:#f5f5f5;}
 
         #sortMenu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            z-index: 1001;
-            margin-top: 5px;
+            display:none; position:absolute; background:white; border:1px solid #ddd;
+            border-radius:4px; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-top:5px; z-index:1001;
         }
-        #sortMenu div {
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            white-space: nowrap;
-        }
-        #sortMenu div:hover { background-color: #f5f5f5; }
+        #sortMenu div {padding:10px 20px; cursor:pointer;}
+        #sortMenu div:hover {background:#f5f5f5;}
 
-        /* Красивый центрированный лоадер */
+        /* Лоадер — теперь 100% работает всегда */
         #loading {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.96);
-            padding: 30px 50px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            z-index: 9999;
-            text-align: center;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            min-width: 160px;
-            backdrop-filter: blur(8px);
-            font-weight: 500;
-            color: #333;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
+            position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+            background:rgba(255,255,255,0.97); padding:35px 55px; border-radius:16px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.2); z-index:9999; text-align:center;
+            display:none; flex-direction:column; align-items:center; gap:16px;
+            backdrop-filter:blur(8px);
         }
-        #loading.show {
-            opacity: 1;
-            pointer-events: auto;
-            display: flex !important;
-        }
+        #loading.show {display:flex !important;}
+
         #loading img {
-            width: 70px;
-            height: 70px;
-            animation: color-and-stroke 1.333s ease-in-out infinite;
+            width:70px; height:70px;
+            animation:color-and-stroke 1.333s ease-in-out infinite;
         }
         @keyframes color-and-stroke {
-            0%, 25% { filter: hue-rotate(0deg) brightness(1); }
-            50% { filter: hue-rotate(15deg) brightness(0.9); }
-            100% { filter: hue-rotate(30deg) brightness(0.8); }
+            0%,25%{filter:hue-rotate(0deg) brightness(1);}
+            50%{filter:hue-rotate(15deg) brightness(0.9);}
+            100%{filter:hue-rotate(30deg) brightness(0.8);}
         }
 
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th { background-color: #4CAF50; color: white; }
-        tr:hover { background-color: #f5f5f5; }
+        table {width:80%; margin:20px auto; border-collapse:collapse; background:white; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+        th, td {padding:12px; text-align:left; border-bottom:1px solid #ddd;}
+        th {background:#4CAF50; color:white;}
+        tr:hover {background:#f5f5f5;}
 
-        /* Иконка копирования */
         .copy-btn {
-            cursor: pointer;
-            margin-right: 8px;
-            width: 20px;
-            height: 20px;
-            opacity: 0.7;
-            transition: all 0.2s;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
+            cursor:pointer; margin-right:8px; width:20px; height:20px; opacity:0.7;
+            position:relative; display:inline-flex; align-items:center;
         }
-        .copy-btn:hover { opacity: 1; transform: scale(1.15); }
-
+        .copy-btn:hover {opacity:1; transform:scale(1.15);}
         .copy-feedback {
-            position: absolute;
-            left: 26px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #4CAF50;
-            color: white;
-            padding: 4px 9px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s, transform 0.3s;
-            z-index: 10;
+            position:absolute; left:24px; top:50%; transform:translateY(-50%);
+            background:#4CAF50; color:white; padding:4px 9px; border-radius:4px;
+            font-size:12px; white-space:nowrap; opacity:0; pointer-events:none;
+            transition:opacity .3s, transform .3s;
         }
-        .copy-feedback.show {
-            opacity: 1;
-            transform: translateY(-50%) translateX(4px);
-        }
+        .copy-feedback.show {opacity:1; transform:translateY(-50%) translateX(4px);}
 
-        #error { color: red; text-align: center; margin: 20px; display: none; }
         #scrollToTop {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            opacity: 0.8;
+            display:none; position:fixed; bottom:20px; right:20px; background:#4CAF50;
+            color:white; border:none; border-radius:50%; width:50px; height:50px;
+            font-size:24px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);
         }
-        #scrollToTop:hover { background-color: #45a049; opacity: 1; }
+        #scrollToTop:hover {background:#45a049;}
 
-        @media (max-width: 600px) {
-            #searchInput { width: 200px; font-size: 14px; padding: 8px 25px 8px 8px; }
-            #loading { padding: 20px 35px; }
-            #loading img { width: 50px; height: 50px; }
+        @media (max-width:600px) {
+            #searchInput {width:200px;}
+            #loading {padding:25px 40px;}
+            #loading img {width:50px; height:50px;}
         }
     </style>
 </head>
@@ -224,18 +96,18 @@
     <div id="searchForm">
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Поиск по названию игры..." autocomplete="off">
-            <button id="clearSearch" title="Очистить">x</button>
+            <button id="clearSearch" title="Очистить">×</button>
         </div>
-        <button id="sortButton" title="Сортировка">up/down</button>
+        <button id="sortButton" title="Сортировка">↕</button>
         <div id="sortMenu">
             <div data-sort="none">Без сортировки</div>
-            <div data-sort="priceAsc">Цена up</div>
-            <div data-sort="priceDesc">Цена down</div>
+            <div data-sort="priceAsc">Цена ↑</div>
+            <div data-sort="priceDesc">Цена ↓</div>
         </div>
     </div>
 
     <div id="copyHint">
-        <strong>Кнопка копирования</strong> — одним кликом копирует название игры и цену в формате:<br>
+        <strong>Кнопка копирования</strong> — одним кликом копирует название и цену в формате:<br>
         <em>«Cyberpunk 2077: Ultimate Edition — 2499 руб.»</em>
     </div>
 
@@ -247,24 +119,17 @@
     <p id="error"></p>
 
     <table id="priceTable">
-        <thead>
-            <tr>
-                <th>Название игры</th>
-                <th>Цена (руб.)</th>
-            </tr>
-        </thead>
+        <thead><tr><th>Название игры</th><th>Цена (руб.)</th></tr></thead>
         <tbody id="tableBody"></tbody>
     </table>
 
-    <button id="scrollToTop" title="Наверх">up</button>
+    <button id="scrollToTop" title="Наверх">↑</button>
 
     <!-- SVG иконка копирования -->
     <svg style="display:none;">
-        <defs>
-            <symbol id="copy-icon" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-            </symbol>
-        </defs>
+        <symbol id="copy-icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+        </symbol>
     </svg>
 
     <script>
@@ -272,178 +137,112 @@
         const apiKey = 'AIzaSyAz6NMjP-Sgq2P9FgGOc8T1prYM57b-An0';
         const range = 'ru price!A:B';
         const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-        let allGames = [];
-        let currentSort = 'none';
+        let allGames = [], currentSort = 'none';
 
-        // Копирование + локальная подсказка
+        // Копирование
         async function copyToClipboard(text, btn) {
             try {
                 await navigator.clipboard.writeText(text);
-                let feedback = btn.querySelector('.copy-feedback');
-                if (!feedback) {
-                    feedback = document.createElement('span');
-                    feedback.className = 'copy-feedback';
-                    feedback.textContent = 'Скопировано!';
-                    btn.appendChild(feedback);
-                }
-                feedback.classList.add('show');
-                setTimeout(() => feedback.classList.remove('show'), 1500);
-            } catch (err) {
-                console.error('Ошибка копирования:', err);
-            }
-        }
-
-        async function fetchWithRetry(url, retries = 3, delay = 1000) {
-            for (let i = 0; i < retries; i++) {
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    return response;
-                } catch (error) {
-                    if (i < retries - 1) await new Promise(r => setTimeout(r, delay));
-                    else throw error;
-                }
-            }
+                let fb = btn.querySelector('.copy-feedback') || document.createElement('span');
+                if (!fb.parentNode) { fb.className = 'copy-feedback'; fb.textContent = 'Скопировано!'; btn.appendChild(fb); }
+                fb.classList.add('show');
+                setTimeout(() => fb.classList.remove('show'), 1500);
+            } catch(e) { console.error(e); }
         }
 
         async function loadPriceList() {
-            const cacheKey = 'xboxRuPriceCache';
-            const cacheTimeKey = 'xboxRuPriceCacheTime';
-            const cacheDuration = 60 * 60 * 1000;
-            const errorElement = document.getElementById('error');
+            const loading = document.getElementById('loading');
             const tableBody = document.getElementById('tableBody');
-            const loadingElement = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            tableBody.innerHTML = ''; errorEl.style.display = 'none';
 
-            tableBody.innerHTML = '';
-            errorElement.style.display = 'none';
+            // Главный трюк — гарантированный перезапуск анимации
+            loading.classList.remove('show');
+            void loading.offsetHeight;  // магия reflow
+            loading.classList.add('show');
 
-            // ГЛАВНЫЙ ФИКС: принудительный перезапуск анимации
-            loadingElement.classList.remove('show');
-            // eslint-disable-next-line no-unused-expressions
-            loadingElement.offsetHeight; // магия reflow — заставляет браузер перерисовать
-            loadingElement.classList.add('show');
-
-            const cachedData = localStorage.getItem(cacheKey);
-            const cacheTime = localStorage.getItem(cacheTimeKey);
-            const now = Date.now();
-
-            if (cachedData && cacheTime && (now - parseInt(cacheTime) < cacheDuration)) {
-                allGames = JSON.parse(cachedData);
+            const cached = localStorage.getItem('xboxRuPriceCache');
+            const cacheTime = localStorage.getItem('xboxRuPriceCacheTime');
+            if (cached && cacheTime && Date.now() - +cacheTime < 3600000) {
+                allGames = JSON.parse(cached);
                 applyFiltersAndSort();
-                loadingElement.classList.remove('show');
+                loading.classList.remove('show');
                 return;
             }
 
             try {
-                const response = await fetchWithRetry(dataUrl);
-                const data = await response.json();
-                const rows = data.values;
-                if (!rows || rows.length <= 1) throw new Error('Таблица пуста');
+                const res = await fetch(dataUrl);
+                if (!res.ok) throw new Error('Ошибка сети');
+                const data = await res.json();
+                if (!data.values || data.values.length <= 1) throw new Error('Пустая таблица');
 
-                allGames = rows.slice(1).map(row => ({
-                    name: row[0]?.trim() || '',
-                    price: row[1]?.trim() || ''
-                })).filter(g => g.name && g.price);
+                allGames = data.values.slice(1)
+                    .map(r => ({name: (r[0]||'').trim(), price: (r[1]||'').trim()}))
+                    .filter(g => g.name && g.price);
 
-                localStorage.setItem(cacheKey, JSON.stringify(allGames));
-                localStorage.setItem(cacheTimeKey, now.toString());
-
+                localStorage.setItem('xboxRuPriceCache', JSON.stringify(allGames));
+                localStorage.setItem('xboxRuPriceCacheTime', Date.now().toString());
                 applyFiltersAndSort();
-            } catch (error) {
-                errorElement.textContent = `Ошибка загрузки: ${error.message}`;
-                errorElement.style.display = 'block';
-                if (!cachedData) {
-                    tableBody.innerHTML = '<tr><td colspan="2">Не удалось загрузить данные</td></tr>';
-                }
+            } catch (e) {
+                errorEl.textContent = 'Ошибка: ' + e.message;
+                errorEl.style.display = 'block';
             } finally {
-                loadingElement.classList.remove('show');
+                loading.classList.remove('show');
             }
         }
 
         function renderTable(games) {
-            const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = '';
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            games.forEach(g => {
+                const tr = document.createElement('tr');
+                const nameTd = document.createElement('td');
 
-            games.forEach(game => {
-                const row = document.createElement('tr');
-                const nameCell = document.createElement('td');
+                const btn = document.createElement('span');
+                btn.className = 'copy-btn';
+                btn.innerHTML = `<svg width="18" height="18"><use href="#copy-icon"></use></svg>`;
+                btn.onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} руб.`, btn); };
 
-                const copyBtn = document.createElement('span');
-                copyBtn.className = 'copy-btn';
-                copyBtn.title = 'Копировать название и цену';
-                copyBtn.innerHTML = `<svg width="18" height="18"><use href="#copy-icon"></use></svg>`;
-                copyBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    copyToClipboard(`${game.name} — ${game.price} руб.`, copyBtn);
-                };
-
-                nameCell.appendChild(copyBtn);
-                nameCell.appendChild(document.createTextNode(' ' + game.name));
-
-                const priceCell = document.createElement('td');
-                priceCell.textContent = game.price;
-
-                row.appendChild(nameCell);
-                row.appendChild(priceCell);
-                tableBody.appendChild(row);
+                nameTd.appendChild(btn);
+                nameTd.appendChild(document.createTextNode(' ' + g.name));
+                tr.appendChild(nameTd);
+                tr.innerHTML += `<td>${g.price}</td>`;
+                tbody.appendChild(tr);
             });
         }
 
         function applyFiltersAndSort() {
-            const query = searchInput.value.trim().toLowerCase();
-            let filtered = allGames.filter(g => g.name.toLowerCase().includes(query));
-
-            if (currentSort === 'priceAsc') {
-                filtered.sort((a, b) => parseFloat(a.price.replace(/[^0-9.-]+/g,'')) - parseFloat(b.price.replace(/[^0-9.-]+/g,'')));
-            } else if (currentSort === 'priceDesc') {
-                filtered.sort((a, b) => parseFloat(b.price.replace(/[^0-9.-]+/g,'')) - parseFloat(a.price.replace(/[^0-9.-]+/g,'')));
-            }
-
+            let filtered = allGames.filter(g => g.name.toLowerCase().includes(searchInput.value.trim().toLowerCase()));
+            if (currentSort === 'priceAsc') filtered.sort((a,b) => +a.price.replace(/\D+/g,'') - +b.price.replace(/\D+/g,''));
+            if (currentSort === 'priceDesc') filtered.sort((a,b) => +b.price.replace(/\D+/g,'') - +a.price.replace(/\D+/g,''));
             renderTable(filtered);
         }
 
+        // Элементы
         const searchInput = document.getElementById('searchInput');
-        const clearSearchBtn = document.getElementById('clearSearch');
-        const sortButton = document.getElementById('sortButton');
+        const clearBtn = document.getElementById('clearSearch');
+        const sortBtn = document.getElementById('sortButton');
         const sortMenu = document.getElementById('sortMenu');
-        const scrollToTopBtn = document.getElementById('scrollToTop');
 
         searchInput.addEventListener('input', () => {
-            clearSearchBtn.style.display = searchInput.value ? 'block' : 'none';
+            clearBtn.style.display = searchInput.value ? 'block' : 'none';
             applyFiltersAndSort();
         });
-
-        clearSearchBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            clearSearchBtn.style.display = 'none';
-            applyFiltersAndSort();
-            searchInput.focus();
-        });
-
-        sortButton.addEventListener('click', () => {
-            sortMenu.style.display = sortMenu.style.display === 'block' ? 'none' : 'block';
-        });
-
-        sortMenu.querySelectorAll('div').forEach(item => {
-            item.addEventListener('click', () => {
-                currentSort = item.getAttribute('data-sort');
+        clearBtn.onclick = () => { searchInput.value=''; clearBtn.style.display='none'; applyFiltersAndSort(); searchInput.focus(); };
+        sortBtn.onclick = () => sortMenu.style.display = sortMenu.style.display==='block' ? 'none' : 'block';
+        sortMenu.onclick = e => {
+            if (e.target.hasAttribute('data-sort')) {
+                currentSort = e.target.dataset.sort;
                 applyFiltersAndSort();
                 sortMenu.style.display = 'none';
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!sortButton.contains(e.target) && !sortMenu.contains(e.target)) {
-                sortMenu.style.display = 'none';
             }
+        };
+        document.addEventListener('click', e => {
+            if (!sortBtn.contains(e.target) && !sortMenu.contains(e.target)) sortMenu.style.display='none';
         });
+        window.onscroll = () => document.getElementById('scrollToTop').style.display = scrollY>200 ? 'block' : 'none';
+        document.getElementById('scrollToTop').onclick = () => scrollTo({top:0, behavior:'smooth'});
 
-        scrollToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-        window.addEventListener('scroll', () => {
-            scrollToTopBtn.style.display = window.scrollY > 200 ? 'block' : 'none';
-        });
-
-        // Запуск
         loadPriceList();
     </script>
 </body>
