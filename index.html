@@ -55,11 +55,23 @@
             cursor: pointer;
             font-size: 16px;
             color: #333;
-            padding: 0;
         }
-        #clearSearch:hover {
-            color: #4CAF50;
+        #clearSearch:hover { color: #4CAF50; }
+
+        /* Новая подсказка под поиском */
+        #copyHint {
+            max-width: 500px;
+            margin: 12px auto 0;
+            padding: 10px 14px;
+            background: #e8f5e9;
+            border: 1px solid #4CAF50;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #2e7d32;
+            text-align: center;
         }
+        #copyHint strong { color: #1b5e20; }
+
         #sortButton {
             padding: 10px;
             font-size: 16px;
@@ -74,9 +86,8 @@
             align-items: center;
             justify-content: center;
         }
-        #sortButton:hover {
-            background-color: #f5f5f5;
-        }
+        #sortButton:hover { background-color: #f5f5f5; }
+
         #sortMenu {
             display: none;
             position: absolute;
@@ -96,9 +107,8 @@
             font-size: 16px;
             white-space: nowrap;
         }
-        #sortMenu div:hover {
-            background-color: #f5f5f5;
-        }
+        #sortMenu div:hover { background-color: #f5f5f5; }
+
         #loading {
             font-size: 16px;
             color: #333;
@@ -111,29 +121,14 @@
             justify-content: center;
             gap: 8px;
         }
-        #loading img {
-            width: 60px;
-            height: 60px;
-            animation: color-and-stroke 1.3333333s ease-in-out infinite;
-        }
-        #loading span {
-            display: block;
-            text-align: center;
-        }
+        #loading img { width: 60px; height: 60px; animation: color-and-stroke 1.333s ease-in-out infinite; }
         @keyframes color-and-stroke {
-            0%, 25% {
-                filter: hue-rotate(0deg) brightness(1);
-            }
-            50% {
-                filter: hue-rotate(15deg) brightness(0.9);
-            }
-            56.25% {
-                filter: hue-rotate(30deg) brightness(0.8);
-            }
-            100% {
-                filter: hue-rotate(30deg) brightness(0.8);
-            }
+            0%, 25% { filter: hue-rotate(0deg) brightness(1); }
+            50% { filter: hue-rotate(15deg) brightness(0.9); }
+            56.25% { filter: hue-rotate(30deg) brightness(0.8); }
+            100% { filter: hue-rotate(30deg) brightness(0.8); }
         }
+
         table {
             width: 80%;
             margin: 20px auto;
@@ -146,13 +141,27 @@
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
-        th {
-            background-color: #4CAF50;
-            color: white;
+        th { background-color: #4CAF50; color: white; }
+
+        tr:hover { background-color: #f5f5f5; }
+
+        /* Стиль кнопки копирования */
+        .copy-btn {
+            cursor: pointer;
+            margin-right: 8px;
+            font-size: 18px;
+            opacity: 0.7;
+            transition: all 0.2s;
+            user-select: none;
         }
-        tr:hover {
-            background-color: #f5f5f5;
+        .copy-btn:hover {
+            opacity: 1;
+            transform: scale(1.15);
         }
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
         #error {
             color: red;
             text-align: center;
@@ -173,47 +182,22 @@
             font-size: 24px;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: opacity 0.3s, background-color 0.3s;
             opacity: 0.8;
         }
-        #scrollToTop:hover {
-            background-color: #45a049;
-            opacity: 1;
-        }
+        #scrollToTop:hover { background-color: #45a049; opacity: 1; }
+
         @media (max-width: 600px) {
-            #searchInput {
-                width: 200px;
-                font-size: 14px;
-                padding: 8px 25px 8px 8px;
-            }
-            #clearSearch {
-                font-size: 14px;
-                right: 8px;
-            }
-            #sortButton {
-                width: 32px;
-                height: 32px;
-                padding: 8px;
-                margin-left: 5px;
-                font-size: 14px;
-            }
-            #sortMenu div {
-                font-size: 14px;
-                padding: 8px 15px;
-            }
-            #searchForm {
-                padding: 5px 0;
-            }
-            #loading img {
-                width: 30px;
-                height: 30px;
-            }
+            #searchInput { width: 200px; font-size: 14px; padding: 8px 25px 8px 8px; }
+            #clearSearch { font-size: 14px; right: 8px; }
+            #sortButton { width: 32px; height: 32px; font-size: 14px; margin-left: 5px; }
+            #copyHint { font-size: 13px; padding: 8px 12px; }
         }
     </style>
 </head>
 <body>
     <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/50';">
     <h1>Прайс-лист игр</h1>
+
     <div id="searchForm">
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Поиск по названию игры..." autocomplete="off">
@@ -226,11 +210,19 @@
             <div data-sort="priceDesc">Цена ↓</div>
         </div>
     </div>
+
+    <!-- Подсказка про копирование -->
+    <div id="copyHint">
+        <strong>📋 Кнопка копирования</strong> — одним кликом копирует название игры и актуальную цену в формате:<br>
+        <em>«Cyberpunk 2077: Ultimate Edition — 2499 руб.»</em>
+    </div>
+
     <div id="loading">
-        <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка" width="60" height="60">
+        <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка">
         <span>Загрузка</span>
     </div>
     <p id="error"></p>
+
     <table id="priceTable">
         <thead>
             <tr>
@@ -240,6 +232,7 @@
         </thead>
         <tbody id="tableBody"></tbody>
     </table>
+
     <button id="scrollToTop" title="Наверх">↑</button>
 
     <script>
@@ -250,18 +243,49 @@
         let allGames = [];
         let currentSort = 'none';
 
+        // Функция копирования в буфер обмена
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                // Небольшой визуальный фидбек (можно улучшить)
+                const toast = document.createElement('div');
+                toast.textContent = 'Скопировано!';
+                toast.style.cssText = `
+                    position: fixed;
+                    bottom: 80px;
+                    right: 20px;
+                    background: #333;
+                    color: white;
+                    padding: 10px 16px;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    z-index: 10000;
+                    animation: fadein 0.3s, fadeout 0.5s 2s forwards;
+                `;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            } catch (err) {
+                console.error('Не удалось скопировать:', err);
+            }
+        }
+
+        // Добавляем стили для тоста
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+            @keyframes fadeout { to { opacity: 0; transform: translateY(-10px); } }
+        `;
+        document.head.appendChild(style);
+
         async function fetchWithRetry(url, retries = 3, delay = 1000) {
             for (let i = 0; i < retries; i++) {
                 try {
                     const response = await fetch(url);
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status} ${response.statusText}`);
-                    }
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     return response;
                 } catch (error) {
                     if (i < retries - 1) {
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        console.log(`Повторная попытка ${i + 1} из ${retries}...`);
+                        await new Promise(r => setTimeout(r, delay));
                         continue;
                     }
                     throw error;
@@ -272,55 +296,44 @@
         async function loadPriceList() {
             const cacheKey = 'xboxRuPriceCache';
             const cacheTimeKey = 'xboxRuPriceCacheTime';
-            const cacheDuration = 60 * 60 * 1000; // 1 час
+            const cacheDuration = 60 * 60 * 1000;
             const errorElement = document.getElementById('error');
             const tableBody = document.getElementById('tableBody');
             const loadingElement = document.getElementById('loading');
+
             tableBody.innerHTML = '';
             errorElement.style.display = 'none';
-            errorElement.textContent = '';
             loadingElement.style.display = 'block';
 
-            // Загрузка кэшированных данных
+            // Кэш
             const cachedData = localStorage.getItem(cacheKey);
             const cacheTime = localStorage.getItem(cacheTimeKey);
             const now = Date.now();
             if (cachedData && cacheTime && (now - parseInt(cacheTime) < cacheDuration)) {
                 allGames = JSON.parse(cachedData);
                 applyFiltersAndSort();
-                console.log('Использованы кэшированные данные');
             }
 
             try {
-                console.log('Запрос к API:', dataUrl);
                 const response = await fetchWithRetry(dataUrl);
                 const data = await response.json();
-                console.log('Данные API:', data);
                 const rows = data.values;
-
-                if (!rows || rows.length <= 1) {
-                    throw new Error('Таблица пуста или содержит только заголовки.');
-                }
+                if (!rows || rows.length <= 1) throw new Error('Таблица пуста');
 
                 allGames = rows.slice(1).map(row => ({
                     name: row[0]?.trim() || '',
                     price: row[1]?.trim() || ''
-                })).filter(game => game.name && game.price);
-
-                if (allGames.length === 0) {
-                    throw new Error('Нет данных для отображения. Проверьте содержимое таблицы.');
-                }
+                })).filter(g => g.name && g.price);
 
                 localStorage.setItem(cacheKey, JSON.stringify(allGames));
                 localStorage.setItem(cacheTimeKey, now.toString());
+
                 applyFiltersAndSort();
-                console.log('Данные успешно загружены и кэшированы');
             } catch (error) {
-                errorElement.textContent = `Ошибка загрузки: ${error.message}. Показаны последние сохраненные данные или таблица пуста.`;
+                errorElement.textContent = `Ошибка загрузки: ${error.message}`;
                 errorElement.style.display = 'block';
-                console.error('Подробности ошибки:', error);
                 if (!cachedData) {
-                    tableBody.innerHTML = '<tr><td colspan="2">Не удалось загрузить данные. Попробуйте позже.</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="2">Не удалось загрузить данные</td></tr>';
                 }
             } finally {
                 loadingElement.style.display = 'none';
@@ -330,29 +343,47 @@
         function renderTable(games) {
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = '';
+
             games.forEach(game => {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td>${game.name}</td><td>${game.price}</td>`;
+
+                const nameCell = document.createElement('td');
+                const copyBtn = document.createElement('span');
+                copyBtn.textContent = '📋';
+                copyBtn.className = 'copy-btn';
+                copyBtn.title = 'Копировать название и цену';
+                copyBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const text = `${game.name} — ${game.price} руб.`;
+                    copyToClipboard(text);
+                };
+
+                nameCell.appendChild(copyBtn);
+                nameCell.appendChild(document.createTextNode(' ' + game.name));
+
+                const priceCell = document.createElement('td');
+                priceCell.textContent = game.price;
+
+                row.appendChild(nameCell);
+                row.appendChild(priceCell);
                 tableBody.appendChild(row);
             });
         }
 
         function applyFiltersAndSort() {
             const query = searchInput.value.trim().toLowerCase();
-            let filteredGames = allGames.filter(game => 
-                game.name.toLowerCase().includes(query)
-            );
+            let filtered = allGames.filter(g => g.name.toLowerCase().includes(query));
 
             if (currentSort === 'priceAsc') {
-                filteredGames.sort((a, b) => parseFloat(a.price.replace(/[^0-9.-]+/g,'')) - parseFloat(b.price.replace(/[^0-9.-]+/g,'')));
+                filtered.sort((a, b) => parseFloat(a.price.replace(/[^0-9.-]+/g,'')) - parseFloat(b.price.replace(/[^0-9.-]+/g,'')));
             } else if (currentSort === 'priceDesc') {
-                filteredGames.sort((a, b) => parseFloat(b.price.replace(/[^0-9.-]+/g,'')) - parseFloat(a.price.replace(/[^0-9.-]+/g,'')));
+                filtered.sort((a, b) => parseFloat(b.price.replace(/[^0-9.-]+/g,'')) - parseFloat(a.price.replace(/[^0-9.-]+/g,'')));
             }
 
-            renderTable(filteredGames);
+            renderTable(filtered);
         }
 
-        // Обработка строки поиска
+        // Элементы управления
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearch');
         const sortButton = document.getElementById('sortButton');
@@ -371,7 +402,6 @@
             searchInput.focus();
         });
 
-        // Обработка кнопки сортировки и меню
         sortButton.addEventListener('click', () => {
             sortMenu.style.display = sortMenu.style.display === 'block' ? 'none' : 'block';
         });
@@ -384,27 +414,21 @@
             });
         });
 
-        // Закрытие меню при клике вне его
         document.addEventListener('click', (e) => {
             if (!sortButton.contains(e.target) && !sortMenu.contains(e.target)) {
                 sortMenu.style.display = 'none';
             }
         });
 
-        // Обработка кнопки "Наверх"
         scrollToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Показ/скрытие кнопки при прокрутке
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 200) {
-                scrollToTopBtn.style.display = 'block';
-            } else {
-                scrollToTopBtn.style.display = 'none';
-            }
+            scrollToTopBtn.style.display = window.scrollY > 200 ? 'block' : 'none';
         });
 
+        // Запуск
         loadPriceList();
     </script>
 </body>
