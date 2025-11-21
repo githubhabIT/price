@@ -26,59 +26,31 @@
         .subtitle { color: var(--text-muted); font-size: 1rem; font-weight: 500; }
 
         .controls { position: sticky; top: 0; background: var(--bg); z-index: 100; padding: 1rem 0; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); margin-bottom: 1.5rem; }
-
-        .search-sort-bar {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            justify-content: center;
-            max-width: 720px;
-            margin: 0 auto;
-            flex-wrap: nowrap;
-        }
-
+        .search-sort-bar { display: flex; gap: 12px; align-items: center; justify-content: center; max-width: 720px; margin: 0 auto; flex-wrap: nowrap; }
         .search-box { position: relative; flex: 1; min-width: 180px; }
-        #searchInput {
-            width: 100%;
-            padding: 13px 48px 13px 44px;
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            background: var(--card);
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
+        #searchInput { width: 100%; padding: 13px 48px 13px 44px; border: 2px solid var(--border); border-radius: 14px; background: var(--card); color: white; font-size: 1rem; transition: all 0.3s; }
         #searchInput:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0,255,157,0.15); }
         .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 1.1rem; }
         #clearSearch { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer; opacity:0; transition:opacity .3s; }
         #clearSearch.show { opacity:1; }
 
-        /* Кнопка сортировки — только иконка */
         .sort-btn {
             background: var(--card);
             border: 2px solid var(--border);
             color: var(--text);
-            width: 52px;
-            height: 52px;
+            width: 52px; height: 52px;
             border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             transition: all 0.3s;
             flex-shrink: 0;
         }
-        .sort-btn:hover, .sort-btn.active {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(0,255,157,0.1);
-        }
+        .sort-btn:hover, .sort-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,255,157,0.1); }
         .sort-btn i { font-size: 1.1rem; }
 
         .copy-hint { background: linear-gradient(135deg, rgba(0,255,157,0.1), rgba(0,255,157,0.05)); border: 1px solid rgba(0,255,157,0.3); color: var(--text); padding: 0.9rem 1.3rem; border-radius: 14px; text-align: center; margin: 0 auto 1.5rem; max-width: 720px; font-size: 0.95rem; }
         .copy-hint strong { color: var(--accent); }
 
-        /* Остальные стили без изменений */
         .desktop-table { display: block; }
         .mobile-cards { display: none; }
         .table-container { background: var(--card); border-radius: 18px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.4); border: 1px solid var(--border); }
@@ -143,10 +115,57 @@
         .game-title { font-size: 1.02rem; font-weight: 500; line-height: 1.4; word-break: break-word; overflow-wrap: anywhere; }
         .game-price { font-size: 1.32rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
 
-        #loading { position: fixed; inset: 0; background: rgba(15,15,21,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity .4s; }
+        /* НОВАЯ АНИМАЦИЯ ЗАГРУЗКИ — Xbox-пульсация */
+        #loading {
+            position: fixed; inset: 0;
+            background: var(--bg);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; backdrop-filter: blur(15px);
+            opacity: 0; pointer-events: none; transition: opacity 0.5s;
+        }
         #loading.show { opacity: 1; pointer-events: auto; }
-        .loader-spinner { width: 70px; height: 70px; border: 4px solid rgba(0,255,157,0.2); border-top: 4px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .xbox-heart {
+            width: 120px;
+            height: 120px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 60px rgba(0, 255, 157, 0.6);
+            animation: heartbeat 1.4s ease-in-out infinite;
+        }
+        .xbox-heart::before,
+        .xbox-heart::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 60px; height: 100px;
+            background: var(--accent);
+            border-radius: 50px 50px 0 0;
+            transform: translate(-50%, -100%) rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+        .xbox-heart::after {
+            transform: translate(-50%, -100%) rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        @keyframes heartbeat {
+            0%   { transform: scale(1);   box-shadow: 0 0 60px rgba(0,255,157,0.6); }
+            20%  { transform: scale(1.15); box-shadow: 0 0 90px rgba(0,255,157,0.8); }
+            40%  { transform: scale(1);   box-shadow: 0 0 60px rgba(0,255,157,0.6); }
+            60%  { transform: scale(1.1); box-shadow: 0 0 80px rgba(0,255,157,0.7); }
+            80%  { transform: scale(1);   box-shadow: 0 0 60px rgba(0,255,157,0.6); }
+            100% { transform: scale(1);   box-shadow: 0 0 60px rgba(0,255,157,0.6); }
+        }
+
+        #loading h3 {
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
 
         #scrollToTop { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: black; width: 54px; height: 54px; border-radius: 50%; border: none; font-size: 1.6rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0,255,157,0.4); opacity: 0; transform: translateY(15px); transition: all .4s; z-index: 99; }
         #scrollToTop.show { opacity: 1; transform: translateY(0); }
@@ -161,8 +180,8 @@
         }
         @media (max-width: 480px) {
             .container { padding: 10px; }
-            .search-sort-bar { gap: 8px; }
-            .sort-btn { width: 46px; height: 46px; }
+            .xbox-heart { width: 100px; height: 100px; }
+            .xbox-heart::before, .xbox-heart::after { width: 50px; height: 85px; }
             .copy-feedback { left: auto !important; right: 100%; margin-right: 8px; }
         }
     </style>
@@ -179,17 +198,17 @@
             <div class="search-sort-bar">
                 <div class="search-box">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="searchInput" placeholder="Поиск">
+                    <input type="text" id="searchInput" placeholder="Поиск по названию...">
                     <button id="clearSearch">×</button>
                 </div>
                 <button class="sort-btn" id="sortButton" title="Сортировать по цене">
-                    <i class="fas fa-sort-amount-down-alt"></i>
+                    <i class="fas fa-sort"></i>
                 </button>
             </div>
         </div>
 
         <div class="copy-hint">
-            <strong>💡 Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена
+            <strong>Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена
         </div>
 
         <div class="desktop-table">
@@ -204,8 +223,9 @@
         <div class="mobile-cards" id="mobileCards"></div>
     </div>
 
+    <!-- НОВАЯ КРУТАЯ ЗАГРУЗКА -->
     <div id="loading">
-        <div class="loader-spinner"></div>
+        <div class="xbox-heart"></div>
         <h3>Загрузка прайса...</h3>
     </div>
 
@@ -245,9 +265,7 @@
             if (currentSort === 'priceAsc') filtered.sort((a,b) => +a.price.replace(/\D+/g,'') - +b.price.replace(/\D+/g,''));
             if (currentSort === 'priceDesc') filtered.sort((a,b) => +b.price.replace(/\D+/g,'') - +a.price.replace(/\D+/g,''));
 
-            // Десктоп
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
+            document.getElementById('tableBody').innerHTML = '';
             filtered.forEach(g => {
                 const tr = document.createElement('tr');
                 const nameTd = document.createElement('td');
@@ -260,10 +278,9 @@
                 div.append(btn, document.createTextNode(g.name));
                 nameTd.appendChild(div);
                 tr.append(nameTd, Object.assign(document.createElement('td'), {textContent: g.price}));
-                tbody.appendChild(tr);
+                document.getElementById('tableBody').appendChild(tr);
             });
 
-            // Мобильные карточки
             const mobile = document.getElementById('mobileCards');
             mobile.innerHTML = '';
             filtered.forEach(g => {
@@ -288,10 +305,7 @@
 
         const searchInput = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearch');
-        searchInput.addEventListener('input', () => {
-            clearBtn.classList.toggle('show', searchInput.value.length > 0);
-            renderAll();
-        });
+        searchInput.addEventListener('input', () => { clearBtn.classList.toggle('show', searchInput.value.length > 0); renderAll(); });
         clearBtn.onclick = () => { searchInput.value = ''; clearBtn.classList.remove('show'); renderAll(); searchInput.focus(); };
 
         document.getElementById('sortButton').onclick = () => {
