@@ -64,7 +64,7 @@
         .copy-btn { background: rgba(0,255,157,0.15); border: 1px solid rgba(0,255,157,0.4); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s ease; color: var(--accent); flex-shrink: 0; }
         .copy-btn:hover { background: var(--accent); color: black; transform: translateY(-2px) scale(1.05); }
 
-        /* МОБИЛЬНЫЕ КАРТОЧКИ */
+        /* МОБИЛЬНЫЕ КАРТОЧКИ — НАЗВАНИЕ ПОЛНОСТЬЮ */
         .game-card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -83,13 +83,16 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(0,255,157,0.15);
         }
-        .game-info { flex: 1; min-width: 0; }
+        .game-info {
+            flex: 1;
+            min-width: 0; /* важно для переноса */
+        }
         .game-title {
             font-size: 1.02rem;
             font-weight: 500;
             line-height: 1.4;
-            word-break: break-word;
-            overflow-wrap: anywhere;
+            word-break: break-word;     /* переносит длинные слова */
+            overflow-wrap: anywhere;    /* современный стандарт */
         }
         .game-price {
             font-size: 1.32rem;
@@ -98,6 +101,7 @@
             white-space: nowrap;
         }
 
+        /* Лоадер и кнопка наверх */
         #loading { position: fixed; inset: 0; background: rgba(15,15,21,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity 0.4s; }
         #loading.show { opacity: 1; pointer-events: auto; }
         .loader-spinner { width: 70px; height: 70px; border: 4px solid rgba(0,255,157,0.2); border-top: 4px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem; }
@@ -106,12 +110,13 @@
         #scrollToTop { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: black; width: 54px; height: 54px; border-radius: 50%; border: none; font-size: 1.6rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0,255,157,0.4); opacity: 0; transform: translateY(15px); transition: all 0.4s; z-index: 99; }
         #scrollToTop.show { opacity: 1; transform: translateY(0); }
 
+        /* Переключение на мобильный вид */
         @media (max-width: 768px) {
             .desktop-table { display: none; }
             .mobile-cards { display: block; }
             h1 { font-size: 2rem; }
             #logo { width: 58px; height: 58px; }
-            .copy-btn { width: 44px; height: 44px; font-size: 1.15rem; }
+            .copy-btn { width: 44px; height: 44px; font-size: 1.15rem; } /* чуть крупнее для пальцев */
         }
         @media (max-width: 480px) {
             .container { padding: 12px; }
@@ -222,7 +227,7 @@
                 if (!data.values || data.values.length <= 1) throw new Error('Пустая таблица');
 
                 allGames = data.values.slice(1)
-                    .map(r => ({name: (r[0]||'').trim(), price: (r[[1]]||'').trim()}))
+                    .map(r => ({name: (r[0]||'').trim(), price: (r[1]||'').trim()}))
                     .filter(g => g.name && g.price);
 
                 localStorage.setItem('priceCache', JSON.stringify(allGames));
@@ -245,7 +250,7 @@
             if (currentSort === 'priceAsc') filtered.sort((a,b) => +a.price.replace(/\D+/g,'') - +b.price.replace(/\D+/g,''));
             if (currentSort === 'priceDesc') filtered.sort((a,b) => +b.price.replace(/\D+/g,'') - +a.price.replace(/\D+/g,''));
 
-            // ДЕСКТОП — без ₽
+            // Десктоп
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
             filtered.forEach(g => {
@@ -263,7 +268,7 @@
                 tbody.appendChild(tr);
             });
 
-            // МОБИЛЬНЫЕ КАРТОЧКИ — с ₽
+            // Мобильные карточки
             const mobile = document.getElementById('mobileCards');
             mobile.innerHTML = '';
             filtered.forEach(g => {
@@ -279,7 +284,7 @@
 
                 const price = document.createElement('div');
                 price.className = 'game-price';
-                price.textContent = g.price + ' ₽';  // ← ЗДЕСЬ ДОБАВЛЯЕМ РУБЛЬ
+                price.textContent = g.price;
 
                 info.append(title, price);
 
@@ -292,7 +297,7 @@
                 mobile.appendChild(card);
             });
 
-            document.getElementById('sortText').textContent = {none:"Сортировка", priceAsc:"Цена ↑", priceDesc:"Цена ↓"}[rentalSort];
+            document.getElementById('sortText').textContent = {none:"Сортировка", priceAsc:"Цена ↑", priceDesc:"Цена ↓"}[currentSort];
         }
 
         const searchInput = document.getElementById('searchInput');
