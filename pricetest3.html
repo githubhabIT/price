@@ -46,12 +46,17 @@
             flex-shrink: 0;
         }
         .sort-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,157,0.1); }
-        .sort-btn i { font-size: 1.1rem; }
 
-        .copy-selected-btn {
-            background: var(--accent);
-            color: black;
-            border: none;
+        /* Кнопки управления выбором */
+        .selection-controls {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .copy-selected-btn, .clear-selection-btn {
             padding: 12px 24px;
             border-radius: 14px;
             font-weight: 600;
@@ -59,13 +64,28 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .copy-selected-btn {
+            background: var(--accent);
+            color: black;
+            border: none;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.3s;
-            font-size: 1rem;
         }
         .copy-selected-btn.visible { opacity: 1; pointer-events: auto; }
         .copy-selected-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,255,157,0.4); }
+
+        .clear-selection-btn {
+            background: var(--card);
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .clear-selection-btn.visible { opacity: 1; pointer-events: auto; }
+        .clear-selection-btn:hover { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,107,107,0.1); }
 
         .copy-hint {
             background: linear-gradient(135deg, rgba(0,255,157,0.1), rgba(0,255,157,0.05));
@@ -93,6 +113,7 @@
         tr:hover { background: rgba(0,255,157,0.06); }
         tr.selected { background: rgba(0,255,157,0.15); }
 
+        /* Десктоп чекбоксы */
         input[type="checkbox"] {
             width: 20px;
             height: 20px;
@@ -140,11 +161,12 @@
         }
         .copy-feedback.show { opacity: 1; transform: translateY(-50%) translateX(0); }
 
+        /* МОБИЛЬНЫЕ КАРТОЧКИ — КРАСИВЫЙ КАСТОМНЫЙ ЧЕКБОКС С ГАЛОЧКОЙ ВНУТРИ */
         .game-card {
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 1.3rem 1.2rem;
+            padding: 1.3rem 1.2rem 1.3rem 68px;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -153,66 +175,77 @@
             transition: all 0.3s;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             position: relative;
-            padding-left: 52px !important;
         }
+
         .game-card::before {
             content: "";
             position: absolute;
-            left: 16px; top: 50%;
+            left: 22px;
+            top: 50%;
             transform: translateY(-50%);
-            width: 20px; height: 20px;
-            border: 2px solid var(--border);
-            border-radius: 6px;
+            width: 26px;
+            height: 26px;
+            border: 2px solid #666;
+            border-radius: 8px;
             background: var(--card);
+            transition: all 0.25s;
         }
-        .game-card input[type="checkbox"] {
-            position: absolute;
-            left: 16px; top: 50%;
-            transform: translateY(-50%);
-            z-index: 2;
-            width: 20px; height: 20px;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .game-card input[type="checkbox"]:checked::before {
+
+        .game-card::after {
             content: "✓";
             position: absolute;
-            left: 16px; top: 50%;
+            left: 22px;
+            top: 50%;
             transform: translateY(-50%);
-            color: var(--accent);
-            font-weight: bold;
             font-size: 18px;
-            z-index: 3;
+            font-weight: bold;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.25s;
+            z-index: 1;
         }
+
+        .game-card input[type="checkbox"] {
+            position: absolute;
+            left: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 26px;
+            height: 26px;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .game-card input[type="checkbox"]:checked + *::before,
+        .game-card input[type="checkbox"]:checked ~ *::before {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .game-card input[type="checkbox"]:checked + *::after,
+        .game-card input[type="checkbox"]:checked ~ *::after {
+            opacity: 1;
+        }
+
         .game-card.selected {
             border-color: var(--accent);
             background: rgba(0,255,157,0.1);
             box-shadow: 0 0 20px rgba(0,255,157,0.2);
         }
+
         .game-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,255,157,0.15); }
+
         .game-info { flex: 1; min-width: 0; }
         .game-title { font-size: 1.02rem; font-weight: 500; line-height: 1.4; word-break: break-word; overflow-wrap: anywhere; }
         .game-price { font-size: 1.32rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
 
-        #loading {
-            position: fixed; inset: 0;
-            background: var(--bg);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999; backdrop-filter: blur(15px);
-            opacity: 0; pointer-events: none; transition: opacity 0.5s;
-        }
+        #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px); opacity: 0; pointer-events: none; transition: opacity 0.5s; }
         #loading.show { opacity: 1; pointer-events: auto; }
         #loading img, #loading video, #loading svg { width: 140px; height: 140px; object-fit: contain; }
         #loading h3 { margin-top: 2rem; font-size: 1.3rem; color: var(--accent); font-weight: 600; }
 
-        #scrollToTop {
-            position: fixed; bottom: 24px; right: 24px;
-            background: var(--accent); color: black;
-            width: 54px; height: 54px; border-radius: 50%;
-            border: none; font-size: 1.6rem; cursor: pointer;
-            box-shadow: 0 8px 24px rgba(0,255,157,0.4);
-            opacity: 0; transform: translateY(15px); transition: all .4s; z-index: 99;
-        }
+        #scrollToTop { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: black; width: 54px; height: 54px; border-radius: 50%; border: none; font-size: 1.6rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0,255,157,0.4); opacity: 0; transform: translateY(15px); transition: all .4s; z-index: 99; }
         #scrollToTop.show { opacity: 1; transform: translateY(0); }
 
         @media (max-width: 768px) {
@@ -221,13 +254,8 @@
             h1 { font-size: 2rem; }
             #logo { width: 58px; height: 58px; }
             .sort-btn { width: 48px; height: 48px; }
-            .copy-btn { width: 44px; height: 44px; }
-            #loading img, #loading video, #loading svg { width: 110px; height: 110px; }
-        }
-        @media (max-width: 480px) {
-            .container { padding: 10px; }
-            #loading img, #loading video, #loading svg { width: 90px; height: 90px; }
-            .copy-feedback { left: auto !important; right: 100%; margin-right: 8px; }
+            .game-card { padding-left: 66px; }
+            .game-card::before, .game-card::after, .game-card input[type="checkbox"] { left: 20px; }
         }
     </style>
 </head>
@@ -252,15 +280,18 @@
             </div>
         </div>
 
-        <div style="text-align:center; margin-bottom:1.5rem;">
+        <div class="selection-controls">
             <button class="copy-selected-btn" id="copySelectedBtn">
                 <i class="fas fa-copy"></i> Скопировать выбранное (0)
+            </button>
+            <button class="clear-selection-btn" id="clearSelectionBtn">
+                <i class="fas fa-times"></i> Снять выделение
             </button>
         </div>
 
         <div class="copy-hint">
             <strong>Подсказка:</strong> Нажмите зелёную кнопку — скопируется одна игра<br>
-            <strong>Новое:</strong> Отметьте галочками → «Скопировать выбранное»
+            <strong>Новое:</strong> Галочками — множественный выбор → Скопировать / Снять выделение
         </div>
 
         <div class="desktop-table">
@@ -289,21 +320,23 @@
         const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
         let allGames = [];
         let currentSort = 'none';
+
         const copySelectedBtn = document.getElementById('copySelectedBtn');
+        const clearSelectionBtn = document.getElementById('clearSelectionBtn');
 
         async function copyToClipboard(text) {
             try {
                 await navigator.clipboard.writeText(text);
-                const old = copySelectedBtn.innerHTML;
                 copySelectedBtn.innerHTML = '<i class="fas fa-check"></i> Скопировано!';
-                setTimeout(() => updateCopyButton(), 1500);
+                setTimeout(updateCopyButton, 1500);
             } catch(e) { console.error(e); }
         }
 
-        function updateCopyButton() {
+        function updateButtons() {
             const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
             copySelectedBtn.innerHTML = `<i class="fas fa-copy"></i> Скопировать выбранное (${count})`;
             copySelectedBtn.classList.toggle('visible', count > 0);
+            clearSelectionBtn.classList.toggle('visible', count > 0);
         }
 
         function copySelected() {
@@ -316,6 +349,15 @@
                 return `${name} — ${price} руб.`;
             });
             copyToClipboard(lines.join('\n'));
+        }
+
+        function clearSelection() {
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                cb.checked = false;
+                const row = cb.closest('tr') || cb.closest('.game-card');
+                row?.classList.remove('selected');
+            });
+            updateButtons();
         }
 
         async function copySingle(text, btn) {
@@ -346,7 +388,6 @@
             if (currentSort === 'priceAsc') filtered.sort((a,b) => +a.price.replace(/\D/g,'') - +b.price.replace(/\D/g,''));
             if (currentSort === 'priceDesc') filtered.sort((a,b) => +b.price.replace(/\D/g,'') - +a.price.replace(/\D/g,''));
 
-            // Десктоп
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
             filtered.forEach(g => {
@@ -357,7 +398,7 @@
                     <td>${g.price}</td>
                 `;
                 const cb = tr.querySelector('input[type="checkbox"]');
-                cb.onchange = () => { tr.classList.toggle('selected', cb.checked); updateCopyButton(); };
+                cb.onchange = () => { tr.classList.toggle('selected', cb.checked); updateButtons(); };
                 tr.querySelector('.copy-btn').onclick = e => {
                     e.stopPropagation();
                     copySingle(`${g.name} — ${g.price} руб.`, e.target.closest('.copy-btn'));
@@ -365,7 +406,6 @@
                 tbody.appendChild(tr);
             });
 
-            // Мобильные карточки
             const mobile = document.getElementById('mobileCards');
             mobile.innerHTML = '';
             filtered.forEach(g => {
@@ -380,7 +420,7 @@
                     <div class="copy-btn"><i class="fas fa-copy"></i></div>
                 `;
                 const cb = card.querySelector('input[type="checkbox"]');
-                cb.onchange = () => { card.classList.toggle('selected', cb.checked); updateCopyButton(); };
+                cb.onchange = () => { card.classList.toggle('selected', cb.checked); updateButtons(); };
                 card.querySelector('.copy-btn').onclick = e => {
                     e.stopPropagation();
                     copySingle(`${g.name} — ${g.price} руб.`, e.target.closest('.copy-btn'));
@@ -389,7 +429,7 @@
             });
 
             updateSortIcon();
-            updateCopyButton();
+            updateButtons();
         }
 
         const searchInput = document.getElementById('searchInput');
@@ -399,12 +439,15 @@
             renderAll();
         });
         clearBtn.onclick = () => { searchInput.value = ''; clearBtn.classList.remove('show'); renderAll(); searchInput.focus(); };
+
         document.getElementById('sortButton').onclick = () => {
             const order = ['none', 'priceAsc', 'priceDesc'];
             currentSort = order[(order.indexOf(currentSort) + 1) % 3];
             renderAll();
         };
+
         copySelectedBtn.onclick = copySelected;
+        clearSelectionBtn.onclick = clearSelection;
 
         window.addEventListener('scroll', () => {
             document.getElementById('scrollToTop').classList.toggle('show', scrollY > 400);
