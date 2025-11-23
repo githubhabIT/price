@@ -3,377 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Прайс-лист игр</title>
+    <title>Прайс-лист игр — оптимизированный</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        :root {
-            --bg: #0f0f15;
-            --card: #181821;
-            --text: #e0e0ff;
-            --text-muted: #a0a0cc;
-            --accent: #00ff9d;
-            --border: #2a2a3a;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+        :root{--bg:#0f0f15;--card:#181821;--text:#e0e0ff;--muted:#a0a0cc;--accent:#00ff9d;--border:#2a2a3a}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .container{max-width:1100px;margin:0 auto;padding:16px}
+        header{text-align:center;margin-bottom:1rem}
+        #logo{width:68px;height:68px;border:3px solid var(--accent);box-shadow:0 0 20px rgba(0,255,157,0.18);border-radius:50%;object-fit:cover;margin-bottom:.8rem}
+        h1{font-size:2.2rem;font-weight:700;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.4rem}
+        .subtitle{color:var(--muted);font-weight:500}
 
-        header { text-align: center; margin-bottom: 1rem; }
-        #logo { width: 68px; height: 68px; border: 3px solid var(--accent); box-shadow: 0 0 20px rgba(0,255,157,0.3); border-radius: 50%; object-fit: cover; margin-bottom: 0.8rem; }
-        h1 { font-size: 2.4rem; font-weight: 700; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 0.4rem 0; }
-        .subtitle { color: var(--text-muted); font-size: 1rem; font-weight: 500; }
+        /* controls */
+        .controls{position:sticky;top:0;background:var(--bg);z-index:90;padding:12px 0;border-bottom:1px solid var(--border)}
+        .bar{display:flex;gap:12px;align-items:center;justify-content:center;max-width:720px;margin:0 auto}
+        .search-box{position:relative;flex:1;min-width:140px}
+        #search{width:100%;padding:12px 44px 12px 44px;border:2px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);font-size:1rem}
+        .icon-left{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+        #clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;opacity:0;transition:opacity .25s}
+        #clear.show{opacity:1}
+        .sort-btn{background:var(--card);border:2px solid var(--border);color:var(--text);width:52px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+        .selection{display:flex;gap:12px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+        .btn{padding:10px 18px;border-radius:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+        .btn-copy{background:var(--accent);color:#000;border:none;opacity:0;pointer-events:none}
+        .btn-copy.visible{opacity:1;pointer-events:auto}
+        .btn-clear{background:var(--card);color:var(--muted);border:2px solid var(--border);opacity:0;pointer-events:none}
+        .btn-clear.visible{opacity:1;pointer-events:auto}
 
-        .controls { position: sticky; top: 0; background: var(--bg); z-index: 100; padding: 1rem 0; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); margin-bottom: 1.5rem; }
-        .search-sort-bar { display: flex; gap: 12px; align-items: center; justify-content: center; max-width: 720px; margin: 0 auto; flex-wrap: nowrap; }
+        .hint{max-width:720px;margin:0 auto 12px;background:linear-gradient(135deg,rgba(0,255,157,0.06),rgba(0,255,157,0.02));border:1px solid rgba(0,255,157,0.12);padding:10px;border-radius:12px;color:var(--text);text-align:center}
 
-        .search-box { position: relative; flex: 1; min-width: 180px; }
-        #searchInput { width: 100%; padding: 13px 48px 13px 44px; border: 2px solid var(--border); border-radius: 14px; background: var(--card); color: white; font-size: 1rem; transition: all 0.3s; }
-        #searchInput:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0,255,157,0.15); }
-        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 1.1rem; }
-        #clearSearch { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer; opacity:0; transition:opacity .3s; }
-        #clearSearch.show { opacity:1; }
+        /* layout */
+        .table-wrap{background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,0.35)}
+        table{width:100%;border-collapse:collapse}
+        thead{background:linear-gradient(90deg,#1a1a2e,#16213e)}
+        th,td{padding:12px 14px;text-align:left}
+        th:first-child,td:first-child{text-align:center;width:60px}
+        td:last-child{text-align:right;font-weight:700;color:var(--accent)}
+        tr:hover{background:rgba(0,255,157,0.04)}
+        tr.selected{background:rgba(0,255,157,0.12)}
 
-        .sort-btn {
-            background: var(--card); border: 2px solid var(--border); color: var(--text); width: 52px; height: 52px;
-            border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;
-        }
-        .sort-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,157,0.1); }
+        /* mobile cards */
+        .cards{display:none}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 14px 14px 64px;margin-bottom:12px;position:relative;display:flex;align-items:center;justify-content:space-between}
+        .card label{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:8px;border:2px solid #666;display:flex;align-items:center;justify-content:center;background:var(--card)}
+        .card input[type="checkbox"]{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:0;width:34px;height:34px}
+        .card .title{font-weight:600;overflow-wrap:break-word}
+        .price{font-weight:700;color:var(--accent);white-space:nowrap}
 
-        .selection-controls { text-align: center; margin-bottom: 1.5rem; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-        .copy-selected-btn, .clear-selection-btn {
-            padding: 12px 24px; border-radius: 14px; font-weight: 600; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; transition: all 0.3s;
-        }
-        .copy-selected-btn { background: var(--accent); color: black; border: none; opacity: 0; pointer-events: none; }
-        .copy-selected-btn.visible { opacity: 1; pointer-events: auto; }
-        .copy-selected-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,255,157,0.4); }
+        /* feedback */
+        .copy-feedback{position:absolute;background:var(--accent);color:#000;padding:6px 10px;border-radius:8px;font-weight:700;font-size:.85rem;opacity:0;pointer-events:none;transition:opacity .18s}
+        .copy-feedback.show{opacity:1}
 
-        .clear-selection-btn { background: var(--card); color: var(--text-muted); border: 2px solid var(--border); opacity: 0; pointer-events: none; }
-        .clear-selection-btn.visible { opacity: 1; pointer-events: auto; }
-        .clear-selection-btn:hover { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,107,107,0.1); }
-
-        .copy-hint {
-            background: linear-gradient(135deg, rgba(0,255,157,0.1), rgba(0,255,157,0.05));
-            border: 1px solid rgba(0,255,157,0.3); color: var(--text); padding: 0.9rem 1.3rem; border-radius: 14px;
-            text-align: center; margin: 0 auto 1.5rem; max-width: 720px; font-size: 0.95rem;
-        }
-        .copy-hint strong { color: var(--accent); }
-
-        .desktop-table { display: block; }
-        .mobile-cards { display: none; }
-        .table-container { background: var(--card); border-radius: 18px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.4); border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; }
-        thead { background: linear-gradient(90deg, #1a1a2e, #16213e); }
-        th { padding: 1.2rem 1rem; text-align: left; font-weight: 600; font-size: 1rem; color: white; }
-        th:first-child { width: 60px; text-align: center; }
-        td { padding: 1rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
-        td:first-child { text-align: center; width: 60px; }
-        td:last-child { text-align: right; font-weight: 600; color: var(--accent); font-size: 1.05rem; }
-        tr:hover { background: rgba(0,255,157,0.06); }
-        tr.selected { background: rgba(0,255,157,0.15); }
-
-        input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; margin: 0; }
-
-        .game-name { display: flex; align-items: center; gap: 12px; padding-left: 4px; }
-
-        .copy-btn {
-            position: relative;
-            background: rgba(0,255,157,0.15);
-            border: 1px solid rgba(0,255,157,0.4);
-            width: 36px; height: 36px;
-            border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.25s; color: var(--accent); flex-shrink: 0;
-        }
-        .copy-btn:hover { background: var(--accent); color: black; transform: translateY(-2px) scale(1.05); }
-
-        .copy-feedback {
-            position: absolute; z-index: 10;
-            background: var(--accent); color: black;
-            padding: 6px 11px; border-radius: 8px;
-            font-size: 0.82rem; font-weight: 600;
-            white-space: nowrap; opacity: 0; pointer-events: none;
-            transition: opacity 0.3s;
-        }
-        @media (min-width: 769px) {
-            .copy-feedback { left: 100%; top: 50%; transform: translateY(-50%); margin-left: 8px; }
-        }
-        @media (max-width: 768px) {
-            .copy-feedback { right: 100%; top: 50%; transform: translateY(-50%); margin-right: 8px; }
-        }
-        .copy-feedback.show { opacity: 1; }
-
-        /* МОБИЛЬНЫЕ КАРТОЧКИ */
-        .game-card {
-            background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-            padding: 1.3rem 1.2rem 1.3rem 70px; margin-bottom: 1rem;
-            display: flex; align-items: center; justify-content: space-between; gap: 14px;
-            transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;
+        /* simplified shadows and heavy effects on mobile */
+        @media (max-width:768px){
+            .table-wrap{display:none}
+            .cards{display:block}
+            .controls{backdrop-filter:none}
+            #logo{width:58px;height:58px}
+            .card{padding-left:68px;box-shadow:0 6px 18px rgba(0,0,0,0.25)}
         }
 
-        .game-card label {
-            position: absolute; left: 22px; top: 50%; transform: translateY(-50%);
-            width: 28px; height: 28px; border: 2px solid #666; border-radius: 8px;
-            background: var(--card); cursor: pointer; transition: all 0.25s;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .game-card input[type="checkbox"] {
-            position: absolute; opacity: 0; width: 28px; height: 28px;
-            left: 22px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 2;
-        }
-
-        .game-card input[type="checkbox"]:checked + label {
-            background: var(--accent); border-color: var(--accent);
-        }
-        .game-card input[type="checkbox"]:checked + label::after {
-            content: "✓"; font-size: 18px; font-weight: bold; color: black;
-        }
-
-        .game-card.selected {
-            border-color: var(--accent); background: rgba(0,255,157,0.1);
-            box-shadow: 0 0 20px rgba(0,255,157,0.2);
-        }
-        .game-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,255,157,0.15); }
-
-        .game-info { flex: 1; min-width: 0; }
-        .game-title { font-size: 1.02rem; font-weight: 500; line-height: 1.4; word-break: break-word; overflow-wrap: anywhere; }
-        .game-price { font-size: 1.32rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
-
-        #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px); opacity: 0; pointer-events: none; transition: opacity 0.5s; }
-        #loading.show { opacity: 1; pointer-events: auto; }
-        #loading img, #loading svg { width: 140px; height: 140px; object-fit: contain; }
-        #loading h3 { margin-top: 2rem; font-size: 1.3rem; color: var(--accent); font-weight: 600; }
-
-        #scrollToTop { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: black; width: 54px; height: 54px; border-radius: 50%; border: none; font-size: 1.6rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0,255,157,0.4); opacity: 0; transform: translateY(15px); transition: all .4s; z-index: 99; }
-        #scrollToTop.show { opacity: 1; transform: translateY(0); }
-
-        @media (max-width: 768px) {
-            .desktop-table { display: none; }
-            .mobile-cards { display: block; }
-            h1 { font-size: 2rem; }
-            #logo { width: 58px; height: 58px; }
-            .sort-btn { width: 48px; height: 48px; }
-            .game-card { padding-left: 68px; }
-            .game-card label, .game-card input[type="checkbox"] { left: 20px; }
-        }
+        /* performance hints */
+        .card,.game-row{will-change:transform,background}
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/80/00ff9d/000000?text=Gamepad';">
+            <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/80/00ff9d/000000?text=Gamepad'">
             <h1>ПРАЙС-ЛИСТ ИГР</h1>
-            <p class="subtitle">Актуальные цены · Обновляется автоматически</p>
+            <p class="subtitle">Актуальные цены · Быстрая версия</p>
         </header>
 
         <div class="controls">
-            <div class="search-sort-bar">
+            <div class="bar">
                 <div class="search-box">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" id="searchInput" placeholder="Поиск">
-                    <button id="clearSearch">×</button>
+                    <i class="fas fa-search icon-left" aria-hidden></i>
+                    <input id="search" type="text" placeholder="Поиск"> 
+                    <button id="clear">×</button>
                 </div>
-                <button class="sort-btn" id="sortButton" title="Сортировать по цене">
-                    <i class="fas fa-sort"></i>
-                </button>
+                <button id="sortBtn" class="sort-btn" title="Сортировать по цене"><i class="fas fa-sort"></i></button>
             </div>
         </div>
 
-        <div class="selection-controls">
-            <button class="copy-selected-btn" id="copySelectedBtn">
-                <i class="fas fa-copy"></i> Скопировать выбранное (0)
-            </button>
-            <button class="clear-selection-btn" id="clearSelectionBtn">
-                <i class="fas fa-times"></i> Снять выделение
-            </button>
+        <div class="selection">
+            <button id="copySelected" class="btn btn-copy"><i class="fas fa-copy"></i> Скопировать выбранное (0)</button>
+            <button id="clearSel" class="btn btn-clear"><i class="fas fa-times"></i> Снять выделение</button>
         </div>
 
-        <div class="copy-hint">
-            <strong>Подсказка:</strong> Нажмите зелёную кнопку — скопируется одна игра<br>
-            <strong>Новое:</strong> Галочками — множественный выбор → Скопировать / Снять выделение
+        <div class="hint"><strong>Подсказка:</strong> Нажмите зелёную кнопку — скопируется одна игра. Новое: множественный выбор.</div>
+
+        <div class="table-wrap" aria-hidden="false">
+            <table id="priceTable" cellspacing="0">
+                <thead><tr><th></th><th>Название игры</th><th>Цена</th></tr></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
         </div>
 
-        <div class="desktop-table">
-            <div class="table-container">
-                <table id="priceTable">
-                    <thead><tr><th></th><th>Название игры</th><th>Цена</th></tr></thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
+        <div class="cards" id="cardsList" aria-hidden="true"></div>
+    </div>
+
+    <template id="rowTemplate">
+        <tr class="game-row">
+            <td><input type="checkbox" class="row-cb"></td>
+            <td>
+                <div style="display:flex;align-items:center;gap:12px">
+                    <button class="copy-single" aria-label="Скопировать" title="Скопировать" style="width:36px;height:36px;border-radius:10px;border:1px solid rgba(0,255,157,0.18);background:rgba(0,255,157,0.08);cursor:pointer"><i class="fas fa-copy"></i>
+                    <span class="copy-feedback">Скопировано!</span></button>
+                    <span class="name"></span>
+                </div>
+            </td>
+            <td class="price-col"></td>
+        </tr>
+    </template>
+
+    <template id="cardTemplate">
+        <div class="card">
+            <input type="checkbox" class="row-cb">
+            <label></label>
+            <div style="flex:1;min-width:0">
+                <div class="title"></div>
+                <div class="price"></div>
             </div>
+            <button class="copy-single" style="width:36px;height:36px;border-radius:10px;border:1px solid rgba(0,255,157,0.18);background:rgba(0,255,157,0.08);cursor:pointer"><i class="fas fa-copy"></i><span class="copy-feedback">Скопировано!</span></button>
         </div>
-
-        <div class="mobile-cards" id="mobileCards"></div>
-    </div>
-
-    <div id="loading">
-        <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка">
-        <h3>Загрузка прайса...</h3>
-    </div>
-
-    <button id="scrollToTop" title="Наверх"><i class="fas fa-arrow-up"></i></button>
+    </template>
 
     <script>
+    (function(){
+        // CONFIG
         const sheetId = '1MzBvxOzI6Yn3sRkAdJZeG-mdSeoQwPRYKv9thY9_U-0';
         const apiKey = 'AIzaSyAz6NMjP-Sgq2P9FgGOc8T1prYM57b-An0';
         const range = 'ru price!A:B';
         const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+        const CACHE_TTL = 1000 * 60 * 5; // 5 min
+        const MOBILE_BREAK = 768;
+
+        // STATE
         let allGames = [];
+        let filtered = [];
         let currentSort = 'none';
+        let selectedCount = 0;
+        const isMobile = () => window.matchMedia(`(max-width: ${MOBILE_BREAK}px)`).matches;
 
-        const copySelectedBtn = document.getElementById('copySelectedBtn');
-        const clearSelectionBtn = document.getElementById('clearSelectionBtn');
+        // ELEMENTS
+        const search = document.getElementById('search');
+        const clearBtn = document.getElementById('clear');
+        const tableBody = document.getElementById('tableBody');
+        const cardsList = document.getElementById('cardsList');
+        const copySelected = document.getElementById('copySelected');
+        const clearSel = document.getElementById('clearSel');
+        const sortBtn = document.getElementById('sortBtn');
+        const rowTpl = document.getElementById('rowTemplate');
+        const cardTpl = document.getElementById('cardTemplate');
 
-        function updateButtons() {
-            const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
-            copySelectedBtn.innerHTML = `<i class="fas fa-copy"></i> Скопировать выбранное (${count})`;
-            copySelectedBtn.classList.toggle('visible', count > 0);
-            clearSelectionBtn.classList.toggle('visible', count > 0);
+        // UTIL
+        function debounce(fn, ms=250){let t; return (...args)=>{clearTimeout(t); t=setTimeout(()=>fn(...args), ms);}};
+        function qs(selector, root=document){return root.querySelector(selector)}
+        function qsa(selector, root=document){return Array.from(root.querySelectorAll(selector))}
+
+        // STORAGE
+        function saveCache(data){localStorage.setItem('priceCache', JSON.stringify(data)); localStorage.setItem('priceCacheTime', Date.now());}
+        function readCache(){try{const raw = localStorage.getItem('priceCache'); const t = +localStorage.getItem('priceCacheTime')||0; if(raw && Date.now()-t < CACHE_TTL) return JSON.parse(raw)}catch(e){} return null}
+
+        // RENDER
+        function renderList(){
+            const q = search.value.trim().toLowerCase();
+            filtered = allGames.filter(g => g.name.toLowerCase().includes(q));
+            if(currentSort === 'priceAsc') filtered.sort((a,b)=>Number(a.num)-Number(b.num));
+            if(currentSort === 'priceDesc') filtered.sort((a,b)=>Number(b.num)-Number(a.num));
+
+            // Only render the active layout
+            if(isMobile()){
+                renderCards(filtered);
+                document.querySelector('.table-wrap').setAttribute('aria-hidden', 'true');
+                cardsList.setAttribute('aria-hidden','false');
+            } else {
+                renderTable(filtered);
+                document.querySelector('.table-wrap').setAttribute('aria-hidden', 'false');
+                cardsList.setAttribute('aria-hidden','true');
+            }
+            updateSelectionUI();
         }
 
-        function copySelected() {
-            const checked = document.querySelectorAll('input[type="checkbox"]:checked');
-            if (checked.length === 0) return;
-            const lines = Array.from(checked).map(cb => {
-                const row = cb.closest('tr') || cb.closest('.game-card');
-                const name = (row.querySelector('.game-title') || row.querySelector('.game-name span'))?.textContent.trim();
-                const price = row.querySelector('td:last-child, .game-price')?.textContent.trim();
-                return `${name} — ${price} руб.`;
-            });
-            navigator.clipboard.writeText(lines.join('\n')).then(() => {
-                copySelectedBtn.innerHTML = '<i class="fas fa-check"></i> Скопировано!';
-                setTimeout(updateButtons, 1500);
-            });
+        function renderTable(items){
+            // batch DOM ops with fragment
+            tableBody.innerHTML = '';
+            const frag = document.createDocumentFragment();
+            for(const g of items){
+                const node = rowTpl.content.cloneNode(true);
+                const tr = node.querySelector('tr');
+                qs('.name', node).textContent = g.name;
+                qs('.price-col', node).textContent = g.price + ' руб.';
+                // store data on element for delegation
+                tr.dataset.name = g.name; tr.dataset.price = g.price;
+                frag.appendChild(node);
+            }
+            tableBody.appendChild(frag);
         }
 
-        function clearSelection() {
-            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
-                cb.checked = false;
-                const row = cb.closest('tr') || cb.closest('.game-card');
-                row?.classList.remove('selected');
-            });
-            updateButtons();
+        function renderCards(items){
+            cardsList.innerHTML = '';
+            const frag = document.createDocumentFragment();
+            for(const g of items){
+                const node = cardTpl.content.cloneNode(true);
+                const card = node.querySelector('.card');
+                qs('.title', node).textContent = g.name;
+                qs('.price', node).textContent = g.price + ' руб.';
+                card.dataset.name = g.name; card.dataset.price = g.price;
+                frag.appendChild(node);
+            }
+            cardsList.appendChild(frag);
         }
 
-        async function copySingle(text, btn) {
-            await navigator.clipboard.writeText(text);
-            const fb = btn.querySelector('.copy-feedback');
-            fb.classList.add('show');
-            setTimeout(() => fb.classList.remove('show'), 1500);
-        }
-
-        function renderAll() {
-            const search = searchInput.value.trim().toLowerCase();
-            let filtered = allGames.filter(g => g.name.toLowerCase().includes(search));
-            if (currentSort === 'priceAsc') filtered.sort((a,b) => +a.price.replace(/\D/g,'') - +b.price.replace(/\D/g,''));
-            if (currentSort === 'priceDesc') filtered.sort((a,b) => +b.price.replace(/\D/g,'') - +a.price.replace(/\D/g,''));
-
-            // Десктоп
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-            filtered.forEach(g => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><input type="checkbox"></td>
-                    <td><div class="game-name">
-                        <div class="copy-btn"><i class="fas fa-copy"></i><span class="copy-feedback">Скопировано!</span></div>
-                        <span>${g.name}</span>
-                    </div></td>
-                    <td>${g.price}</td>
-                `;
-                const cb = tr.querySelector('input[type="checkbox"]');
-                cb.onchange = () => { tr.classList.toggle('selected', cb.checked); updateButtons(); };
-                tr.querySelector('.copy-btn').onclick = e => { e.stopPropagation(); copySingle(`${g.name} — ${g.price} руб.`, e.currentTarget); };
-                tbody.appendChild(tr);
-            });
-
-            // Мобильные карточки
-            const mobile = document.getElementById('mobileCards');
-            mobile.innerHTML = '';
-            filtered.forEach(g => {
-                const safeId = 'cb-' + g.name.replace(/\W/g, '_').substring(0, 50);
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.innerHTML = `
-                    <input type="checkbox" id="${safeId}">
-                    <label for="${safeId}"></label>
-                    <div class="game-info">
-                        <div class="game-title">${g.name}</div>
-                        <div class="game-price">${g.price}</div>
-                    </div>
-                    <div class="copy-btn">
-                        <i class="fas fa-copy"></i>
-                        <span class="copy-feedback">Скопировано!</span>
-                    </div>
-                `;
-                const cb = card.querySelector('input[type="checkbox"]');
-                cb.onchange = () => { card.classList.toggle('selected', cb.checked); updateButtons(); };
-                card.querySelector('.copy-btn').onclick = e => { e.stopPropagation(); copySingle(`${g.name} — ${g.price} руб.`, e.currentTarget); };
-                mobile.appendChild(card);
-            });
-
-            document.querySelector('#sortButton i').className =
-                currentSort === 'priceAsc' ? 'fas fa-sort-amount-down-alt' :
-                currentSort === 'priceDesc' ? 'fas fa-sort-amount-up-alt' : 'fas fa-sort';
-
-            updateButtons();
-        }
-
-        const searchInput = document.getElementById('searchInput');
-        const clearBtn = document.getElementById('clearSearch');
-        searchInput.addEventListener('input', () => {
-            clearBtn.classList.toggle('show', searchInput.value.length > 0);
-            renderAll();
+        // EVENTS (delegated)
+        // Clicks for copy-single and changes for checkboxes
+        document.addEventListener('click', async (e)=>{
+            const copyBtn = e.target.closest('.copy-single');
+            if(copyBtn){
+                e.preventDefault();
+                const container = copyBtn.closest('tr') || copyBtn.closest('.card');
+                const name = container?.dataset?.name || qs('.name', container)?.textContent || qs('.title', container)?.textContent;
+                const price = container?.dataset?.price || qs('.price-col', container)?.textContent || qs('.price', container)?.textContent;
+                const text = `${name} — ${price.replace(/руб\.?/,'').trim()} руб.`;
+                try{await navigator.clipboard.writeText(text);}catch(e){}
+                const fb = copyBtn.querySelector('.copy-feedback'); if(fb){fb.classList.add('show'); setTimeout(()=>fb.classList.remove('show'),1000)}
+            }
         });
-        clearBtn.onclick = () => { searchInput.value = ''; clearBtn.classList.remove('show'); renderAll(); searchInput.focus(); };
 
-        document.getElementById('sortButton').onclick = () => {
-            const order = ['none', 'priceAsc', 'priceDesc'];
-            currentSort = order[(order.indexOf(currentSort) + 1) % 3];
-            renderAll();
-        };
-
-        copySelectedBtn.onclick = copySelected;
-        clearSelectionBtn.onclick = clearSelection;
-
-        window.addEventListener('scroll', () => document.getElementById('scrollToTop').classList.toggle('show', scrollY > 400));
-        document.getElementById('scrollToTop').onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
-
-        // Загрузка прайса
-        (async function loadPriceList() {
-            const loading = document.getElementById('loading');
-            loading.classList.add('show');
-
-            const cached = localStorage.getItem('priceCache');
-            const time = localStorage.getItem('priceCacheTime');
-            if (cached && time && Date.now() - +time < 300000) {
-                allGames = JSON.parse(cached);
-                renderAll();
-                loading.classList.remove('show');
-                return;
+        // checkbox change - delegation
+        document.addEventListener('change', (e)=>{
+            if(e.target.classList.contains('row-cb')){
+                const cb = e.target;
+                const container = cb.closest('tr') || cb.closest('.card');
+                const checked = cb.checked;
+                container?.classList.toggle('selected', checked);
+                selectedCount += checked ? 1 : -1;
+                // clamp
+                if(selectedCount < 0) selectedCount = 0;
+                updateSelectionUI();
             }
+        });
 
-            try {
+        function updateSelectionUI(){
+            copySelected.textContent = '';
+            copySelected.innerHTML = `<i class="fas fa-copy"></i> Скопировать выбранное (${selectedCount})`;
+            copySelected.classList.toggle('visible', selectedCount>0);
+            clearSel.classList.toggle('visible', selectedCount>0);
+        }
+
+        // copy selected
+        copySelected.addEventListener('click', ()=>{
+            if(selectedCount === 0) return;
+            // collect checked boxes from current view
+            const checked = qsa('.row-cb:checked');
+            const lines = checked.map(cb => {
+                const container = cb.closest('tr') || cb.closest('.card');
+                const name = container?.dataset?.name || qs('.name', container)?.textContent || qs('.title', container)?.textContent;
+                const price = container?.dataset?.price || qs('.price-col', container)?.textContent || qs('.price', container)?.textContent;
+                return `${name} — ${price.replace(/руб\.?/,'').trim()} руб.`;
+            });
+            navigator.clipboard.writeText(lines.join('\n')).then(()=>{
+                copySelected.innerHTML = '<i class="fas fa-check"></i> Скопировано!';
+                setTimeout(()=>updateSelectionUI(),1200);
+            });
+        });
+
+        clearSel.addEventListener('click', ()=>{
+            qsa('.row-cb:checked').forEach(cb=>{cb.checked=false; const c=cb.closest('tr')||cb.closest('.card'); c?.classList.remove('selected')});
+            selectedCount = 0; updateSelectionUI();
+        });
+
+        // sort
+        sortBtn.addEventListener('click', ()=>{
+            const order = ['none','priceAsc','priceDesc'];
+            currentSort = order[(order.indexOf(currentSort)+1)%3];
+            const icon = qs('i', sortBtn);
+            icon.className = currentSort==='priceAsc'? 'fas fa-sort-amount-down-alt' : currentSort==='priceDesc'? 'fas fa-sort-amount-up-alt' : 'fas fa-sort';
+            renderList();
+        });
+
+        // search debounce
+        const onSearch = debounce(()=>{clearBtn.classList.toggle('show', search.value.length>0); // small delay render
+            requestAnimationFrame(renderList);
+        }, 220);
+        search.addEventListener('input', onSearch);
+        clearBtn.addEventListener('click', ()=>{search.value=''; clearBtn.classList.remove('show'); renderList(); search.focus();});
+
+        // resize: re-render if breakpoint crosses
+        let lastIsMobile = isMobile();
+        window.addEventListener('resize', debounce(()=>{
+            const nowMobile = isMobile();
+            if(nowMobile !== lastIsMobile){ lastIsMobile = nowMobile; renderList(); }
+        }, 300));
+
+        // LOADING
+        async function loadData(){
+            // show skeleton if needed (simple)
+            const cached = readCache();
+            if(cached){ allGames = cached; renderList(); return; }
+
+            try{
                 const res = await fetch(dataUrl);
-                if (!res.ok) throw new Error('Нет сети');
+                if(!res.ok) throw new Error('Сервер не отвечает');
                 const data = await res.json();
-                if (!data.values || data.values.length <= 1) throw new Error('Пустая таблица');
+                if(!data.values || data.values.length <= 1) throw new Error('Пустой прайс');
 
-                allGames = data.values.slice(1)
-                    .map(r => ({ name: (r[0]||'').trim(), price: (r[1]||'').trim() }))
-                    .filter(g => g.name && g.price);
+                allGames = data.values.slice(1).map(r=>{
+                    const name = (r[0]||'').trim();
+                    const priceRaw = (r[1]||'').trim();
+                    const num = Number((priceRaw||'').replace(/\D/g,'')) || 0;
+                    return {name, price: priceRaw || '—', num};
+                }).filter(g=>g.name && g.price);
 
-                localStorage.setItem('priceCache', JSON.stringify(allGames));
-                localStorage.setItem('priceCacheTime', Date.now() + '');
-
-                renderAll();
-            } catch (e) {
-                document.getElementById('tableBody').innerHTML = `<tr><td colspan="3" style="text-align:center;color:#ff6b6b;padding:3rem;">Ошибка: ${e.message}</td></tr>`;
-                document.getElementById('mobileCards').innerHTML = `<div style="text-align:center;color:#ff6b6b;padding:2rem;">Ошибка загрузки</div>`;
-            } finally {
-                loading.classList.remove('show');
+                saveCache(allGames);
+                renderList();
+            }catch(err){
+                tableBody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:#ff6b6b;padding:3rem;">Ошибка: ${err.message}</td></tr>`;
+                cardsList.innerHTML = `<div style="text-align:center;color:#ff6b6b;padding:2rem;">Ошибка загрузки</div>`;
             }
-        })();
+        }
+
+        // initial
+        loadData();
+
+    })();
     </script>
 </body>
 </html>
