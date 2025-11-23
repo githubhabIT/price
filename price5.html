@@ -7,157 +7,123 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        :root {
-            --bg: #0f0f18;
-            --card: #1a1a28;
-            --text: #e0e0ff;
-            --text-muted: #a0a0cc;
-            --accent: #00ff9d;
-            --border: #2a2a3a;
-        }
-        * { box-sizing: border-box; margin:0; padding:0; }
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            background: #f4f4f9;
+            color: #333;
             line-height: 1.6;
-            min-height: 100vh;
         }
+        h1 { text-align: center; color: #333; margin: 15px 0 5px; font-weight: 600; }
         #logo {
             display: block;
-            margin: 16px auto 8px;
-            width: 64px;
-            height: 64px;
+            margin: 10px auto 0;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--accent);
-            box-shadow: 0 0 20px rgba(0,255,157,0.3);
+            border: 3px solid #ddd;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        h1 {
-            text-align: center;
-            font-size: 2.1rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff, var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 6px;
-        }
-        .subtitle { text-align: center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px; }
-
         #searchForm {
             position: sticky;
             top: 0;
-            background: var(--bg);
-            padding: 16px 0;
-            z-index: 100;
+            background: #f4f4f9;
+            padding: 14px 0;
+            z-index: 1000;
             text-align: center;
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(12px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            backdrop-filter: blur(8px);
         }
-        .search-container {
-            position: relative;
-            display: inline-block;
-        }
+        .search-container { position: relative; display: inline-block; }
         #searchInput {
-            padding: 13px 44px 13px 44px;
-            width: 340px;
+            padding: 12px 40px 12px 14px;
+            width: 320px;
             max-width: 90vw;
             font-size: 16px;
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            background: var(--card);
-            color: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             transition: all 0.3s;
         }
         #searchInput:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(0,255,157,0.15);
-        }
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            pointer-events: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 4px rgba(76,175,80,0.15);
         }
         #clearSearch {
             display: none;
             position: absolute;
-            right: 12px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
             font-size: 20px;
-            color: var(--text-muted);
+            color: #999;
         }
-        #clearSearch:hover { color: var(--accent); }
+        #clearSearch:hover { color: #4CAF50; }
 
-        /* КНОПКА СОРТИРОВКИ — ИКОНКА */
         #sortButton {
             margin-left: 12px;
-            width: 48px;
-            height: 48px;
-            background: var(--card);
-            border: 2px solid var(--border);
-            border-radius: 14px;
+            width: 44px;
+            height: 44px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 18px;
-            color: var(--text);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
         }
         #sortButton:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(0,255,157,0.1);
+            border-color: #4CAF50;
+            background: #f9fff9;
         }
 
         #sortMenu {
             display: none;
             position: absolute;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            margin-top: 10px;
-            z-index: 101;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            margin-top: 8px;
+            z-index: 1001;
             min-width: 180px;
             overflow: hidden;
             transform: translateX(-50%);
             left: 50%;
         }
         #sortMenu div {
-            padding: 12px 18px;
+            padding: 12px 20px;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.95rem;
+            transition: background 0.2s;
         }
-        #sortMenu div:hover { background: rgba(0,255,157,0.15); color: var(--accent); }
+        #sortMenu div:hover { background: #f5f5f5; }
 
         #copyHint {
-            max-width: 620px;
-            margin: 20px auto;
-            padding: 16px 22px;
-            background: linear-gradient(135deg, rgba(0,255,157,0.1), rgba(0,255,157,0.05));
-            border: 1px solid rgba(0,255,157,0.3);
-            border-radius: 16px;
+            max-width: 560px;
+            margin: 18px auto;
+            padding: 16px 20px;
+            background: #e8f5e9;
+            border: 1px solid #4CAF50;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #2e7d32;
             text-align: center;
-            font-size: 0.95rem;
-            color: var(--text);
+            line-height: 1.6;
         }
-        #copyHint strong { color: var(--accent); }
+        #copyHint svg { width: 22px; height: 22px; vertical-align: -5px; margin-right: 8px; fill: #2e7d32; }
 
-        /* ЛОАДЕР — ВСЕГДА АНИМИРУЕТСЯ */
+        /* ТОЛЬКО ЛОАДЕР — ТЁМНАЯ ТЕМА */
         #loading {
             position: fixed;
             inset: 0;
-            background: var(--bg);
+            background: #0f0f18;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -168,70 +134,66 @@
             pointer-events: none;
             transition: opacity 0.5s ease;
         }
-        #loading.show { opacity: 1; pointer-events: auto; }
-        #loading img { width: 140px; height: 140px; }
+        #loading.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #loading img, #loading svg {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+        }
         #loading span {
-            margin-top: 24px;
+            margin-top: 28px;
             font-size: 1.4rem;
-            color: var(--accent);
+            color: #00ff9d;
             font-weight: 600;
         }
-        @media (max-width: 768px) { #loading img { width: 110px; height: 110px; } }
-        @media (max-width: 480px) { #loading img { width: 90px; height: 90px; } }
+        @media (max-width: 768px) {
+            #loading img, #loading svg { width: 110px; height: 110px; }
+            #loading span { font-size: 1.2rem; }
+        }
+        @media (max-width: 480px) {
+            #loading img, #loading svg { width: 90px; height: 90px; }
+        }
 
         table {
-            width: 90%;
-            max-width: 1100px;
+            width: 88%;
+            max-width: 1000px;
             margin: 24px auto;
             border-collapse: collapse;
-            background: var(--card);
-            border-radius: 16px;
+            background: white;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-            border: 1px solid var(--border);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
-        thead { background: linear-gradient(90deg, #1a1a2e, #16213e); }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #eee; }
         th {
-            padding: 16px;
-            text-align: left;
+            background: #4CAF50;
             color: white;
             font-weight: 600;
-            font-size: 1.02rem;
-        }
-        th:last-child { text-align: right; }
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border);
-        }
-        td:last-child {
-            text-align: right;
-            font-weight: 600;
-            color: var(--accent);
             font-size: 1.05rem;
         }
-        tr:hover { background: rgba(0,255,157,0.08); }
+        tr:hover { background: #f8fff8; }
+        td:last-child { text-align: right; font-weight: 600; color: #2e7d32; }
 
         .copy-btn {
             cursor: pointer;
-            margin-right: 12px;
-            opacity: 0.8;
-            transition: all 0.25s;
+            margin-right: 10px;
+            opacity: 0.7;
+            transition: all 0.2s;
         }
-        .copy-btn:hover {
-            opacity: 1;
-            transform: scale(1.2);
-        }
+        .copy-btn:hover { opacity: 1; transform: scale(1.15); }
         .copy-feedback {
             position: absolute;
-            left: 100%;
+            left: 32px;
             top: 50%;
             transform: translateY(-50%);
-            margin-left: 10px;
-            background: var(--accent);
-            color: black;
+            background: #4CAF50;
+            color: white;
             padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.82rem;
+            border-radius: 6px;
+            font-size: 13px;
             font-weight: 600;
             white-space: nowrap;
             opacity: 0;
@@ -239,22 +201,21 @@
             transition: all 0.3s;
             z-index: 10;
         }
-        .copy-feedback.show { opacity: 1; }
+        .copy-feedback.show { opacity: 1; transform: translateY(-50%) translateX(4px); }
 
-        /* КНОПКА НАВЕРХ — МАЛЕНЬКАЯ И КРАСИВАЯ */
         #scrollToTop {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: var(--accent);
-            color: black;
-            width: 46px;
-            height: 46px;
+            background: #4CAF50;
+            color: white;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             border: none;
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0,255,157,0.4);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
             opacity: 0;
             transform: translateY(10px);
             transition: all 0.4s;
@@ -270,31 +231,28 @@
         }
         #scrollToTop:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(0,255,157,0.5);
+            box-shadow: 0 10px 25px rgba(76,175,80,0.4);
         }
 
         @media (max-width: 600px) {
-            #searchInput { width: 280px; }
+            #searchInput { width: 260px; }
             table { width: 94%; }
-            td, th { padding: 12px 10px; font-size: 0.95rem; }
+            th, td { padding: 12px 10px; font-size: 15px; }
         }
     </style>
 </head>
 <body>
 
-    <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/64/00ff9d/000?text=G'">
+    <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/56/4CAF50/white?text=G'">
 
-    <h1>ПРАЙС-ЛИСТ ИГР</h1>
-    <p class="subtitle">Актуальные цены · Обновляется автоматически</p>
+    <h1>Прайс-лист игр</h1>
 
     <div id="searchForm">
         <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
             <input type="text" id="searchInput" placeholder="Поиск по названию..." autocomplete="off">
-            <button id="clearSearch">×</button>
+            <button id="clearSearch" title="Очистить">×</button>
         </div>
 
-        <!-- КНОПКА СОРТИРОВКИ — КРАСИВАЯ ИКОНКА -->
         <button id="sortButton" title="Сортировка">
             <i class="fas fa-sort"></i>
         </button>
@@ -307,28 +265,24 @@
     </div>
 
     <div id="copyHint">
-        <strong>Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена игры
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        <strong>Кнопка копирования</strong> — одним кликом копирует название и цену:<br>
+        <em>«GTA V: Premium Edition — 1299 руб.»</em>
     </div>
 
-    <!-- ЛОАДЕР -->
+    <!-- ТЁМНЫЙ ЛОАДЕР (единственное тёмное место!) -->
     <div id="loading">
         <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка">
         <span>Загрузка прайса...</span>
     </div>
 
-    <p id="error" style="color:#ff6b6b; text-align:center; font-weight:500; display:none; margin:20px;"></p>
+    <p id="error" style="color:#d32f2f; text-align:center; font-weight:500; display:none; margin:20px;"></p>
 
     <table id="priceTable">
-        <thead>
-            <tr>
-                <th>Название игры</th>
-                <th>Цена</th>
-            </tr>
-        </thead>
+        <thead><tr><th>Название игры</th><th>Цена (руб.)</th></tr></thead>
         <tbody id="tableBody"></tbody>
     </table>
 
-    <!-- КНОПКА НАВЕРХ — МАЛЕНЬКАЯ И СТИЛЬНАЯ -->
     <button id="scrollToTop" title="Наверх">
         <i class="fas fa-arrow-up"></i>
     </button>
@@ -395,7 +349,7 @@
                 applyFiltersAndSort();
 
             } catch (e) {
-                errorEl.textContent = 'Ошибка: ' + e.message;
+                errorEl.textContent = 'Ошибка загрузки: ' + e.message;
                 errorEl.style.display = 'block';
             } finally {
                 loading.classList.remove('show');
@@ -408,7 +362,9 @@
                 <tr>
                     <td>
                         <span class="copy-btn">
-                            <i class="fas fa-copy"></i>
+                            <svg width="18" height="18" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                            </svg>
                         </span>
                         ${g.name}
                     </td>
@@ -436,7 +392,6 @@
 
             renderTable(filtered);
 
-            // Обновляем иконку сортировки
             const icon = document.querySelector('#sortButton i');
             icon.className = currentSort === 'priceAsc' ? 'fas fa-sort-amount-down-alt' :
                             currentSort === 'priceDesc' ? 'fas fa-sort-amount-up-alt' : 'fas fa-sort';
