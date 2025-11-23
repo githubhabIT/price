@@ -4,140 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Прайс-лист игр</title>
-    <!-- Подключаем красивый шрифт (как в тёмной версии) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-            margin: 0;
-            background: #f4f4f9;
-            color: #333;
-            line-height: 1.6;
+        :root {
+            --bg: #0f0f18;
+            --card: #1a1a28;
+            --text: #e0e0ff;
+            --text-muted: #a0a0cc;
+            --accent: #00ff9d;
+            --border: #2a2a3a;
         }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin: 15px 0 5px;
-            font-weight: 600;
+        * { box-sizing: border-box; margin:0; padding:0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
         }
         #logo {
             display: block;
-            margin: 10px auto 0;
-            width: 56px;
-            height: 56px;
+            margin: 16px auto 8px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid #ddd;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 20px rgba(0,255,157,0.3);
         }
+        h1 {
+            text-align: center;
+            font-size: 2.1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+        .subtitle { text-align: center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 12px; }
+
         #searchForm {
             position: sticky;
             top: 0;
-            background: #f4f4f9;
-            padding: 14px 0;
-            z-index: 1000;
+            background: var(--bg);
+            padding: 16px 0;
+            z-index: 100;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
         }
         .search-container {
             position: relative;
             display: inline-block;
         }
         #searchInput {
-            padding: 12px 40px 12px 14px;
-            width: 320px;
+            padding: 13px 44px 13px 44px;
+            width: 340px;
             max-width: 90vw;
             font-size: 16px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            background: var(--card);
+            color: white;
             transition: all 0.3s;
         }
         #searchInput:focus {
             outline: none;
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 4px rgba(76,175,80,0.15);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0,255,157,0.15);
+        }
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
         }
         #clearSearch {
             display: none;
             position: absolute;
-            right: 10px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
             font-size: 20px;
-            color: #999;
+            color: var(--text-muted);
         }
-        #clearSearch:hover { color: #4CAF50; }
+        #clearSearch:hover { color: var(--accent); }
 
+        /* КНОПКА СОРТИРОВКИ — ИКОНКА */
         #sortButton {
             margin-left: 12px;
-            width: 44px;
-            height: 44px;
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            width: 48px;
+            height: 48px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 14px;
             cursor: pointer;
             font-size: 18px;
+            color: var(--text);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
         }
         #sortButton:hover {
-            border-color: #4CAF50;
-            background: #f9fff9;
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(0,255,157,0.1);
         }
 
         #sortMenu {
             display: none;
             position: absolute;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            margin-top: 8px;
-            z-index: 1001;
-            min-width: 160px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            margin-top: 10px;
+            z-index: 101;
+            min-width: 180px;
             overflow: hidden;
             transform: translateX(-50%);
             left: 50%;
         }
         #sortMenu div {
-            padding: 12px 20px;
+            padding: 12px 18px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            font-size: 0.95rem;
         }
-        #sortMenu div:hover { background: #f5f5f5; }
+        #sortMenu div:hover { background: rgba(0,255,157,0.15); color: var(--accent); }
 
         #copyHint {
-            max-width: 560px;
-            margin: 18px auto;
-            padding: 16px 20px;
-            background: #e8f5e9;
-            border: 1px solid #4CAF50;
-            border-radius: 12px;
-            font-size: 15px;
-            color: #2e7d32;
+            max-width: 620px;
+            margin: 20px auto;
+            padding: 16px 22px;
+            background: linear-gradient(135deg, rgba(0,255,157,0.1), rgba(0,255,157,0.05));
+            border: 1px solid rgba(0,255,157,0.3);
+            border-radius: 16px;
             text-align: center;
-            line-height: 1.6;
+            font-size: 0.95rem;
+            color: var(--text);
         }
-        #copyHint svg {
-            width: 22px;
-            height: 22px;
-            vertical-align: -5px;
-            margin-right: 8px;
-            fill: #2e7d32;
-        }
+        #copyHint strong { color: var(--accent); }
 
-        /* ИДЕАЛЬНЫЙ ЛОАДЕР — всегда анимируется */
+        /* ЛОАДЕР — ВСЕГДА АНИМИРУЕТСЯ */
         #loading {
             position: fixed;
             inset: 0;
-            background: rgba(244, 244, 249, 0.98);
+            background: var(--bg);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -148,71 +168,70 @@
             pointer-events: none;
             transition: opacity 0.5s ease;
         }
-        #loading.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        #loading img, #loading svg {
-            width: 140px;
-            height: 140px;
-            object-fit: contain;
-        }
+        #loading.show { opacity: 1; pointer-events: auto; }
+        #loading img { width: 140px; height: 140px; }
         #loading span {
             margin-top: 24px;
             font-size: 1.4rem;
-            color: #4CAF50;
+            color: var(--accent);
             font-weight: 600;
         }
-        @media (max-width: 768px) {
-            #loading img, #loading svg { width: 110px; height: 110px; }
-            #loading span { font-size: 1.2rem; }
-        }
-        @media (max-width: 480px) {
-            #loading img, #loading svg { width: 90px; height: 90px; }
-        }
+        @media (max-width: 768px) { #loading img { width: 110px; height: 110px; } }
+        @media (max-width: 480px) { #loading img { width: 90px; height: 90px; } }
 
         table {
-            width: 88%;
-            max-width: 1000px;
+            width: 90%;
+            max-width: 1100px;
             margin: 24px auto;
             border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
+            background: var(--card);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            border: 1px solid var(--border);
         }
-        th, td {
-            padding: 14px 16px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
+        thead { background: linear-gradient(90deg, #1a1a2e, #16213e); }
         th {
-            background: #4CAF50;
+            padding: 16px;
+            text-align: left;
             color: white;
             font-weight: 600;
+            font-size: 1.02rem;
+        }
+        th:last-child { text-align: right; }
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        td:last-child {
+            text-align: right;
+            font-weight: 600;
+            color: var(--accent);
             font-size: 1.05rem;
         }
-        tr:hover { background: #f8fff8; }
+        tr:hover { background: rgba(0,255,157,0.08); }
+
         .copy-btn {
             cursor: pointer;
-            margin-right: 10px;
-            opacity: 0.7;
-            transition: all 0.2s;
+            margin-right: 12px;
+            opacity: 0.8;
+            transition: all 0.25s;
         }
         .copy-btn:hover {
             opacity: 1;
-            transform: scale(1.15);
+            transform: scale(1.2);
         }
         .copy-feedback {
             position: absolute;
-            left: 32px;
+            left: 100%;
             top: 50%;
             transform: translateY(-50%);
-            background: #4CAF50;
-            color: white;
+            margin-left: 10px;
+            background: var(--accent);
+            color: black;
             padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
+            border-radius: 8px;
+            font-size: 0.82rem;
             font-weight: 600;
             white-space: nowrap;
             opacity: 0;
@@ -220,53 +239,66 @@
             transition: all 0.3s;
             z-index: 10;
         }
-        .copy-feedback.show {
-            opacity: 1;
-            transform: translateY(-50%) translateX(4px);
-        }
+        .copy-feedback.show { opacity: 1; }
 
+        /* КНОПКА НАВЕРХ — МАЛЕНЬКАЯ И КРАСИВАЯ */
         #scrollToTop {
-            display: none;
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: #4CAF50;
-            color: white;
-            border: none;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: black;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
-            width: 56px;
-            height: 56px;
-            font-size: 28px;
+            border: none;
+            font-size: 20px;
             cursor: pointer;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            box-shadow: 0 6px 20px rgba(0,255,157,0.4);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s;
             z-index: 98;
-            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #scrollToTop.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
         }
         #scrollToTop:hover {
-            background: #45a049;
             transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,255,157,0.5);
         }
-        #scrollToTop.show { display: block; }
 
         @media (max-width: 600px) {
-            #searchInput { width: 260px; }
+            #searchInput { width: 280px; }
             table { width: 94%; }
-            th, td { padding: 12px 10px; font-size: 15px; }
+            td, th { padding: 12px 10px; font-size: 0.95rem; }
         }
     </style>
 </head>
 <body>
 
-    <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/56/4CAF50/white?text=G'">
+    <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/64/00ff9d/000?text=G'">
 
-    <h1>Прайс-лист игр</h1>
+    <h1>ПРАЙС-ЛИСТ ИГР</h1>
+    <p class="subtitle">Актуальные цены · Обновляется автоматически</p>
 
     <div id="searchForm">
         <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
             <input type="text" id="searchInput" placeholder="Поиск по названию..." autocomplete="off">
-            <button id="clearSearch" title="Очистить">×</button>
+            <button id="clearSearch">×</button>
         </div>
-        <button id="sortButton" title="Сортировка">Sort</button>
+
+        <!-- КНОПКА СОРТИРОВКИ — КРАСИВАЯ ИКОНКА -->
+        <button id="sortButton" title="Сортировка">
+            <i class="fas fa-sort"></i>
+        </button>
+
         <div id="sortMenu">
             <div data-sort="none">Без сортировки</div>
             <div data-sort="priceAsc">Цена: по возрастанию</div>
@@ -275,27 +307,31 @@
     </div>
 
     <div id="copyHint">
-        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-        <strong>Кнопка копирования</strong> — одним кликом копирует название и цену:<br>
-        <em>«GTA V: Premium Edition — 1299 руб.»</em>
+        <strong>Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена игры
     </div>
 
-    <!-- КРАСИВЫЙ РАБОЧИЙ ЛОАДЕР -->
+    <!-- ЛОАДЕР -->
     <div id="loading">
         <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка">
         <span>Загрузка прайса...</span>
     </div>
 
-    <p id="error" style="color:#d32f2f; text-align:center; font-weight:500; display:none; margin:20px;"></p>
+    <p id="error" style="color:#ff6b6b; text-align:center; font-weight:500; display:none; margin:20px;"></p>
 
     <table id="priceTable">
         <thead>
-            <tr><th>Название игры</th><th>Цена (руб.)</th></tr>
+            <tr>
+                <th>Название игры</th>
+                <th>Цена</th>
+            </tr>
         </thead>
         <tbody id="tableBody"></tbody>
     </table>
 
-    <button id="scrollToTop" title="Наверх">Up Arrow</button>
+    <!-- КНОПКА НАВЕРХ — МАЛЕНЬКАЯ И СТИЛЬНАЯ -->
+    <button id="scrollToTop" title="Наверх">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <script>
         const sheetId = '1MzBvxOzI6Yn3sRkAdJZeG-mdSeoQwPRYKv9thY9_U-0';
@@ -331,12 +367,10 @@
             tbody.innerHTML = '';
             errorEl.style.display = 'none';
 
-            // ВАЖНО: принудительный рефлоу → анимация лоадера всегда срабатывает
             loading.classList.remove('show');
             void loading.offsetHeight;
             loading.classList.add('show');
 
-            // Кэш 5 минут
             const cached = localStorage.getItem('priceCache');
             const time = localStorage.getItem('priceCacheTime');
             if (cached && time && Date.now() - +time < 300000) {
@@ -361,7 +395,7 @@
                 applyFiltersAndSort();
 
             } catch (e) {
-                errorEl.textContent = 'Ошибка загрузки: ' + e.message;
+                errorEl.textContent = 'Ошибка: ' + e.message;
                 errorEl.style.display = 'block';
             } finally {
                 loading.classList.remove('show');
@@ -374,17 +408,14 @@
                 <tr>
                     <td>
                         <span class="copy-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                            </svg>
+                            <i class="fas fa-copy"></i>
                         </span>
                         ${g.name}
                     </td>
-                    <td style="text-align:right; font-weight:600; color:#2e7d32;">${g.price}</td>
+                    <td>${g.price}</td>
                 </tr>
             `).join('');
 
-            // Делегирование кликов по копированию
             tbody.querySelectorAll('.copy-btn').forEach((btn, i) => {
                 btn.onclick = e => {
                     e.stopPropagation();
@@ -404,9 +435,13 @@
                 filtered.sort((a, b) => +b.price.replace(/\D/g, '') - +a.price.replace(/\D/g, ''));
 
             renderTable(filtered);
+
+            // Обновляем иконку сортировки
+            const icon = document.querySelector('#sortButton i');
+            icon.className = currentSort === 'priceAsc' ? 'fas fa-sort-amount-down-alt' :
+                            currentSort === 'priceDesc' ? 'fas fa-sort-amount-up-alt' : 'fas fa-sort';
         }
 
-        // Элементы
         const searchInput = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearch');
         const sortBtn = document.getElementById('sortButton');
@@ -450,7 +485,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // Запуск
         loadPriceList();
     </script>
 </body>
