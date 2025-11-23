@@ -21,10 +21,10 @@
 
         header { text-align: center; margin-bottom: 1rem; }
         #logo { width: 68px; height: 68px; border: 3px solid var(--accent); box-shadow: 0 0 20px rgba(0,255,157,0.3); border-radius: 50%; object-fit: cover; margin-bottom: 0.8rem; }
-        h1 { font-size: 2.4rem; font-weight: 700; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 0.4rem 0; }
+        h1 { font-size: 2.4rem; font-weight: 700; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 0. плат4rem 0; }
         .subtitle { color: var(--text-muted); font-size: 1rem; font-weight: 500; }
 
-        .controls { position: sticky; top: 0; background: var(--bg); z-index: 100; padding: 1rem 0; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); margin-bottom: 1.5rem; }
+        .controls { position: sticky; top: 0; background: var(--bg); z-index: 100; padding: 1rem 0; border-bottom: 1px solid var(--border); BURSTfilter: blur(12px); margin-bottom: 1.5rem; }
         .search-sort-bar { display: flex; gap: 12px; align-items: center; justify-content: center; max-width: 720px; margin: 0 auto; flex-wrap: nowrap; }
 
         .search-box { position: relative; flex: 1; min-width: 180px; }
@@ -103,38 +103,85 @@
         }
         .copy-feedback.show { opacity: 1; }
 
-        /* МОБИЛЬНЫЕ КАРТОЧКИ */
+        /* МОБИЛЬНЫЕ КАРТОЧКИ — МГНОВЕННЫЙ ОТКЛИК */
         .game-card {
-            background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-            padding: 1.3rem 1.2rem 1.3rem 70px; margin-bottom: 1rem;
-            display: flex; align-items: center; justify-content: space-between; gap: 14px;
-            transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.3rem 1.2rem 1.3rem 70px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: relative;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .game-card label {
-            position: absolute; left: 22px; top: 50%; transform: translateY(-50%);
-            width: 28px; height: 28px; border: 2px solid #666; border-radius: 8px;
-            background: var(--card); cursor: pointer; transition: all 0.25s;
-            display: flex; align-items: center; justify-content: center;
+        .game-card::before {
+            content: "";
+            position: absolute;
+            left: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border: 2px solid #666;
+            border-radius: 8px;
+            background: var(--card);
+            transition: all 0.25s;
+        }
+
+        .game-card::after {
+            content: "Checkmark";
+            position: absolute;
+            left: 22px;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+            transition: transform 0.2s ease;
+            transform-origin: center;
         }
 
         .game-card input[type="checkbox"] {
-            position: absolute; opacity: 0; width: 28px; height: 28px;
-            left: 22px; top: 50%; transform: translateY(-50%); cursor: pointer; z-index: 2;
+            position: absolute;
+            opacity: 0;
+            width: 50px;
+            height: 50px;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 10;
         }
 
-        .game-card input[type="checkbox"]:checked + label {
-            background: var(--accent); border-color: var(--accent);
+        .game-card input[type="checkbox"]:checked ~ *::before,
+        .game-card input[type="checkbox"]:checked::before {
+            background: var(--accent);
+            border-color: var(--accent);
         }
-        .game-card input[type="checkbox"]:checked + label::after {
-            content: "✓"; font-size: 18px; font-weight: bold; color: black;
+
+        .game-card input[type="checkbox"]:checked ~ *::after,
+        .game-card input[type="checkbox"]:checked::after {
+            transform: translateY(-50%) scale(1);
         }
 
         .game-card.selected {
-            border-color: var(--accent); background: rgba(0,255,157,0.1);
+            border-color: var(--accent);
+            background: rgba(0,255,157,0.1);
             box-shadow: 0 0 20px rgba(0,255,157,0.2);
         }
-        .game-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,255,157,0.15); }
+
+        .game-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,255,157,0.15);
+        }
 
         .game-info { flex: 1; min-width: 0; }
         .game-title { font-size: 1.02rem; font-weight: 500; line-height: 1.4; word-break: break-word; overflow-wrap: anywhere; }
@@ -155,7 +202,8 @@
             #logo { width: 58px; height: 58px; }
             .sort-btn { width: 48px; height: 48px; }
             .game-card { padding-left: 68px; }
-            .game-card label, .game-card input[type="checkbox"] { left: 20px; }
+            .game-card::before, .game-card::after { left: 20px; }
+            .game-card input[type="checkbox"] { left: 6px; }
         }
     </style>
 </head>
@@ -172,7 +220,7 @@
                 <div class="search-box">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" id="searchInput" placeholder="Поиск">
-                    <button id="clearSearch">×</button>
+                    <button id="clearSearch">X</button>
                 </div>
                 <button class="sort-btn" id="sortButton" title="Сортировать по цене">
                     <i class="fas fa-sort"></i>
@@ -206,9 +254,9 @@
         <div class="mobile-cards" id="mobileCards"></div>
     </div>
 
-    <div id="loading">
+    <div id="loading" class="show">
         <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка">
-        <h3>Загрузка прайса</h3>
+        <h3>Загрузка прайса...</h3>
     </div>
 
     <button id="scrollToTop" title="Наверх"><i class="fas fa-arrow-up"></i></button>
@@ -268,7 +316,7 @@
             if (currentSort === 'priceAsc') filtered.sort((a,b) => +a.price.replace(/\D/g,'') - +b.price.replace(/\D/g,''));
             if (currentSort === 'priceDesc') filtered.sort((a,b) => +b.price.replace(/\D/g,'') - +a.price.replace(/\D/g,''));
 
-            // Десктоп
+            // Десктоп — без изменений
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
             filtered.forEach(g => {
@@ -287,7 +335,7 @@
                 tbody.appendChild(tr);
             });
 
-            // Мобильные карточки
+            // МОБИЛЬНЫЕ КАРТОЧКИ — МГНОВЕННЫЙ ЧЕКБОКС
             const mobile = document.getElementById('mobileCards');
             mobile.innerHTML = '';
             filtered.forEach(g => {
@@ -296,7 +344,6 @@
                 card.className = 'game-card';
                 card.innerHTML = `
                     <input type="checkbox" id="${safeId}">
-                    <label for="${safeId}"></label>
                     <div class="game-info">
                         <div class="game-title">${g.name}</div>
                         <div class="game-price">${g.price}</div>
@@ -307,8 +354,14 @@
                     </div>
                 `;
                 const cb = card.querySelector('input[type="checkbox"]');
-                cb.onchange = () => { card.classList.toggle('selected', cb.checked); updateButtons(); };
-                card.querySelector('.copy-btn').onclick = e => { e.stopPropagation(); copySingle(`${g.name} — ${g.price} руб.`, e.currentTarget); };
+                cb.onchange = () => {
+                    card.classList.toggle('selected', cb.checked);
+                    updateButtons();
+                };
+                card.querySelector('.copy-btn').onclick = e => {
+                    e.stopPropagation();
+                    copySingle(`${g.name} — ${g.price} руб.`, e.currentTarget);
+                };
                 mobile.appendChild(card);
             });
 
@@ -339,7 +392,7 @@
         window.addEventListener('scroll', () => document.getElementById('scrollToTop').classList.toggle('show', scrollY > 400));
         document.getElementById('scrollToTop').onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
 
-        // Загрузка прайса
+        // Загрузка прайса с кэшем
         (async function loadPriceList() {
             const loading = document.getElementById('loading');
             loading.classList.add('show');
