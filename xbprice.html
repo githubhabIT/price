@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прайс-лист игр</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin:0; padding:0; }
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 12px 8px 80px;
+            min-height: 100vh;
+        }
+        h1 { text-align: center; font-size: 1.8rem; margin: 8px 0 4px; font-weight: 600; }
+        #logo { display: block; margin: 0 auto 8px; width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        #searchForm { position: sticky; top: 0; background: #f4f4f9; padding: 12px 10px; z-index: 100; border-bottom: 1px solid #ddd; backdrop-filter: blur(10px); }
+        .controls-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 100%; flex-wrap: nowrap; }
+        .search-container { position: relative; flex: 1; min-width: 150px; max-width: 380px; }
+        #searchInput { width: 100%; padding: 12px 44px 12px 14px; font-size: 16px; border: 2px solid #ddd; border-radius: 12px; background: white; transition: all 0.3s; }
+        #searchInput:focus { outline: none; border-color: #4CAF50; box-shadow: 0 0 0 4px rgba(76,175,80,0.15); }
+        #clearSearch { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 20px; color: #999; cursor: pointer; display: none; }
+        #clearSearch:hover { color: #4CAF50; }
+
+        #sortButton { flex-shrink: 0; width: 48px; height: 48px; background: white; border: 2px solid #ddd; border-radius: 12px; font-size: 19px; color: #555; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        #sortButton:hover { border-color: #4CAF50; background: #f9fff9; color: #4CAF50; }
+
+        #sortMenu { display: none; position: absolute; background: white; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); margin-top: 8px; right: 10px; min-width: 190px; z-index: 101; }
+        #sortMenu div { padding: 12px 16px; cursor: pointer; font-size: 0.95rem; }
+        #sortMenu div:hover { background: #f0fff0; }
+
+        #copyHint { margin: 16px auto; max-width: 560px; padding: 14px 18px; background: #e8f5e9; border: 1px solid #4CAF50; border-radius: 12px; font-size: 14.5px; color: #2e7d32; text-align: center; line-height: 1.5; }
+        #copyHint svg { width: 20px; height: 20px; vertical-align: -4px; margin-right: 6px; fill: #2e7d32; }
+
+        #loading { position: fixed; inset: 0; background: #0f0f18; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px); opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+        #loading.show { opacity: 1; pointer-events: auto; }
+        #loading img { width: 120px; height: 120px; }
+        #loading span { margin-top: 24px; font-size: 1.3rem; color: #00ff9d; font-weight: 600; }
+
+        .table-container { display: flex; justify-content: center; padding: 0 10px; }
+        table { width: 100%; max-width: 720px; margin: 20px 0; border-collapse: collapse; background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.1); font-size: 15px; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #4CAF50; color: white; font-weight: 600; font-size: 15px; }
+        td:last-child { text-align: right; font-weight: 600; color: #2e7d32; white-space: nowrap; }
+        tr:hover { background: #f8fff8; }
+
+        .copy-btn { cursor: pointer; margin-right: 10px; opacity: 0.7; transition: all 0.2s; }
+        .copy-btn:hover { opacity: 1; transform: scale(1.15); }
+        .copy-feedback { position: absolute; left: 32px; top: 50%; transform: translateY(-50%); background: #4CAF50; color: white; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 10; }
+        .copy-feedback.show { opacity: 1; transform: translateY(-50%) translateX(4px); }
+
+        #scrollToTop { position: fixed; bottom: 16px; right: 16px; background: #4CAF50; color: white; width: 48px; height: 48px; border-radius: 50%; border: none; font-size: 22px; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.25); opacity: 0; transform: translateY(10px); transition: all 0.4s; z-index: 98; display: flex; align-items: center; justify-content: center; }
+        #scrollToTop.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        #scrollToTop:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(76,175,80,0.4); }
+
+        @media (max-width: 480px) {
+            body { padding: 8px 6px 70px; }
+            h1 { font-size: 1.6rem; }
+            #searchInput { font-size: 15px; padding: 11px 40px 11px 12px; }
+            #sortButton { width: 44px; height: 44px; font-size: 18px; }
+            .controls-wrapper { gap: 8px; }
+            table { font-size: 14px; max-width: 100%; }
+            th, td { padding: 12px 10px; }
+            #copyHint { margin: 14px 6px; padding: 12px 16px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/56/4CAF50/white?text=G'">
+
+    <h1>Прайс-лист игр</h1>
+
+    <div id="searchForm">
+        <div class="controls-wrapper">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Поиск..." autocomplete="off">
+                <button id="clearSearch">×</button>
+            </div>
+            <button id="sortButton" title="Сортировка">
+                <i class="fas fa-sort"></i>
+            </button>
+        </div>
+        <div id="sortMenu">
+            <div data-sort="none">Без сортировки</div>
+            <div data-sort="priceAsc">Цена: по возрастанию</div>
+            <div data-sort="priceDesc">Цена: по убыванию</div>
+        </div>
+    </div>
+
+    <div id="copyHint">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        <strong>Копир.</strong> — клик копирует название и цену
+    </div>
+
+    <div id="loading">
+        <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка">
+        <span>Загрузка прайса...</span>
+    </div>
+
+    <p id="error" style="color:#d32f2f; text-align:center; display:none; margin:16px 8px;"></p>
+
+    <div class="table-container">
+        <table id="priceTable">
+            <thead><tr><th>Название игры</th><th>Цена</th></tr></thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <button id="scrollToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        const sheetId = '1MzBvxOzI6Yn3sRkAdJZeG-mdSeoQwPRYKv9thY9_U-0';
+        const apiKey = 'AIzaSyAz6NMjP-Sgq2P9FgGOc8T1prYM57b-An0';
+        const range = 'ru price!A:B';
+        const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+
+        let allGames = [], currentSort = 'none';
+
+        async function copyToClipboard(text, btn) {
+            try {
+                await navigator.clipboard.writeText(text);
+                let fb = btn.querySelector('.copy-feedback');
+                if (!fb) {
+                    fb = document.createElement('span');
+                    fb.className = 'copy-feedback';
+                    fb.textContent = 'Скопировано!';
+                    btn.style.position = 'relative';
+                    btn.appendChild(fb);
+                }
+                fb.classList.remove('show');
+                void fb.offsetHeight;
+                fb.classList.add('show');
+                setTimeout(() => fb.classList.remove('show'), 1600);
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadPriceList() {
+            const loading = document.getElementById('loading');
+            const tbody = document.getElementById('tableBody');
+            const errorEl = document.getElementById('error');
+
+            tbody.innerHTML = '';
+            errorEl.style.display = 'none';
+
+            loading.classList.remove('show');
+            void loading.offsetHeight;
+            loading.classList.add('show');
+
+            // КЭШ ТЕПЕРЬ ТОЛЬКО 5 МИНУТ (300 000 мс)
+            const cached = localStorage.getItem('priceCache');
+            const time = localStorage.getItem('priceCacheTime');
+            if (cached && time && Date.now() - +time < 300000) {  // ← 5 минут
+                allGames = JSON.parse(cached);
+                applyFiltersAndSort();
+                loading.classList.remove('show');
+                return;
+            }
+
+            try {
+                const res = await fetch(dataUrl);
+                if (!res.ok) throw new Error('Нет интернета');
+                const data = await res.json();
+                if (!data.values || data.values.length <= 1) throw new Error('Таблица пуста');
+
+                allGames = data.values.slice(1)
+                    .map(r => ({ name: (r[0] || '').trim(), price: (r[1] || '').trim() }))
+                    .filter(g => g.name && g.price);
+
+                localStorage.setItem('priceCache', JSON.stringify(allGames));
+                localStorage.setItem('priceCacheTime', Date.now() + '');  // ← обновляем время
+                applyFiltersAndSort();
+
+            } catch (e) {
+                errorEl.textContent = 'Ошибка: ' + e.message;
+                errorEl.style.display = 'block';
+            } finally {
+                loading.classList.remove('show');
+            }
+        }
+
+        function renderTable(games) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = games.map(g => `
+                <tr>
+                    <td>
+                        <span class="copy-btn">
+                            <svg width="17" height="17" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                            </svg>
+                        </span>
+                        ${g.name}
+                    </td>
+                    <td>${g.price}</td>
+                </tr>
+            `).join('');
+
+            tbody.querySelectorAll('.copy-btn').forEach((btn, i) => {
+                btn.onclick = e => {
+                    e.stopPropagation();
+                    copyToClipboard(`${games[i].name} — ${games[i].price} руб.`, btn);
+                };
+            });
+        }
+
+        function applyFiltersAndSort() {
+            let filtered = allGames.filter(g =>
+                g.name.toLowerCase().includes(searchInput.value.trim().toLowerCase())
+            );
+
+            if (currentSort === 'priceAsc')
+                filtered.sort((a, b) => +a.price.replace(/\D/g, '') - +b.price.replace(/\D/g, ''));
+            if (currentSort === 'priceDesc')
+                filtered.sort((a, b) => +b.price.replace(/\D/g, '') - +a.price.replace(/\D/g, ''));
+
+            renderTable(filtered);
+
+            const icon = document.querySelector('#sortButton i');
+            icon.className = currentSort === 'priceAsc' ? 'fas fa-sort-amount-down-alt' :
+                            currentSort === 'priceDesc' ? 'fas fa-sort-amount-up-alt' : 'fas fa-sort';
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearSearch');
+        const sortBtn = document.getElementById('sortButton');
+        const sortMenu = document.getElementById('sortMenu');
+
+        searchInput.addEventListener('input', () => {
+            clearBtn.style.display = searchInput.value ? 'block' : 'none';
+            applyFiltersAndSort();
+        });
+
+        clearBtn.onclick = () => {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            applyFiltersAndSort();
+            searchInput.focus();
+        };
+
+        sortBtn.onclick = () => {
+            sortMenu.style.display = sortMenu.style.display === 'block' ? 'none' : 'block';
+        };
+
+        sortMenu.onclick = e => {
+            if (e.target.dataset.sort !== undefined) {
+                currentSort = e.target.dataset.sort;
+                sortMenu.style.display = 'none';
+                applyFiltersAndSort();
+            }
+        };
+
+        document.addEventListener('click', e => {
+            if (!sortBtn.contains(e.target) && !sortMenu.contains(e.target)) {
+                sortMenu.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('scrollToTop').classList.toggle('show', scrollY > 300);
+        });
+
+        document.getElementById('scrollToTop').onclick = () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        loadPriceList();
+    </script>
+</body>
+</html>
