@@ -6,12 +6,11 @@
   <meta name="theme-color" content="#0f0f15">
   <title>Прайс-лист игр</title>
 
-  <!-- Preload критических ресурсов -->
+  <!-- Preload критического -->
   <link rel="preload" href="./resources/loading-xenon-dark-theme.7093517a.svg" as="image" type="image/svg+xml">
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style">
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
-  <!-- Отложенная загрузка шрифтов и иконок -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -24,8 +23,9 @@
 
   <style>
     :root { --bg: #0f0f15; --card: #181821; --text: #e0e0ff; --text-muted: #a0a0cc; --accent: #00ff9d; --border: #2a2a3a; }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; touch-action: manipulation; -webkit-overflow-scrolling: touch; }
+    * { touch-action: pan-x pan-y; }
     .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
     header { text-align: center; margin-bottom: 1rem; }
     #logo { width: 68px; height: 68px; border-radius: 50%; border: 3px solid var(--accent); box-shadow: 0 0 20px rgba(0,255,157,0.3); object-fit: cover; margin-bottom: 0.8rem; }
@@ -97,7 +97,7 @@
     </div>
 
     <div class="copy-hint">
-      <strong>Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена <br>
+      <strong>Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена<br>
       <strong>Внимание:</strong> Если игры нет в прайсе — пишите в <strong><a href="https://t.me/realfurys" style="color:var(--accent);font-weight:700;text-decoration:none;">личку</a></strong>
     </div>
 
@@ -129,7 +129,6 @@
     let allGames = [];
     let currentSort = 'none';
 
-    // Дебаунс без внешних библиотек
     const debounce = (func, delay) => {
       let timer;
       return (...args) => {
@@ -160,6 +159,7 @@
       else icon.className = 'fas fa-sort';
     }
 
+    // ОПТИМИЗИРОВАННЫЙ РЕНДЕР — НЕ ТОРМОЗИТ НА IPHONE
     function renderAll() {
       const search = searchInput.value.trim().toLowerCase();
       let filtered = allGames.filter(g => g.name.toLowerCase().includes(search));
@@ -169,9 +169,9 @@
       if (currentSort === 'priceDesc')
         filtered.sort((a,b) => +b.price.replace(/\D/g,'') - +a.price.replace(/\D/g,''));
 
-      // Десктоп
+      // Десктоп — через DocumentFragment
       const tbody = document.getElementById('tableBody');
-      tbody.innerHTML = '';
+      const fragmentDesktop = document.createDocumentFragment();
       filtered.forEach(g => {
         const tr = document.createElement('tr');
         const nameTd = document.createElement('td');
@@ -188,12 +188,14 @@
         priceTd.textContent = g.price;
         tr.appendChild(nameTd);
         tr.appendChild(priceTd);
-        tbody.appendChild(tr);
+        fragmentDesktop.appendChild(tr);
       });
+      tbody.innerHTML = '';
+      tbody.appendChild(fragmentDesktop);
 
-      // Мобильные карточки
+      // Мобильные карточки — тоже через фрагмент
       const mobile = document.getElementById('mobileCards');
-      mobile.innerHTML = '';
+      const fragmentMobile = document.createDocumentFragment();
       filtered.forEach(g => {
         const card = document.createElement('div');
         card.className = 'game-card';
@@ -208,13 +210,15 @@
           e.stopPropagation();
           copyToClipboard(`${g.name} — ${g.price} руб.`, card.querySelector('.copy-btn'));
         };
-        mobile.appendChild(card);
+        fragmentMobile.appendChild(card);
       });
+      mobile.innerHTML = '';
+      mobile.appendChild(fragmentMobile);
 
       updateSortIcon();
     }
 
-    const debouncedRender = debounce(renderAll, 180);
+    const debouncedRender = debounce(renderAll, 280); // 280 мс — идеально для iOS
 
     const searchInput = document.getElementById('searchInput');
     const clearBtn = document.getElementById('clearSearch');
@@ -242,13 +246,13 @@
     });
     document.getElementById('scrollToTop').onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
 
-    // Загрузка данных с кэшем 30 минут
+    // Загрузка с кэшем 30 минут
     (async function loadPriceList() {
       const loading = document.getElementById('loading');
       const cached = localStorage.getItem('priceCache');
       const time = localStorage.getItem('priceCacheTime');
 
-      if (cached && time && Date.now() - +time < 1_800_000) { // 30 минут
+      if (cached && time && Date.now() - +time < 1_800_000) {
         allGames = JSON.parse(cached);
         renderAll();
         loading.classList.remove('show');
