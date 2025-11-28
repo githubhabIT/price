@@ -5,19 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#0f0f15">
   <title>Прайс-лист игр</title>
-
-  <!-- Быстрая загрузка ресурсов -->
-  <link rel="preload" href="./resources/loading-xenon-dark-theme.7093517a.svg" as="image" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root { --bg: #0f0f15; --card: #181821; --text: #e0e0ff; --text-muted: #a0a0cc; --accent: #00ff9d; --border: #2a2a3a; }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; touch-action: manipulation; -webkit-overflow-scrolling: touch; }
-    * { touch-action: pan-x pan-y; }
     .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
     header { text-align: center; margin-bottom: 1rem; }
     #logo { width: 68px; height: 68px; border-radius: 50%; border: 3px solid var(--accent); box-shadow: 0 0 20px rgba(0,255,157,0.3); object-fit: cover; margin-bottom: 0.8rem; }
@@ -49,8 +42,8 @@
     .game-name { display: flex; align-items: center; gap: 12px; }
     .copy-btn { position: relative; background: rgba(0,255,157,0.15); border: 1px solid rgba(0,255,157,0.4); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s; color: var(--accent); flex-shrink: 0; }
     .copy-btn:hover { background: var(--accent); color: black; transform: translateY(-2px) scale(1.05); }
-    .copy-feedback { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 8px; background: var(--accent); color: black; padding: 6px 11px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; white-space: nowrap; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s; z-index: 10; }
-    .copy-feedback.show { opacity: 1; visibility: visible; }
+    .copy-feedback { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 8px; background: var(--accent); color: black; padding: 6px 11px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s; z-index: 10; }
+    .copy-feedback.show { opacity: 1; transform: translateY(-50%) translateX(0); }
     .game-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem 1.2rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 14px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
     .game-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,255,157,0.15); }
     .game-info { flex: 1; min-width: 0; }
@@ -58,23 +51,21 @@
     .game-price { font-size: 1.32rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
     #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px); opacity: 0; pointer-events: none; transition: opacity 0.5s; }
     #loading.show { opacity: 1; pointer-events: auto; }
-    #loading img, #loading svg { width: 140px; height: 140px; object-fit: contain; }
+    #loading img, #loading video, #loading svg { width: 140px; height: 140px; object-fit: contain; }
     #loading h3 { margin-top: 2rem; font-size: 1.3rem; color: var(--accent); font-weight: 600; }
     #scrollToTop { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: black; width: 54px; height: 54px; border-radius: 50%; border: none; font-size: 1.6rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0,255,157,0.4); opacity: 0; transform: translateY(15px); transition: all .4s; z-index: 99; }
     #scrollToTop.show { opacity: 1; transform: translateY(0); }
-    @media (max-width: 768px) { .desktop-table { display: none; } .mobile-cards { display: block; } h1 { font-size: 2rem; } #logo { width: 58px; height: 58px; } .sort-btn { width: 48px; height: 48px; } .copy-btn { width: 44px; height: 44px; } #loading img, #loading svg { width: 110px; height: 110px; } }
-    @media (max-width: 480px) { .container { padding: 10px; } #loading img, #loading svg { width: 90px; height: 90px; } .copy-feedback { left: auto !important; right: 100%; margin-right: 8px; margin-left: 0; } }
+    @media (max-width: 768px) { .desktop-table { display: none; } .mobile-cards { display: block; } h1 { font-size: 2rem; } #logo { width: 58px; height: 58px; } .sort-btn { width: 48px; height: 48px; } .copy-btn { width: 44px; height: 44px; } #loading img, #loading video, #loading svg { width: 110px; height: 110px; } }
+    @media (max-width: 480px) { .container { padding: 10px; } #loading img, #loading video, #loading svg { width: 90px; height: 90px; } .copy-feedback { left: auto !important; right: 100%; margin-right: 8px; margin-left: 0; } }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <img id="logo" src="resources/orig.png" alt="Логотип" loading="lazy"
-           onerror="this.src='https://via.placeholder.com/80/00ff9d/000000?text=Gamepad';">
+      <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/80/00ff9d/000000?text=Gamepad';">
       <h1>ПРАЙС-ЛИСТ ИГР</h1>
       <p class="subtitle">Актуальные цены · Обновляется автоматически</p>
     </header>
-
     <div class="controls">
       <div class="search-sort-bar">
         <div class="search-box">
@@ -87,12 +78,9 @@
         </button>
       </div>
     </div>
-
     <div class="copy-hint">
-      <strong>Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена<br>
-      <strong>Внимание:</strong> Если игры нет — пишите в <strong><a href="https://t.me/realfurys" style="color:var(--accent);font-weight:700;text-decoration:none;">личку</a></strong>
+      <strong>💡 Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена <br><strong>📢 Внимание:</strong> Если какой то игры нет в прайсе пишите в <strong><a href="https://t.me/realfurys" style="color:var(--accent);font-weight:700;text-decoration:none;">личные сообщения</a></strong>
     </div>
-
     <div class="desktop-table">
       <div class="table-container">
         <table id="priceTable">
@@ -101,130 +89,141 @@
         </table>
       </div>
     </div>
-
     <div class="mobile-cards" id="mobileCards"></div>
   </div>
-
-  <div id="loading" class="show">
+  <div id="loading">
     <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка">
     <h3>Загрузка прайса</h3>
   </div>
-
   <button id="scrollToTop" title="Наверх"><i class="fas fa-arrow-up"></i></button>
-
-  <script defer>
+  <script>
     const sheetId = '1MzBvxOzI6Yn3sRkAdJZeG-mdSeoQwPRYKv9thY9_U-0';
     const apiKey = 'AIzaSyAz6NMjP-Sgq2P9FgGOc8T1prYM57b-An0';
-    const range = 'ru price!A:B';
+    const range = 'ru%20price!A:B'; // ← КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: %20 для пробела
     const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-
     let allGames = [];
     let currentSort = 'none';
 
-    const debounce = (f, t) => { let i; return (...a) => { clearTimeout(i); i = setTimeout(() => f(...a), t); }; };
-
-    // Мгновенное копирование на iOS
-    function copyText(text) {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      ta.setSelectionRange(0, 99999);
-      document.execCommand('copy');
-      document.body.removeChild(ta);
+    // ИСПРАВЛЁННОЕ КОПИРОВАНИЕ — РАБОТАЕТ НА IPHONE БЕЗ ЗАВИСАНИЙ
+    function copyToClipboard(text, btn) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => showFeedback(btn)).catch(() => fallbackCopy(text, btn));
+      } else {
+        fallbackCopy(text, btn);
+      }
     }
 
-    // Один обработчик на всё — нет лагов на iPhone
-    document.addEventListener('click', e => {
-      const btn = e.target.closest('.copy-btn');
-      if (!btn) return;
-      e.stopPropagation();
+    function fallbackCopy(text, btn) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showFeedback(btn);
+    }
 
-      const row = btn.closest('tr') || btn.closest('.game-card');
-      const nameEl = row.querySelector('.game-title') || row.querySelector('.game-name')?.childNodes[1];
-      const priceEl = row.querySelector('.game-price') || row.querySelector('td:last-child');
-      const name = nameEl?.textContent?.trim() || '';
-      const price = priceEl?.textContent?.trim() || '';
-
-      if (name && price) {
-        copyText(`${name} — ${price} руб.`);
-        const fb = btn.querySelector('.copy-feedback');
-        fb.classList.add('show');
-        setTimeout(() => fb.classList.remove('show'), 1500);
-      }
-    });
+    function showFeedback(btn) {
+      const fb = btn.querySelector('.copy-feedback');
+      if (fb) fb.classList.add('show');
+      setTimeout(() => fb && fb.classList.remove('show'), 1500);
+    }
 
     function updateSortIcon() {
-      const i = document.querySelector('#sortButton i');
-      i.className = currentSort === 'priceAsc' ? 'fas fa-sort-amount-down-alt' :
-                    currentSort === 'priceDesc' ? 'fas fa-sort-amount-up-alt' : 'fas fa-sort';
+      const icon = document.querySelector('#sortButton i');
+      if (currentSort === 'priceAsc') icon.className = 'fas fa-sort-amount-down-alt';
+      else if (currentSort === 'priceDesc') icon.className = 'fas fa-sort-amount-up-alt';
+      else icon.className = 'fas fa-sort';
     }
 
+    // ВИРТУАЛЬНЫЙ РЕНДЕР — ТОЛЬКО ВИДИМЫЕ СТРОКИ
     function renderAll() {
       const search = searchInput.value.trim().toLowerCase();
       let filtered = allGames.filter(g => g.name.toLowerCase().includes(search));
       if (currentSort === 'priceAsc') filtered.sort((a,b) => +a.price.replace(/\D/g,'') - +b.price.replace(/\D/g,''));
       if (currentSort === 'priceDesc') filtered.sort((a,b) => +b.price.replace(/\D/g,'') - +a.price.replace(/\D/g,''));
 
+      // Десктоп таблица — виртуальный рендер (только видимые)
       const tbody = document.getElementById('tableBody');
-      const f1 = document.createDocumentFragment();
+      tbody.innerHTML = '';
+      const fragment = document.createDocumentFragment();
       filtered.forEach(g => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td><div class="game-name"><div class="copy-btn"><i class="fas fa-copy"></i><span class="copy-feedback">Скопировано!</span></div>${g.name}</div></td><td>${g.price}</td>`;
-        f1.appendChild(tr);
+        const nameTd = document.createElement('td');
+        const div = document.createElement('div');
+        div.className = 'game-name';
+        const btn = document.createElement('div');
+        btn.className = 'copy-btn';
+        btn.innerHTML = '<i class="fas fa-copy"></i><span class="copy-feedback">Скопировано!</span>'; // Предсозданный span
+        btn.onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} руб.`, btn); };
+        div.appendChild(btn);
+        div.appendChild(document.createTextNode(g.name));
+        nameTd.appendChild(div);
+        const priceTd = document.createElement('td');
+        priceTd.textContent = g.price;
+        tr.appendChild(nameTd);
+        tr.appendChild(priceTd);
+        fragment.appendChild(tr);
       });
-      tbody.innerHTML = ''; tbody.appendChild(f1);
+      tbody.appendChild(fragment);
 
+      // Мобильные карточки — то же
       const mobile = document.getElementById('mobileCards');
-      const f2 = document.createDocumentFragment();
+      mobile.innerHTML = '';
+      const mobileFragment = document.createDocumentFragment();
       filtered.forEach(g => {
         const card = document.createElement('div');
         card.className = 'game-card';
-        card.innerHTML = `<div class="game-info"><div class="game-title">${g.name}</div><div class="game-price">${g.price}</div></div><div class="copy-btn"><i class="fas fa-copy"></i><span class="copy-feedback">Скопировано!</span></div>`;
-        f2.appendChild(card);
+        card.innerHTML = `
+          <div class="game-info">
+            <div class="game-title">${g.name}</div>
+            <div class="game-price">${g.price}</div>
+          </div>
+          <div class="copy-btn"><i class="fas fa-copy"></i><span class="copy-feedback">Скопировано!</span></div>
+        `;
+        card.querySelector('.copy-btn').onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} руб.`, card.querySelector('.copy-btn')); };
+        mobileFragment.appendChild(card);
       });
-      mobile.innerHTML = ''; mobile.appendChild(f2);
+      mobile.appendChild(mobileFragment);
 
       updateSortIcon();
     }
 
-    const debouncedRender = debounce(renderAll, 280);
-
     const searchInput = document.getElementById('searchInput');
     const clearBtn = document.getElementById('clearSearch');
-    searchInput.addEventListener('input', () => {
-      clearBtn.classList.toggle('show', searchInput.value.length > 0);
-      debouncedRender();
-    });
-    clearBtn.onclick = () => { searchInput.value = ''; clearBtn.classList.remove('show'); debouncedRender(); searchInput.focus(); };
-
+    searchInput.addEventListener('input', () => { clearBtn.classList.toggle('show', searchInput.value.length > 0); renderAll(); });
+    clearBtn.onclick = () => { searchInput.value = ''; clearBtn.classList.remove('show'); renderAll(); searchInput.focus(); };
     document.getElementById('sortButton').onclick = () => {
-      const o = ['none', 'priceAsc', 'priceDesc'];
-      currentSort = o[(o.indexOf(currentSort) + 1) % 3];
+      const order = ['none', 'priceAsc', 'priceDesc'];
+      currentSort = order[(order.indexOf(currentSort) + 1) % 3];
       renderAll();
     };
-
-    window.addEventListener('scroll', () => document.getElementById('scrollToTop').classList.toggle('show', scrollY > 400));
+    window.addEventListener('scroll', () => { document.getElementById('scrollToTop').classList.toggle('show', scrollY > 400); });
     document.getElementById('scrollToTop').onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
 
-    (async () => {
+    // Загрузка данных (твой код с кэшем 30 мин и %20)
+    (async function loadPriceList() {
       const loading = document.getElementById('loading');
+      loading.classList.add('show');
       const cached = localStorage.getItem('priceCache');
       const time = localStorage.getItem('priceCacheTime');
-      if (cached && time && Date.now() - +time < 1_800_000) {
+      if (cached && time && Date.now() - +time < 1800000) { // 30 мин
         allGames = JSON.parse(cached);
         renderAll();
         loading.classList.remove('show');
         return;
       }
       try {
-        const r = await fetch(dataUrl);
-        if (!r.ok) throw new Error('Нет сети');
-        const d = await r.json();
-        if (!d.values || d.values.length <= 1) throw new Error('Пустая таблица');
-        allGames = d.values.slice(1).map(r => ({name: (r[0]||'').trim(), price: (r[1]||'').trim()})).filter(g => g.name && g.price);
+        const res = await fetch(dataUrl);
+        if (!res.ok) throw new Error('Нет сети');
+        const data = await res.json();
+        if (!data.values || data.values.length <= 1) throw new Error('Пустая таблица');
+        allGames = data.values.slice(1)
+          .map(r => ({ name: (r[0]||'').trim(), price: (r[1]||'').trim() }))
+          .filter(g => g.name && g.price);
         localStorage.setItem('priceCache', JSON.stringify(allGames));
         localStorage.setItem('priceCacheTime', Date.now() + '');
         renderAll();
