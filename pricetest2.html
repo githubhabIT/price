@@ -15,26 +15,21 @@
             --accent: #00ff9d;
             --border: #2a2a3a;
         }
-
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
         .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
-
         header { text-align: center; margin-bottom: 1rem; }
         #logo { width: 68px; height: 68px; border-radius: 50%; border: 3px solid var(--accent); box-shadow: 0 0 20px rgba(0,255,157,0.3); object-fit: cover; margin-bottom: 0.8rem; }
         h1 { font-size: 2.4rem; font-weight: 700; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 0.4rem 0; }
         .subtitle { color: var(--text-muted); font-size: 1rem; font-weight: 500; }
-
         .controls { position: sticky; top: 0; background: var(--bg); z-index: 100; padding: 1rem 0; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); margin-bottom: 1.5rem; }
         .search-sort-bar { display: flex; gap: 12px; align-items: center; justify-content: center; max-width: 720px; margin: 0 auto; flex-wrap: nowrap; }
-
         .search-box { position: relative; flex: 1; min-width: 180px; }
         #searchInput { width: 100%; padding: 13px 48px 13px 44px; border: 2px solid var(--border); border-radius: 14px; background: var(--card); color: white; font-size: 1rem; transition: all 0.3s; }
         #searchInput:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0,255,157,0.15); }
         .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 1.1rem; }
         #clearSearch { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer; opacity:0; transition:opacity .3s; }
         #clearSearch.show { opacity:1; }
-
         .sort-btn {
             background: var(--card);
             border: 2px solid var(--border);
@@ -48,10 +43,8 @@
         }
         .sort-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,157,0.1); }
         .sort-btn i { font-size: 1.1rem; }
-
         .copy-hint { background: linear-gradient(135deg, rgba(0,255,157,0.1), rgba(0,255,157,0.05)); border: 1px solid rgba(0,255,157,0.3); color: var(--text); padding: 0.9rem 1.3rem; border-radius: 14px; text-align: center; margin: 0 auto 1.5rem; max-width: 720px; font-size: 0.95rem; }
         .copy-hint strong { color: var(--accent); }
-
         .desktop-table { display: block; }
         .mobile-cards { display: none; }
         .table-container { background: var(--card); border-radius: 18px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.4); border: 1px solid var(--border); }
@@ -63,7 +56,6 @@
         td:last-child { text-align: right; font-weight: 600; color: var(--accent); font-size: 1.05rem; }
         tr:hover { background: rgba(0,255,157,0.06); }
         .game-name { display: flex; align-items: center; gap: 12px; }
-
         .copy-btn {
             position: relative;
             background: rgba(0,255,157,0.15);
@@ -75,9 +67,10 @@
             transition: all 0.25s;
             color: var(--accent);
             flex-shrink: 0;
+            touch-action: manipulation; /* ← добавлено для iOS */
+            -webkit-tap-highlight-color: transparent;
         }
         .copy-btn:hover { background: var(--accent); color: black; transform: translateY(-2px) scale(1.05); }
-
         .copy-feedback {
             position: absolute;
             left: 100%;
@@ -97,7 +90,6 @@
             z-index: 10;
         }
         .copy-feedback.show { opacity: 1; transform: translateY(-50%) translateX(0); }
-
         .game-card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -115,7 +107,6 @@
         .game-info { flex: 1; min-width: 0; }
         .game-title { font-size: 1.02rem; font-weight: 500; line-height: 1.4; word-break: break-word; overflow-wrap: anywhere; }
         .game-price { font-size: 1.32rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
-
         #loading {
             position: fixed; inset: 0;
             background: var(--bg);
@@ -124,13 +115,10 @@
             opacity: 0; pointer-events: none; transition: opacity 0.5s;
         }
         #loading.show { opacity: 1; pointer-events: auto; }
-
         #loading img, #loading video, #loading svg { width: 140px; height: 140px; object-fit: contain; }
         #loading h3 { margin-top: 2rem; font-size: 1.3rem; color: var(--accent); font-weight: 600; }
-
         #scrollToTop { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: black; width: 54px; height: 54px; border-radius: 50%; border: none; font-size: 1.6rem; cursor: pointer; box-shadow: 0 8px 24px rgba(0,255,157,0.4); opacity: 0; transform: translateY(15px); transition: all .4s; z-index: 99; }
         #scrollToTop.show { opacity: 1; transform: translateY(0); }
-
         @media (max-width: 768px) {
             .desktop-table { display: none; }
             .mobile-cards { display: block; }
@@ -154,7 +142,6 @@
             <h1>ПРАЙС-ЛИСТ ИГР</h1>
             <p class="subtitle">Актуальные цены · Обновляется автоматически</p>
         </header>
-
         <div class="controls">
             <div class="search-sort-bar">
                 <div class="search-box">
@@ -167,12 +154,10 @@
                 </button>
             </div>
         </div>
-
         <div class="copy-hint">
-            <strong>💡 Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена
-            <br><strong>📢 Внимание:</strong> Если какой то игры нет в прайсе пишите в <strong><a href="https://t.me/realfurys" style="color:var(--accent);font-weight:700;text-decoration:none;">личные сообщения</a></strong>
+            <strong>Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена
+            <br><strong>Внимание:</strong> Если какой то игры нет в прайсе пишите в <strong><a href="https://t.me/realfurys" style="color:var(--accent);font-weight:700;text-decoration:none;">личные сообщения</a></strong>
         </div>
-
         <div class="desktop-table">
             <div class="table-container">
                 <table id="priceTable">
@@ -181,18 +166,13 @@
                 </table>
             </div>
         </div>
-
         <div class="mobile-cards" id="mobileCards"></div>
     </div>
 
-    <!-- АНИМАЦИЯ ЗАГРУЗКИ -->
     <div id="loading">
         <img src="./resources/loading-xenon-dark-theme.7093517a.svg" alt="Загрузка">
-        <!-- Или так: <video autoplay loop muted playsinline><source src="loading/anim.webm" type="video/webm"></video> -->
-        <!-- Или так: <img src="loading/anim.svg"> -->
         <h3>Загрузка прайса</h3>
     </div>
-
     <button id="scrollToTop" title="Наверх"><i class="fas fa-arrow-up"></i></button>
 
     <script>
@@ -200,27 +180,45 @@
         const apiKey = 'AIzaSyAz6NMjP-Sgq2P9FgGOc8T1prYM57b-An0';
         const range = 'ru price!A:B';
         const dataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-
         let allGames = [];
         let currentSort = 'none';
 
-        // Копирование в буфер
+        // ИСПРАВЛЕННАЯ функция копирования — теперь мгновенно на iPhone 15 / iOS
         async function copyToClipboard(text, btn) {
+            // Показываем «Скопировано!» сразу
+            let fb = btn.querySelector('.copy-feedback');
+            if (!fb) {
+                fb = document.createElement('span');
+                fb.className = 'copy-feedback';
+                fb.textContent = 'Скопировано!';
+                btn.appendChild(fb);
+            }
+            fb.classList.add('show');
+            setTimeout(() => fb.classList.remove('show'), 1500);
+
+            // Самый надёжный способ для iOS
+            if (navigator.clipboard && window.ClipboardItem) {
+                try {
+                    await navigator.clipboard.write([new ClipboardItem({
+                        'text/plain': new Blob([text], { type: 'text/plain' })
+                    })]);
+                    return;
+                } catch (e) {}
+            }
+
+            // Fallback на старый способ (всегда работает)
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
             try {
-                await navigator.clipboard.writeText(text);
-                let fb = btn.querySelector('.copy-feedback');
-                if (!fb) {
-                    fb = document.createElement('span');
-                    fb.className = 'copy-feedback';
-                    fb.textContent = 'Скопировано!';
-                    btn.appendChild(fb);
-                }
-                fb.classList.add('show');
-                setTimeout(() => fb.classList.remove('show'), 1500);
-            } catch(e) { console.error(e); }
+                document.execCommand('copy');
+            } catch (e) {}
+            document.body.removeChild(ta);
         }
 
-        // Обновление иконки сортировки
         function updateSortIcon() {
             const icon = document.querySelector('#sortButton i');
             if (currentSort === 'priceAsc') icon.className = 'fas fa-sort-amount-down-alt';
@@ -228,28 +226,26 @@
             else icon.className = 'fas fa-sort';
         }
 
-        // Рендер таблицы и карточек
         function renderAll() {
             const search = searchInput.value.trim().toLowerCase();
             let filtered = allGames.filter(g => g.name.toLowerCase().includes(search));
-
             if (currentSort === 'priceAsc') filtered.sort((a,b) => +a.price.replace(/\D/g,'') - +b.price.replace(/\D/g,''));
             if (currentSort === 'priceDesc') filtered.sort((a,b) => +b.price.replace(/\D/g,'') - +a.price.replace(/\D/g,''));
 
-            // Десктоп таблица
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
             filtered.forEach(g => {
                 const tr = document.createElement('tr');
-
                 const nameTd = document.createElement('td');
                 const div = document.createElement('div');
                 div.className = 'game-name';
 
-                const btn = document.createElement('div');
+                // ← Заменили div на button (важно для iOS)
+                const btn = document.createElement('button');
+                btn.type = 'button';
                 btn.className = 'copy-btn';
                 btn.innerHTML = '<i class="fas fa-copy"></i>';
-                btn.onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} руб.`, btn); };
+                btn.onclick = () => copyToClipboard(`${g.name} — ${g.price} руб.`, btn);
 
                 div.appendChild(btn);
                 div.appendChild(document.createTextNode(g.name));
@@ -257,13 +253,11 @@
 
                 const priceTd = document.createElement('td');
                 priceTd.textContent = g.price;
-
                 tr.appendChild(nameTd);
                 tr.appendChild(priceTd);
                 tbody.appendChild(tr);
             });
 
-            // Мобильные карточки
             const mobile = document.getElementById('mobileCards');
             mobile.innerHTML = '';
             filtered.forEach(g => {
@@ -274,27 +268,22 @@
                         <div class="game-title">${g.name}</div>
                         <div class="game-price">${g.price}</div>
                     </div>
-                    <div class="copy-btn"><i class="fas fa-copy"></i></div>
+                    <button type="button" class="copy-btn"><i class="fas fa-copy"></i></button>
                 `;
-                card.querySelector('.copy-btn').onclick = e => {
-                    e.stopPropagation();
+                card.querySelector('.copy-btn').onclick = () => 
                     copyToClipboard(`${g.name} — ${g.price} руб.`, card.querySelector('.copy-btn'));
-                };
                 mobile.appendChild(card);
             });
 
             updateSortIcon();
         }
 
-        // Элементы управления
         const searchInput = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearch');
-
         searchInput.addEventListener('input', () => {
             clearBtn.classList.toggle('show', searchInput.value.length > 0);
             renderAll();
         });
-
         clearBtn.onclick = () => {
             searchInput.value = '';
             clearBtn.classList.remove('show');
@@ -308,18 +297,15 @@
             renderAll();
         };
 
-        // Кнопка наверх
         window.addEventListener('scroll', () => {
             document.getElementById('scrollToTop').classList.toggle('show', scrollY > 400);
         });
         document.getElementById('scrollToTop').onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
 
-        // Загрузка данных
         (async function loadPriceList() {
             const loading = document.getElementById('loading');
             loading.classList.add('show');
 
-            // Кэш на 5 минут
             const cached = localStorage.getItem('priceCache');
             const time = localStorage.getItem('priceCacheTime');
             if (cached && time && Date.now() - +time < 300000) {
@@ -333,16 +319,12 @@
                 const res = await fetch(dataUrl);
                 if (!res.ok) throw new Error('Нет сети');
                 const data = await res.json();
-
                 if (!data.values || data.values.length <= 1) throw new Error('Пустая таблица');
-
                 allGames = data.values.slice(1)
                     .map(r => ({ name: (r[0]||'').trim(), price: (r[1]||'').trim() }))
                     .filter(g => g.name && g.price);
-
                 localStorage.setItem('priceCache', JSON.stringify(allGames));
                 localStorage.setItem('priceCacheTime', Date.now() + '');
-
                 renderAll();
             } catch (e) {
                 document.getElementById('tableBody').innerHTML = `<tr><td colspan="2" style="text-align:center;color:#ff6b6b;padding:3rem;">Ошибка: ${e.message}</td></tr>`;
