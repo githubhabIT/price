@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#0f0f15">
   <title>Прайс-лист игр</title>
 
+  <!-- Быстрая загрузка ресурсов -->
   <link rel="preload" href="./resources/loading-xenon-dark-theme.7093517a.svg" as="image" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -122,23 +123,38 @@
 
     const debounce = (f, t) => { let i; return (...a) => { clearTimeout(i); i = setTimeout(() => f(...a), t); }; };
 
-    // САМАЯ ВАЖНАЯ ФУНКЦИЯ — РАБОТАЕТ МГНОВЕННО НА ВСЕХ IPHONE
-    function copyToClipboard(text, btn) {
-      const textarea = document.createElement('textarea');
-      textarea.value319 = text;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      textarea.style.pointerEvents = 'none';
-      document.body.appendChild(textarea);
-      textarea.select();
-      textarea.setSelectionRange(0, 99999);
+    // Мгновенное копирование на iOS
+    function copyText(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, 99999);
       document.execCommand('copy');
-      document.body.removeChild(textarea);
-
-      const fb = btn.querySelector('.copy-feedback');
-      fb.classList.add('show');
-      setTimeout(() => fb.classList.remove('show'), 1500);
+      document.body.removeChild(ta);
     }
+
+    // Один обработчик на всё — нет лагов на iPhone
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('.copy-btn');
+      if (!btn) return;
+      e.stopPropagation();
+
+      const row = btn.closest('tr') || btn.closest('.game-card');
+      const nameEl = row.querySelector('.game-title') || row.querySelector('.game-name')?.childNodes[1];
+      const priceEl = row.querySelector('.game-price') || row.querySelector('td:last-child');
+      const name = nameEl?.textContent?.trim() || '';
+      const price = priceEl?.textContent?.trim() || '';
+
+      if (name && price) {
+        copyText(`${name} — ${price} руб.`);
+        const fb = btn.querySelector('.copy-feedback');
+        fb.classList.add('show');
+        setTimeout(() => fb.classList.remove('show'), 1500);
+      }
+    });
 
     function updateSortIcon() {
       const i = document.querySelector('#sortButton i');
@@ -153,32 +169,23 @@
       if (currentSort === 'priceDesc') filtered.sort((a,b) => +b.price.replace(/\D/g,'') - +a.price.replace(/\D/g,''));
 
       const tbody = document.getElementById('tableBody');
-      const frag1 = document.createDocumentFragment();
+      const f1 = document.createDocumentFragment();
       filtered.forEach(g => {
         const tr = document.createElement('tr');
-        const td1 = document.createElement('td');
-        const div = document.createElement('div'); div.className = 'game-name';
-        const btn = document.createElement('div'); btn.className = 'copy-btn';
-        btn.innerHTML = `<i class="fas fa-copy"></i><span class="copy-feedback">Скопировано!</span>`;
-        btn.onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} руб.`, btn); };
-        div.appendChild(btn); div.appendChild(document.createTextNode(g.name));
-        td1.appendChild(div);
-        const td2 = document.createElement('td'); td2.textContent = g.price;
-        tr.append(td1, td2);
-        frag1.appendChild(tr);
+        tr.innerHTML = `<td><div class="game-name"><div class="copy-btn"><i class="fas fa-copy"></i><span class="copy-feedback">Скопировано!</span></div>${g.name}</div></td><td>${g.price}</td>`;
+        f1.appendChild(tr);
       });
-      tbody.innerHTML = ''; tbody.appendChild(frag1);
+      tbody.innerHTML = ''; tbody.appendChild(f1);
 
       const mobile = document.getElementById('mobileCards');
-      const frag2 = document.createDocumentFragment();
+      const f2 = document.createDocumentFragment();
       filtered.forEach(g => {
-        const card = document.createElement('div'); card.className = 'game-card';
-        card.innerHTML = `<div class="game-info"><div class="game-title">${g.name}</div><div class="game-price">${g.price}</div></div>
-                          <div class="copy-btn"><i class="fas fa-copy"></i><span class="copy-feedback">Скопировано!</span></div>`;
-        card.querySelector('.copy-btn').onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} руб.`, card.querySelector('.copy-btn')); };
-        frag2.appendChild(card);
+        const card = document.createElement('div');
+        card.className = 'game-card';
+        card.innerHTML = `<div class="game-info"><div class="game-title">${g.name}</div><div class="game-price">${g.price}</div></div><div class="copy-btn"><i class="fas fa-copy"></i><span class="copy-feedback">Скопировано!</span></div>`;
+        f2.appendChild(card);
       });
-      mobile.innerHTML = ''; mobile.appendChild(frag2);
+      mobile.innerHTML = ''; mobile.appendChild(f2);
 
       updateSortIcon();
     }
@@ -187,8 +194,12 @@
 
     const searchInput = document.getElementById('searchInput');
     const clearBtn = document.getElementById('clearSearch');
-    searchInput.addEventListener('input', () => { clearBtn.classList.toggle('show', searchInput.value.length > 0); debouncedRender(); });
+    searchInput.addEventListener('input', () => {
+      clearBtn.classList.toggle('show', searchInput.value.length > 0);
+      debouncedRender();
+    });
     clearBtn.onclick = () => { searchInput.value = ''; clearBtn.classList.remove('show'); debouncedRender(); searchInput.focus(); };
+
     document.getElementById('sortButton').onclick = () => {
       const o = ['none', 'priceAsc', 'priceDesc'];
       currentSort = o[(o.indexOf(currentSort) + 1) % 3];
