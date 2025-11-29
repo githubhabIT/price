@@ -15,7 +15,22 @@
     header { text-align: center; margin-bottom: 1rem; }
     #logo { width: 68px; height: 68px; border-radius: 50%; border: 3px solid var(--accent); box-shadow: 0 0 20px rgba(0,255,157,0.3); object-fit: cover; margin-bottom: 0.8rem; }
     h1 { font-size: 2.4rem; font-weight: 700; background: linear-gradient(135deg, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 0.4rem 0; }
-    .subtitle { color: var(--text-muted); font-size: 1rem; font-weight: 500; }
+    .subtitle { 
+      color: var(--text-muted); 
+      font-size: 1rem; 
+      font-weight: 500; 
+      margin-bottom: 0.2rem;
+    }
+    .contact-info {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .working-hours {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
     .controls { position: sticky; top: 0; background: var(--bg); z-index: 100; padding: 1rem 0; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); margin-bottom: 1.5rem; }
     .search-sort-bar { display: flex; gap: 12px; align-items: center; justify-content: center; max-width: 720px; margin: 0 auto; flex-wrap: nowrap; }
     .search-box { position: relative; flex: 1; min-width: 180px; }
@@ -28,7 +43,6 @@
       color: white;
       font-size: 1rem;
       transition: all 0.3s;
-      /* Ускорение ввода на iOS */
       -webkit-tap-highlight-color: transparent;
     }
     #searchInput:focus {
@@ -59,7 +73,6 @@
       transition: opacity 0.3s;
       padding: 4px;
       border-radius: 50%;
-      /* Критично для iOS — иначе touchend не сработает */
       -webkit-tap-highlight-color: transparent;
     }
     #clearSearch.show { opacity: 1; }
@@ -261,12 +274,13 @@
       <img id="logo" src="resources/orig.png" alt="Логотип" onerror="this.src='https://via.placeholder.com/80/00ff9d/000000?text=Gamepad';">
       <h1>ПРАЙС-ЛИСТ ИГР</h1>
       <p class="subtitle">Актуальные цены · Обновляется автоматически</p>
+      <p class="contact-info">Руслан | Подписки Xbox</p>
+      <p class="working-hours">Работаю <strong>с 11:00 до 23:00</strong></p>
     </header>
     <div class="controls">
       <div class="search-sort-bar">
         <div class="search-box">
           <i class="fas fa-search search-icon"></i>
-          <!-- ✅ Оптимизированный input для iOS -->
           <input 
             type="text" 
             id="searchInput" 
@@ -314,7 +328,7 @@
     let allGames = [];
     let currentSort = 'none';
 
-    // ✅ Копирование — как было (работает!)
+    // Копирование
     function copyToClipboard(text, btn) {
       showFeedback(btn);
       if (navigator.clipboard && window.isSecureContext) {
@@ -348,7 +362,6 @@
       }
     }
 
-    // ✅ Безопасный рендер — без innerHTML
     function renderAll() {
       const search = document.getElementById('searchInput').value.trim().toLowerCase();
       let filtered = allGames.filter(g => g.name.toLowerCase().includes(search));
@@ -359,14 +372,12 @@
         filtered.sort((a, b) => parseFloat(b.price.replace(/[^0-9.-]/g, '')) - parseFloat(a.price.replace(/[^0-9.-]/g, '')));
       }
 
-      // 🖥️ Десктоп
       const tbody = document.getElementById('tableBody');
       tbody.innerHTML = '';
       const frag = document.createDocumentFragment();
 
       filtered.forEach(g => {
         const tr = document.createElement('tr');
-
         const nameTd = document.createElement('td');
         const div = document.createElement('div');
         div.className = 'game-name';
@@ -392,7 +403,6 @@
       });
       tbody.appendChild(frag);
 
-      // 📱 Мобильные карточки
       const mobile = document.getElementById('mobileCards');
       mobile.innerHTML = '';
       const mobileFrag = document.createDocumentFragment();
@@ -429,16 +439,13 @@
       updateSortIcon();
     }
 
-    // ✅ 🔥 Ключевое исправление: дебаунс + надёжная очистка
+    // 🔍 Поиск + очистка
     const searchInput = document.getElementById('searchInput');
     const clearBtn = document.getElementById('clearSearch');
 
     let renderTimeout;
     searchInput.addEventListener('input', () => {
-      // Мгновенно показываем/скрываем ×
       clearBtn.classList.toggle('show', searchInput.value.trim() !== '');
-
-      // Дебаунс рендера
       clearTimeout(renderTimeout);
       renderTimeout = setTimeout(renderAll, 250);
     });
@@ -447,18 +454,32 @@
       searchInput.value = '';
       clearBtn.classList.remove('show');
       renderAll();
-      // Асинхронный фокус — безопасно для iOS
       setTimeout(() => searchInput.focus(), 30);
     };
 
     clearBtn.addEventListener('click', clearSearchHandler);
-    // Дополнительно для тач-устройств (iPhone/iPad)
     clearBtn.addEventListener('touchend', e => {
       e.preventDefault();
       clearSearchHandler();
     });
 
-    // Сортировка и прокрутка — как раньше
+    // ✅ Закрытие поиска при клике/тапе вне поля
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('touchstart', handleOutsideClick, { passive: true });
+
+    function handleOutsideClick(e) {
+      const searchBox = document.querySelector('.search-box');
+      const sortBtn = document.getElementById('sortButton');
+      const target = e.target;
+
+      // Если клик вне поиска и сортировки — убираем фокус
+      if (!searchBox.contains(target) && !sortBtn.contains(target) && target !== searchInput) {
+        searchInput.blur();
+        if ('ontouchstart' in window) setTimeout(() => searchInput.blur(), 10);
+      }
+    }
+
+    // Сортировка и прокрутка
     document.getElementById('sortButton').onclick = () => {
       const order = ['none', 'priceAsc', 'priceDesc'];
       currentSort = order[(order.indexOf(currentSort) + 1) % 3];
@@ -473,7 +494,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // 📥 Загрузка
+    // Загрузка данных
     (async () => {
       const loading = document.getElementById('loading');
       loading.classList.add('show');
