@@ -428,7 +428,7 @@
         const copyBtn = document.createElement('div');
         copyBtn.className = 'copy-btn';
         copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-        copyBtn.onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} руб.`, copyBtn); };
+        copyBtn.onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} `, copyBtn); };
 
         card.appendChild(info);
         card.appendChild(copyBtn);
