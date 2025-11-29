@@ -19,26 +19,116 @@
     .controls { position: sticky; top: 0; background: var(--bg); z-index: 100; padding: 1rem 0; border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); margin-bottom: 1.5rem; }
     .search-sort-bar { display: flex; gap: 12px; align-items: center; justify-content: center; max-width: 720px; margin: 0 auto; flex-wrap: nowrap; }
     .search-box { position: relative; flex: 1; min-width: 180px; }
-    #searchInput { width: 100%; padding: 13px 48px 13px 44px; border: 2px solid var(--border); border-radius: 14px; background: var(--card); color: white; font-size: 1rem; transition: all 0.3s; }
-    #searchInput:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(0,255,157,0.15); }
-    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 1.1rem; }
-    #clearSearch { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer; opacity:0; transition:opacity .3s; }
-    #clearSearch.show { opacity:1; }
-    .sort-btn { background: var(--card); border: 2px solid var(--border); color: var(--text); width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; flex-shrink: 0; }
-    .sort-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,157,0.1); }
+    #searchInput {
+      width: 100%;
+      padding: 13px 48px 13px 44px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      background: var(--card);
+      color: white;
+      font-size: 1rem;
+      transition: all 0.3s;
+      /* Ускорение ввода на iOS */
+      -webkit-tap-highlight-color: transparent;
+    }
+    #searchInput:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(0,255,157,0.15);
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      font-size: 1.1rem;
+    }
+    #clearSearch {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s;
+      padding: 4px;
+      border-radius: 50%;
+      /* Критично для iOS — иначе touchend не сработает */
+      -webkit-tap-highlight-color: transparent;
+    }
+    #clearSearch.show { opacity: 1; }
+    .sort-btn {
+      background: var(--card);
+      border: 2px solid var(--border);
+      color: var(--text);
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+    .sort-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0,255,157,0.1);
+    }
     .sort-btn i { font-size: 1.1rem; }
-    .copy-hint { background: linear-gradient(135deg, rgba(0,255,157,0.1), rgba(0,255,157,0.05)); border: 1px solid rgba(0,255,157,0.3); color: var(--text); padding: 0.9rem 1.3rem; border-radius: 14px; text-align: center; margin: 0 auto 1.5rem; max-width: 720px; font-size: 0.95rem; }
+    .copy-hint {
+      background: linear-gradient(135deg, rgba(0,255,157,0.1), rgba(0,255,157,0.05));
+      border: 1px solid rgba(0,255,157,0.3);
+      color: var(--text);
+      padding: 0.9rem 1.3rem;
+      border-radius: 14px;
+      text-align: center;
+      margin: 0 auto 1.5rem;
+      max-width: 720px;
+      font-size: 0.95rem;
+    }
     .copy-hint strong { color: var(--accent); }
-    .copy-hint a { color: var(--accent); font-weight:700; text-decoration:none; }
+    .copy-hint a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
     .desktop-table { display: block; }
     .mobile-cards { display: none; }
-    .table-container { background: var(--card); border-radius: 18px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.4); border: 1px solid var(--border); }
+    .table-container {
+      background: var(--card);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+    }
     table { width: 100%; border-collapse: collapse; }
     thead { background: linear-gradient(90deg, #1a1a2e, #16213e); }
-    th { padding: 1.2rem 1rem; text-align: left; font-weight: 600; font-size: 1rem; color: white; }
+    th {
+      padding: 1.2rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 1rem;
+      color: white;
+    }
     th:last-child { text-align: right; }
-    td { padding: 1rem; border-bottom: 1px solid var(--border); }
-    td:last-child { text-align: right; font-weight: 600; color: var(--accent); font-size: 1.05rem; }
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    td:last-child {
+      text-align: right;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 1.05rem;
+    }
     tr:hover { background: rgba(0,255,157,0.06); }
     .game-name { display: flex; align-items: center; gap: 12px; }
     .copy-btn {
@@ -90,12 +180,45 @@
       box-shadow: 0 10px 25px rgba(0,255,157,0.15);
     }
     .game-info { flex: 1; min-width: 0; }
-    .game-title { font-size: 1.02rem; font-weight: 500; line-height: 1.4; word-break: break-word; overflow-wrap: anywhere; }
-    .game-price { font-size: 1.32rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
-    #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(15px); opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+    .game-title {
+      font-size: 1.02rem;
+      font-weight: 500;
+      line-height: 1.4;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+    .game-price {
+      font-size: 1.32rem;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      backdrop-filter: blur(15px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
     #loading.show { opacity: 1; pointer-events: auto; }
-    #loading img, #loading video, #loading svg { width: 140px; height: 140px; object-fit: contain; }
-    #loading h3 { margin-top: 2rem; font-size: 1.3rem; color: var(--accent); font-weight: 600; }
+    #loading img, #loading video, #loading svg {
+      width: 140px;
+      height: 140px;
+      object-fit: contain;
+    }
+    #loading h3 {
+      margin-top: 2rem;
+      font-size: 1.3rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
     #scrollToTop {
       position: fixed;
       bottom: 24px;
@@ -114,6 +237,7 @@
       transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       z-index: 99;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     #scrollToTop.show { opacity: 1; transform: translateY(0); }
     @media (max-width: 768px) { 
@@ -142,8 +266,17 @@
       <div class="search-sort-bar">
         <div class="search-box">
           <i class="fas fa-search search-icon"></i>
-          <input type="text" id="searchInput" placeholder="Поиск">
-          <button id="clearSearch">×</button>
+          <!-- ✅ Оптимизированный input для iOS -->
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Поиск" 
+            autocapitalize="none" 
+            autocomplete="off" 
+            autocorrect="off" 
+            spellcheck="false"
+          >
+          <button id="clearSearch" aria-label="Очистить поиск">×</button>
         </div>
         <button class="sort-btn" id="sortButton" title="Сортировать по цене">
           <i class="fas fa-sort"></i>
@@ -153,7 +286,7 @@
     <div class="copy-hint">
       <strong>💡 Подсказка:</strong> Нажмите зелёную кнопку — скопируется название и цена<br>
       <strong>📢 Внимание:</strong> Если какой-то игры нет в прайсе — пишите в 
-      <strong><a href="https://t.me/realfurys" target="_blank">личные сообщения</a></strong>
+      <strong><a href="https://t.me/spelonline" target="_blank">@spelonline</a></strong>
     </div>
     <div class="desktop-table">
       <div class="table-container">
@@ -173,7 +306,6 @@
   <button id="scrollToTop" title="Наверх"><i class="fas fa-arrow-up"></i></button>
 
   <script>
-    // 🔑 Google Sheets API (без пробелов!)
     const sheetId = '1MzBvxOzI6Yn3sRkAdJZeG-mdSeoQwPRYKv9thY9_U-0';
     const apiKey = 'AIzaSyAz6NMjP-Sgq2P9FgGOc8T1prYM57b-An0';
     const range = 'ru%20price!A:B';
@@ -182,39 +314,29 @@
     let allGames = [];
     let currentSort = 'none';
 
-    // ✅ Копирование — безопасное для iOS
+    // ✅ Копирование — как было (работает!)
     function copyToClipboard(text, btn) {
-      // Сначала визуальная обратная связь
       showFeedback(btn);
-      
-      // Затем копирование (асинхронно, но без блокировки)
       if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).catch(() => {
-          // Если clipboard недоступен — ничего не делаем (уже дали фидбек)
-        });
+        navigator.clipboard.writeText(text).catch(() => {});
       } else {
-        // Fallback только если clipboard не поддерживается
         fallbackCopy(text);
       }
     }
 
-    // ✅ Простая, безопасная fallback-копия (без focus/select)
     function fallbackCopy(text) {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.style.cssText = 'position:absolute;left:-9999px;top:-9999px;';
-      document.body.appendChild(textarea);
-      textarea.select();
-      try { document.execCommand('copy'); } catch (e) { /* ignore */ }
-      document.body.removeChild(textarea);
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:absolute;left:-9999px;top:-9999px;';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
     }
 
-    // ✅ Безопасная обратная связь — только переключение класса (без анимации transform/opacity)
     function showFeedback(btn) {
       btn.classList.add('copied');
-      setTimeout(() => {
-        btn.classList.remove('copied');
-      }, 800);
+      setTimeout(() => btn.classList.remove('copied'), 800);
     }
 
     function updateSortIcon() {
@@ -226,7 +348,7 @@
       }
     }
 
-    // ✅ renderAll — БЕЗ innerHTML, только createElement + textContent
+    // ✅ Безопасный рендер — без innerHTML
     function renderAll() {
       const search = document.getElementById('searchInput').value.trim().toLowerCase();
       let filtered = allGames.filter(g => g.name.toLowerCase().includes(search));
@@ -237,7 +359,7 @@
         filtered.sort((a, b) => parseFloat(b.price.replace(/[^0-9.-]/g, '')) - parseFloat(a.price.replace(/[^0-9.-]/g, '')));
       }
 
-      // 🖥️ Десктоп: таблица
+      // 🖥️ Десктоп
       const tbody = document.getElementById('tableBody');
       tbody.innerHTML = '';
       const frag = document.createDocumentFragment();
@@ -252,11 +374,7 @@
         const btn = document.createElement('div');
         btn.className = 'copy-btn';
         btn.innerHTML = '<i class="fas fa-copy"></i>';
-
-        btn.onclick = e => {
-          e.stopPropagation();
-          copyToClipboard(`${g.name} — ${g.price} руб.`, btn);
-        };
+        btn.onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} руб.`, btn); };
 
         const nameSpan = document.createElement('span');
         nameSpan.textContent = g.name;
@@ -272,10 +390,9 @@
         tr.appendChild(priceTd);
         frag.appendChild(tr);
       });
-
       tbody.appendChild(frag);
 
-      // 📱 Мобильные карточки — тоже без innerHTML
+      // 📱 Мобильные карточки
       const mobile = document.getElementById('mobileCards');
       mobile.innerHTML = '';
       const mobileFrag = document.createDocumentFragment();
@@ -301,37 +418,47 @@
         const copyBtn = document.createElement('div');
         copyBtn.className = 'copy-btn';
         copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-
-        copyBtn.onclick = e => {
-          e.stopPropagation();
-          copyToClipboard(`${g.name} — ${g.price} руб.`, copyBtn);
-        };
+        copyBtn.onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} руб.`, copyBtn); };
 
         card.appendChild(info);
         card.appendChild(copyBtn);
         mobileFrag.appendChild(card);
       });
-
       mobile.appendChild(mobileFrag);
+
       updateSortIcon();
     }
 
-    // 🎛️ Events
+    // ✅ 🔥 Ключевое исправление: дебаунс + надёжная очистка
     const searchInput = document.getElementById('searchInput');
     const clearBtn = document.getElementById('clearSearch');
 
+    let renderTimeout;
     searchInput.addEventListener('input', () => {
-      clearBtn.classList.toggle('show', searchInput.value.length > 0);
-      renderAll();
+      // Мгновенно показываем/скрываем ×
+      clearBtn.classList.toggle('show', searchInput.value.trim() !== '');
+
+      // Дебаунс рендера
+      clearTimeout(renderTimeout);
+      renderTimeout = setTimeout(renderAll, 250);
     });
 
-    clearBtn.onclick = () => {
+    const clearSearchHandler = () => {
       searchInput.value = '';
       clearBtn.classList.remove('show');
       renderAll();
-      searchInput.focus();
+      // Асинхронный фокус — безопасно для iOS
+      setTimeout(() => searchInput.focus(), 30);
     };
 
+    clearBtn.addEventListener('click', clearSearchHandler);
+    // Дополнительно для тач-устройств (iPhone/iPad)
+    clearBtn.addEventListener('touchend', e => {
+      e.preventDefault();
+      clearSearchHandler();
+    });
+
+    // Сортировка и прокрутка — как раньше
     document.getElementById('sortButton').onclick = () => {
       const order = ['none', 'priceAsc', 'priceDesc'];
       currentSort = order[(order.indexOf(currentSort) + 1) % 3];
@@ -346,7 +473,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // 📥 Загрузка данных
+    // 📥 Загрузка
     (async () => {
       const loading = document.getElementById('loading');
       loading.classList.add('show');
@@ -359,7 +486,7 @@
           renderAll();
           loading.classList.remove('show');
           return;
-        } catch (e) { /* ignore cache error */ }
+        } catch (e) {}
       }
 
       try {
