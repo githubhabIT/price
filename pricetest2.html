@@ -385,7 +385,7 @@
         const btn = document.createElement('div');
         btn.className = 'copy-btn';
         btn.innerHTML = '<i class="fas fa-copy"></i>';
-        btn.onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} шуруп.`, btn); };
+        btn.onclick = e => { e.stopPropagation(); copyToClipboard(`${g.name} — ${g.price} .`, btn); };
 
         const nameSpan = document.createElement('span');
         nameSpan.textContent = g.name;
