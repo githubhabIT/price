@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Оптимизация Xbox Live — Keenetic</title>
+  <title>Настройка DNS на роутере Keenetic</title>
   <style>
     * {
       margin: 0;
@@ -213,24 +213,55 @@
       margin: 0 2px;
     }
 
-    /* Адаптивность */
+    /* ✅ Адаптивность — иконки ОСТАЮТСЯ СЛЕВА даже на мобильных */
     @media (max-width: 600px) {
       .container {
         margin: 40px 16px;
       }
       h1 {
-        font-size: 30px;
+        font-size: 28px;
+      }
+      .subtitle {
+        font-size: 17px;
       }
       .hero-image {
-        max-width: 90%;
+        max-width: 100%;
       }
+
       .step {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row; /* ← ключ: не column! */
+        padding: 16px;
+        gap: 14px;
       }
+
       .step-icon {
-        width: 100%;
-        height: 80px;
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+      }
+
+      .step-icon img {
+        border-radius: 6px;
+      }
+
+      .step-number {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        font-size: 16px;
+      }
+
+      .step-title {
+        font-size: 17px;
+      }
+
+      .command {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+
+      .tip {
+        font-size: 14px;
       }
     }
   </style>
@@ -240,7 +271,6 @@
     <h1>Настройка DNS на роутере Keenetic</h1>
     <p class="subtitle">Минимальный пинг. Нет ограничений. Полная стабильность.</p>
 
-    <!-- Ваша иллюстрация -->
     <img src="resources/DNSXBOX.png" alt="XBOX Series X - DNS Change!" class="hero-image">
 
     <div class="note">
@@ -249,11 +279,9 @@
     </div>
 
     <div class="steps">
-      <!-- Шаг 1 -->
       <div class="step">
         <div class="step-icon">
-          <!-- Место для мини-картинки: браузер -->
-          <img src="resources/858757578.jpg" alt="Браузер" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj4KICAgIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjI4IiBmaWxsPSIjZjVmNWY1IiBzdHJva2U9IiMzYzNjM2MiIHN0cm9rZS13aWR0aD0iNCIvPgogICAgPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMTAiIGZpbGw9IiMwMDAwMDAiLz4KICAgIDxwYXRoIGQ9Ik0yMCAzMGMwLTQuMSAxLjItNy44IDMuMy0xMC43TDMwIDIwTDM3IDI5LjNDMzkuOCAzMi4yIDQxIDM1LjkgNDEgNDBIMTlDMTkgMzUuOSAyMC4yIDMyLjIgMjAgMzB6IiBmaWxsPSIjMDAwMDAwIi8+Cjwvc3ZnPg=='">
+          <img src="resources/858757578.jpg" alt="Браузер">
         </div>
         <div class="step-content">
           <span class="step-number">1</span><span class="step-title">Откройте CLI-интерфейс</span>
@@ -265,11 +293,9 @@
         </div>
       </div>
 
-      <!-- Шаг 2 -->
       <div class="step">
         <div class="step-icon">
-          <!-- Место для мини-картинки: команда / терминал -->
-          <img src="resources/dns4546.jpg" alt="Терминал" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj4KICAgIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjI4IiBmaWxsPSIjZjVmNWY1IiBzdHJva2U9IiMzYzNjM2MiIHN0cm9rZS13aWR0aD0iNCIvPgogICAgPHBhdGggZD0iTTEwIDQwSDUwVjIwSDEwVjQweiIgZmlsbD0iIzAwMDAwMCIvPgogICAgPHBhdGggZD0iTTE1IDI1SDQ1IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIvPgogICAgPHBhdGggZD0iTTE1IDMwSDQ1IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIvPgogICAgPHBhdGggZD0iTTE1IDM1SDQ1IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4='">
+          <img src="resources/dns4546.jpg" alt="Терминал">
         </div>
         <div class="step-content">
           <span class="step-number">2</span><span class="step-title">Настройте DNS для Xbox Live</span>
@@ -279,11 +305,9 @@
         </div>
       </div>
 
-      <!-- Шаг 3 -->
       <div class="step">
         <div class="step-icon">
-          <!-- Место для мини-картинки: дискета / сохранение -->
-          <img src="resources/dns3.jpg" alt="Сохранить" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj4KICAgIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjI4IiBmaWxsPSIjZjVmNWY1IiBzdHJva2U9IiMzYzNjM2MiIHN0cm9rZS13aWR0aD0iNCIvPgogICAgPHBhdGggZD0iTTEwIDQwSDUwVjIwSDEwVjQweiIgZmlsbD0iIzAwMDAwMCIvPgogICAgPHBhdGggZD0iTTE1IDI1SDQ1IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIvPgogICAgPHBhdGggZD0iTTE1IDMwSDQ1IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIvPgogICAgPHBhdGggZD0iTTE1IDM1SDQ1IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4='">
+          <img src="resources/dns3.jpg" alt="Сохранить">
         </div>
         <div class="step-content">
           <span class="step-number">3</span><span class="step-title">Сохраните конфигурацию</span>
@@ -303,4 +327,3 @@
   </div>
 </body>
 </html>
-
